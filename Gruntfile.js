@@ -2,7 +2,7 @@
 
 module.exports = function(grunt) {
 
-  //var proxySnippet = require("./lib/utils.js").proxyRequest;
+  var handleRequest = require("./src/prism.js").handleRequest;
 
   // Project configuration.
   grunt.initConfig({
@@ -24,7 +24,7 @@ module.exports = function(grunt) {
     },
 
     // Configuration to be run (and then tested).
-    /*    connect: {
+    connect: {
       options: {
         port: 9000,
         // change this to '0.0.0.0' to access the server from outside
@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       request: {
         options: {
           middleware: function(connect, options) {
-            return [require('./lib/utils').proxyRequest];
+            return [require("./src/prism.js").handleRequest];
           }
         },
         proxies: [{
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
           }
         }]
       }
-    },*/
+    },
 
     mochaTest: {
       test: {
