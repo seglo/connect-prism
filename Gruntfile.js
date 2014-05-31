@@ -2,7 +2,7 @@
 
 module.exports = function(grunt) {
 
-  var handleRequest = require("./src/prism.js").handleRequest;
+  var handleRequest = require("./lib/prism.js").handleRequest;
 
   // Project configuration.
   grunt.initConfig({
@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         'Gruntfile.js',
         'tasks/*.js',
         'lib/*.js',
-        '<%= nodeunit.tests %>'
+        'test/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       request: {
         options: {
           middleware: function(connect, options) {
-            return [require("./src/prism.js").handleRequest];
+            return [require("./lib/prism.js").handleRequest];
           }
         },
         proxies: [{
@@ -73,8 +73,8 @@ module.exports = function(grunt) {
   // plugin's task(s), then test the result.
   grunt.registerTask('test', [
     'clean',
-    //'configureProxies:request',
-    //'connect:request',
+    'configurePrism:request',
+    'connect:request',
     'mochaTest'
   ]);
 

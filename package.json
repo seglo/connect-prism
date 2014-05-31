@@ -11,7 +11,7 @@
     "url": "https://github.com/seglo/grunt-connect-prism"
   },
   "author": "Sean Glover",
-  "license": "BSD-2-Clause",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/seglo/grunt-connect-prism/issues"
   },
@@ -21,5 +21,9 @@
     "grunt-contrib-connect": "~0.7.1",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-clean": "~0.5.0"
+  },
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "http-proxy": "~1.1.4"
   }
 }
