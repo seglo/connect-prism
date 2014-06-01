@@ -35,16 +35,22 @@ module.exports = function(grunt) {
           middleware: function(connect, options) {
             return [require("./lib/prism.js").handleRequest];
           }
-        },
-        proxies: [{
-          context: '/request',
-          host: 'localhost',
-          port: 8090,
-          changeOrigin: true,
-          headers: {
-            "x-proxied-header": "added"
-          }
-        }]
+        }
+      }
+    },
+
+    prism: {
+      request: {
+        options: {
+          proxies: [{
+            mode: 'record',
+            mocksPath: './mocks',
+            context: '/request',
+            host: 'localhost',
+            port: 8090,
+            https: false
+          }]
+        }
       }
     },
 
@@ -73,7 +79,7 @@ module.exports = function(grunt) {
   // plugin's task(s), then test the result.
   grunt.registerTask('test', [
     'clean',
-    'configurePrism:request',
+    'prism:request',
     'connect:request',
     'mochaTest'
   ]);
