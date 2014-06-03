@@ -1,0 +1,11 @@
+{
+  "requestUrl": "/request",
+  "responseHeaders": {
+    "content-type": "text/plain",
+    "date": "Tue, 03 Jun 2014 02:21:32 GMT",
+    "connection": "close",
+    "transfer-encoding": "chunked"
+  },
+  "statusCode": 200,
+  "data": "a server response"
+}
