@@ -1,5 +1,5 @@
 {
-  "requestUrl": "/request",
+  "requestUrl": "/readRequest",
   "responseHeaders": {
     "content-type": "text/plain",
     "date": "Tue, 03 Jun 2014 02:21:32 GMT",

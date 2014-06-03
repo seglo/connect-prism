@@ -38,13 +38,14 @@ module.exports = function(grunt) {
         var httpProxy = require('http-proxy');
         var proxyOption;
         var proxyOptions = [];
-        prism.resetProxies();
         var proxies = prism.proxies();
 
         if (target) {
             var prismOptions = grunt.config('prism.' + target + '.options') || [];
             proxyOptions = proxyOptions.concat(prismOptions.proxies || []);
         }
+
+        // TODO: add support to load proxies of each child config if a target isn't provided
 
         proxyOptions = proxyOptions.concat(grunt.config('prism.options.proxies') || []);
 

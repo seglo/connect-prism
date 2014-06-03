@@ -25,33 +25,78 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     connect: {
-      options: {
-        port: 9000,
-        // change this to '0.0.0.0' to access the server from outside
-        hostname: 'localhost'
-      },
-      request: {
+      server: {
         options: {
+          port: 9000,
+          // change this to '0.0.0.0' to access the server from outside
+          hostname: 'localhost',
           middleware: function(connect, options) {
             return [require("./lib/prism.js").handleRequest];
           }
         }
       }
+      /*,
+      proxyTest: {
+        options: {
+          middleware: function(connect, options) {
+            return [require("./lib/prism.js").handleRequest];
+          }
+        }
+      },
+      recordTest: {
+        options: {
+          middleware: function(connect, options) {
+            return [require("./lib/prism.js").handleRequest];
+          }
+        }
+      },
+      readTest: {
+        options: {
+          middleware: function(connect, options) {
+            return [require("./lib/prism.js").handleRequest];
+          }
+        }
+      }*/
     },
 
     prism: {
-      request: {
+      proxyTest: {
+        options: {
+          proxies: [{
+            mode: 'proxy',
+            mocksPath: './mocks',
+            context: '/proxyRequest',
+            host: 'localhost',
+            port: 8090,
+            https: false
+          }]
+        }
+      },
+      recordTest: {
         options: {
           proxies: [{
             mode: 'record',
             mocksPath: './mocks',
-            context: '/request',
+            context: '/recordRequest',
+            host: 'localhost',
+            port: 8090,
+            https: false
+          }]
+        }
+      },
+      readTest: {
+        options: {
+          proxies: [{
+            mode: 'read',
+            mocksPath: './mocksToRead',
+            context: '/readRequest',
             host: 'localhost',
             port: 8090,
             https: false
           }]
         }
       }
+
     },
 
     mochaTest: {
@@ -79,8 +124,10 @@ module.exports = function(grunt) {
   // plugin's task(s), then test the result.
   grunt.registerTask('test', [
     'clean',
-    'prism:request',
-    'connect:request',
+    'prism:proxyTest',
+    'prism:recordTest',
+    'prism:readTest',
+    'connect:server',
     'mochaTest'
   ]);
 
