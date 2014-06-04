@@ -70,12 +70,12 @@ describe('Prism', function() {
 
 					assert.equal(_.isUndefined(proxy), false);
 
-					var pathToResponse = path.join(proxy.config.mocksPath, encodeURIComponent(res.req.path));
+					var pathToResponse = path.join(proxy.config.mocksPath, prism.hashUrl(res.req.path));
 
 					var waitForFile = function() {
-						clearTimeout();
-						if (!fs.existsSync(pathToResponse)) {
-							setTimeout(20, waitForFile());
+						if (fs.statSync(pathToResponse).size === 0) {
+							setTimeout(waitForFile, 20);
+							return;
 						}
 
 						var recordedResponse = fs.readFileSync(pathToResponse).toString();

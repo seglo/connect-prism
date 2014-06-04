@@ -1,8 +1,8 @@
 {
-  "requestUrl": "/readRequest",
+  "requestUrl": "/recordRequest",
   "responseHeaders": {
     "content-type": "text/plain",
-    "date": "Tue, 03 Jun 2014 02:21:32 GMT",
+    "date": "Wed, 04 Jun 2014 17:23:06 GMT",
     "connection": "close",
     "transfer-encoding": "chunked"
   },
