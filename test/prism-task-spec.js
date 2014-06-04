@@ -114,5 +114,26 @@ describe('Prism', function() {
 			});
 			request.end();
 		});
+
+		it('can handle a 404 in read mode', function(done) {
+			var request = http.request({
+				host: 'localhost',
+				path: '/readRequestThatDoesntExist',
+				port: 9000
+			}, function(res) {
+				var data = '';
+				res.on('data', function(chunk) {
+					data += chunk;
+				});
+				res.on('end', function() {
+						assert.equal(res.statusCode, 404);
+						assert.equal(res.req.path, '/readRequestThatDoesntExist');
+						assert.equal(data, 'No mock exists for /readRequestThatDoesntExist');
+						done();
+
+				});
+			});
+			request.end();
+		});
 	});
 });
