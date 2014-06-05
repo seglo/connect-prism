@@ -2,7 +2,7 @@
 
 module.exports = function(grunt) {
 
-  var handleRequest = require("./lib/prism.js").handleRequest;
+  var prismMiddleware = require("./lib/events.js").handleRequest;
 
   // Project configuration.
   grunt.initConfig({
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
           // change this to '0.0.0.0' to access the server from outside
           hostname: 'localhost',
           middleware: function(connect, options) {
-            return [require("./lib/prism.js").handleRequest];
+            return [prismMiddleware];
           }
         }
       }
@@ -62,10 +62,10 @@ module.exports = function(grunt) {
           }]
         }
       },
-      readTest: {
+      mockTest: {
         options: {
           proxies: [{
-            mode: 'read',
+            mode: 'mock',
             mocksPath: './mocksToRead',
             context: '/readRequest',
             host: 'localhost',
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
     'clean',
     'prism:proxyTest',
     'prism:recordTest',
-    'prism:readTest',
+    'prism:mockTest',
     'connect:server',
     'mochaTest'
   ]);
