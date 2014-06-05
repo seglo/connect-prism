@@ -35,28 +35,6 @@ module.exports = function(grunt) {
           }
         }
       }
-      /*,
-      proxyTest: {
-        options: {
-          middleware: function(connect, options) {
-            return [require("./lib/prism.js").handleRequest];
-          }
-        }
-      },
-      recordTest: {
-        options: {
-          middleware: function(connect, options) {
-            return [require("./lib/prism.js").handleRequest];
-          }
-        }
-      },
-      readTest: {
-        options: {
-          middleware: function(connect, options) {
-            return [require("./lib/prism.js").handleRequest];
-          }
-        }
-      }*/
     },
 
     prism: {
