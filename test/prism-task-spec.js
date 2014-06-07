@@ -14,8 +14,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 3 proxies', function() {
-      assert.equal(3, proxies.proxies().length);
+    it('should have initialized 4 proxies', function() {
+      assert.equal(4, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -24,6 +24,13 @@ describe('Prism', function() {
       assert.equal(_.isUndefined(proxy), false);
       assert.equal(proxy.config.mode, 'proxy');
       assert.equal(proxy.config.mocksPath, './mocks');
+    });
+
+    it('mode can be overridden', function() {
+      var proxy = proxies.getProxy('/proxyOverrideRequest');
+
+      assert.equal(_.isUndefined(proxy), false);
+      assert.equal(proxy.config.mode, 'record');
     });
   });
 

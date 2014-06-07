@@ -72,8 +72,19 @@ module.exports = function(grunt) {
             https: false
           }]
         }
+      },
+      modeOverrideTest: {
+        options: {
+          proxies: [{
+            mode: 'proxy',
+            mocksPath: './mocks',
+            context: '/proxyOverrideRequest',
+            host: 'localhost',
+            port: 8090,
+            https: false
+          }]
+        }
       }
-
     },
 
     mochaTest: {
@@ -105,6 +116,7 @@ module.exports = function(grunt) {
     'prism:proxyTest',
     'prism:recordTest',
     'prism:mockTest',
+    'prism:modeOverrideTest:record',
     'connect:server',
     'mochaTest'
   ]);

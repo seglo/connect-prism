@@ -33,7 +33,7 @@ module.exports = function(grunt) {
     return true;
   }
 
-  grunt.registerTask('prism', 'Configure any specified connect proxies for prism.', function(target) {
+  grunt.registerTask('prism', 'Configure any specified connect proxies for prism.', function(target, mode) {
     // setup proxy
     var httpProxy = require('http-proxy');
     var proxyOption;
@@ -41,6 +41,12 @@ module.exports = function(grunt) {
 
     if (target) {
       var prismOptions = grunt.config('prism.' + target + '.options') || [];
+      // set override mode for this target if supplied
+      if (mode) {
+        _.forEach(prismOptions.proxies || [], function(proxy) {
+          proxy.mode = mode;
+        });
+      }
       proxyOptions = proxyOptions.concat(prismOptions.proxies || []);
     }
 
