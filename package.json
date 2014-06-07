@@ -1,22 +1,29 @@
-s {
+{
   "name": "grunt-connect-prism",
   "version": "0.1.0",
   "description": "Record, playback, and proxy HTTP traffic.",
-  "main": "index.js",
+  "main": "Gruntfile.js",
   "scripts": {
-    "test": "test"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/seglo/grunt-connect-prism"
   },
-  "author": "Sean Glover",
+  "author": {
+    "name": "Sean Glover",
+    "email": "seglo@randonom.com",
+    "url": "http://randonom.com/blog/"
+  },
   "licenses": [{
     "type": "MIT",
     "url": "https://github.com/seglo/grunt-connect-prism/blob/master/LICENSE-MIT"
-  }]
+  }],
   "bugs": {
     "url": "https://github.com/seglo/grunt-connect-prism/issues"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
   },
   "devDependencies": {
     "grunt-mocha-test": "~0.10.2",
@@ -28,5 +35,19 @@ s {
   "dependencies": {
     "lodash": "~2.4.1",
     "http-proxy": "~1.1.4"
-  }
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "keywords": [
+    "gruntplugin",
+    "mock",
+    "record",
+    "proxy",
+    "connect",
+    "http",
+    "grunt",
+    "prism",
+    "test"
+  ]
 }
