@@ -3,7 +3,7 @@
 > Record, playback, and proxy HTTP traffic as middleware for the grunt-contrib-connect plugin.
 
 ## Getting Started
-This plugin requires Grunt `~0.4.1` and the grunt-contrib-connect plugin to already be installed.
+This plugin requires Grunt `~0.4.1` and the [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect) `~0.7.1` plugin to already be installed.
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
@@ -30,7 +30,7 @@ There are currently 3 supported modes of operation.
 
 #### Record
 
-The record mode will allow you to both record and proxy all HTTP traffic for a certain endpoint on your connect development server.  For example, if in production your API sits at an endpoint /myApiServer you may be currently proxying requests to a server you're hosting on another port or on an integration machine somewhere else.  You may have also attempted to mock out services that make HTTP calls in your client side code itself.  While in record mode you can navigate your application and trigger all the types of API calls you would like to have recorded.  Prism will then listen for responses and serialize them to disk.  When you want to read these responses instead of proxying traffic to the real server you shutdown and switch to the 'mock' mode.
+The record mode will allow you to both record and proxy all HTTP traffic for a certain endpoint on your connect development server.  For example, if in production your API sits at an endpoint `/api` then you may be currently proxying requests to a server you're hosting locally on another port or to an integration machine somewhere else.  You may have also attempted to mock out services that make HTTP calls in your client side code itself.  While in record mode you can navigate your application and trigger all the types of API calls you would like to have recorded.  Prism will then listen for responses and serialize them to disk.  When you want to read these responses instead of proxying traffic to the real server you shutdown and switch to the 'mock' mode.
 
 #### Mock
 
@@ -162,7 +162,7 @@ i.e. `grunt prism:server:mock`
 Type: `String`
 Default: `'./mocks'`
 
-Path to the directory you want to record and mock responses.
+Path to the directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it.
 
 #### context:
 
@@ -194,6 +194,7 @@ The http scheme of the API you are proxying.  `true` === `https`, `false` === `h
 
 ## TODO Wishlist
 * Detect json responses and format data property appropriately.
+* Scrub response date from headers.
 
 ## Release History
 * 0.1.0 Initial release

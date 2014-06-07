@@ -19,14 +19,15 @@ module.exports = function(grunt) {
 
     var mocksPath = proxyOption.mocksPath;
     if (_.isUndefined(mocksPath) || !grunt.file.isDir(mocksPath)) {
-      grunt.log.error('Prism mocksPath: \'' + mocksPath + '\' is invalid.');
-      return false;
+      grunt.log.warn('Mocks path did not exist \'' + mocksPath + '\'  Attempting to create...');
+      grunt.file.mkdir(mocksPath);
     }
 
     if (_.isUndefined(proxyOption.host) || _.isUndefined(proxyOption.context)) {
       grunt.log.error('Proxy missing host or context configuration');
       return false;
     }
+
     if (proxyOption.https && proxyOption.port === 80) {
       grunt.log.warn('Proxy  for ' + proxyOption.context + ' is using https on port 80. Are you sure this is correct?');
     }
