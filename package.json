@@ -1,7 +1,7 @@
 s {
   "name": "grunt-connect-prism",
-  "version": "0.0.1",
-  "description": "Record and playback proxied HTTP traffic.",
+  "version": "0.1.0",
+  "description": "Record, playback, and proxy HTTP traffic.",
   "main": "index.js",
   "scripts": {
     "test": "test"
