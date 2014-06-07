@@ -101,6 +101,7 @@ module.exports = function(grunt) {
   // plugin's task(s), then test the result.
   grunt.registerTask('test', [
     'clean',
+    'jshint',
     'prism:proxyTest',
     'prism:recordTest',
     'prism:mockTest',
