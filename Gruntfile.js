@@ -23,12 +23,11 @@ module.exports = function(grunt) {
       tests: ['tmp']
     },
 
-    // Configuration to be run (and then tested).
+    // Stub connect server to add prism middleware to.
     connect: {
       server: {
         options: {
           port: 9000,
-          // change this to '0.0.0.0' to access the server from outside
           hostname: 'localhost',
           middleware: function(connect, options) {
             return [prismMiddleware];

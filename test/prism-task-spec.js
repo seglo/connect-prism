@@ -114,7 +114,7 @@ describe('Prism', function() {
 			request.end();
 		});
 
-		it('can handle a 404 in read mode', function(done) {
+		it('can handle a 404 in mock mode', function(done) {
 			var request = http.request({
 				host: 'localhost',
 				path: '/readRequestThatDoesntExist',
