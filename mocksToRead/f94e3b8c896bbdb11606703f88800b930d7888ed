@@ -1,11 +1,6 @@
 {
   "requestUrl": "/recordRequest",
-  "responseHeaders": {
-    "content-type": "text/plain",
-    "date": "Wed, 04 Jun 2014 17:23:06 GMT",
-    "connection": "close",
-    "transfer-encoding": "chunked"
-  },
+  "contentType": "text/plain",
   "statusCode": 200,
   "data": "a server response"
 }

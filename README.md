@@ -194,7 +194,6 @@ The http scheme of the API you are proxying.  `true` === `https`, `false` === `h
 
 ## TODO Wishlist
 * Detect json responses and format data property appropriately.
-* Scrub response date from headers.
 
 ## Release History
 * 0.1.0 Initial release
