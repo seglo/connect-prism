@@ -197,3 +197,4 @@ The http scheme of the API you are proxying.  `true` === `https`, `false` === `h
 
 ## Release History
 * 0.1.0 Initial release
+* 0.1.1 Stop recording all response headers.  Only capture content-type.

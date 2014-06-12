@@ -1,6 +1,6 @@
 {
   "name": "grunt-connect-prism",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Record, playback, and proxy HTTP traffic.",
   "main": "Gruntfile.js",
   "scripts": {
