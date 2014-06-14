@@ -18,11 +18,13 @@ grunt.loadNpmTasks('grunt-connect-prism');
 ```
 ## Overview
 
+Prism is similar to the Ruby project [VCR](https://github.com/elcuervo/vcr.js).
+
 The purpose of this plugin is to provide an easy way for front end developers to record HTTP responses returned by their API (or some other remote source) and then be able replay the responses in the future.  It's basically an HTTP cache, but for developers working on a Single Page Application (SPA).
 
 It's useful for mocking complex & high latency API calls during development.  It's also useful when writing e2e tests for your SPA only, removing the server from the equation.  This results in much faster execution of your e2e test suite.
 
-Prism works by adding a custom connect middleware to the [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect) plugin.
+Prism works by adding a custom connect middleware to the connect server provided by the [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect) plugin.
 
 ### Modes
 
