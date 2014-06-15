@@ -46,61 +46,23 @@ And finally, prism supports simple proxying in much the same way as the [grunt-c
 
 #### Adding the middleware
 
-Note: This configuration was recycled from [grunt-connect-proxy's README.md](https://github.com/drewzboto/grunt-connect-proxy#adding-the-middleware).
+This configuration is based on a modification to the connect middleware configuration that the yeoman [angular-generator](https://github.com/yeoman/generator-angular)
 
-##### With Livereload
+Add the middleware call to prism.
 
-Add the middleware call from the connect option middleware hook
 ```js
   connect: {
     livereload: {
       options: {
-        middleware: function (connect, options) {
-          if (!Array.isArray(options.base)) {
-            options.base = [options.base];
-          }
-
-          // Setup the proxy
-          var middlewares = [require('grunt-connect-prism/lib/events').handleRequest];
-
-          // Serve static files.
-          options.base.forEach(function(base) {
-            middlewares.push(connect.static(base));
-          });
-
-          // Make directory browse-able.
-          var directory = options.directory || options.base[options.base.length - 1];
-          middlewares.push(connect.directory(directory));
-
-          return middlewares;
-        }
-      }
-    }
-  }
-```
-
-##### Without Livereload
-
-It is possible to add the proxy middleware without Livereload as follows:
-
-```js
-  // server
-  connect: {
-    server: {
-      options: {
-        port: 8000,
-        base: 'public',
-        logger: 'dev',
-        hostname: 'localhost',
-        middleware: function (connect, options) {
-          var prism = require('grunt-connect-prism/lib/events').handleRequest;
+        middleware: function(connect) {
           return [
-            // Include the proxy first
-            prism,
-            // Serve static files.
-            connect.static(options.base),
-            // Make empty directories browsable.
-            connect.directory(options.base)
+            require('grunt-connect-prism/lib/events').handleRequest,
+            connect.static('.tmp'),
+            connect().use(
+              '/bower_components',
+              connect.static('./bower_components')
+            ),
+            connect.static(appConfig.app)
           ];
         }
       }

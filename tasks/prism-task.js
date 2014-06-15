@@ -1,8 +1,9 @@
 'use strict';
 
+var httpProxy = require('http-proxy');
 var _ = require('lodash');
-var events = require('../lib/events.js');
-var proxies = require('../lib/proxies.js');
+var events = require('../lib/events');
+var proxies = require('../lib/proxies');
 
 module.exports = function(grunt) {
   function validateProxyConfig(proxyOption) {
@@ -35,44 +36,43 @@ module.exports = function(grunt) {
   }
 
   grunt.registerTask('prism', 'Configure any specified connect proxies for prism.', function(target, mode) {
-    // setup proxy
-    var httpProxy = require('http-proxy');
-    var proxyOption;
-    var proxyOptions = [];
+    var proxyConfigs = [];
 
     if (target) {
-      var prismOptions = grunt.config('prism.' + target + '.options') || [];
+      var prismTargetOptions = grunt.config('prism.' + target + '.options') || {};
       // set override mode for this target if supplied
       if (mode) {
-        _.forEach(prismOptions.proxies || [], function(proxy) {
-          proxy.mode = mode;
-        });
+        prismTargetOptions.mode = mode;
       }
-      proxyOptions = proxyOptions.concat(prismOptions.proxies || []);
+
+      proxyConfigs.push(prismTargetOptions);
     }
 
-    // TODO: add support to load proxies of each child config if a target isn't provided
+    var rootProxyConfig = grunt.config('prism.options');
 
-    proxyOptions = proxyOptions.concat(grunt.config('prism.options.proxies') || []);
+    // if the root prism options are set, add'm
+    if (rootProxyConfig) {
+      proxyConfigs.push(rootProxyConfig);
+    }
 
-    proxyOptions.forEach(function(proxy) {
-      proxyOption = _.defaults(proxy, {
+    proxyConfigs.forEach(function(proxyConfig) {
+      proxyConfig = _.defaults(proxyConfig, {
         port: 80,
         https: false,
         mode: 'proxy',
         mocksPath: './mocks'
       });
 
-      if (validateProxyConfig(proxyOption)) {
+      if (validateProxyConfig(proxyConfig)) {
         var proxyServer = httpProxy.createProxyServer()
           .on('proxyRes', events.handleResponse);
 
         proxies.add({
           server: proxyServer,
-          config: proxyOption
+          config: proxyConfig
         });
 
-        grunt.log.writeln('Proxy created for: ' + proxyOption.context + ' to ' + proxyOption.host + ':' + proxyOption.port);
+        grunt.log.writeln('Proxy created for: ' + proxyConfig.context + ' to ' + proxyConfig.host + ':' + proxyConfig.port);
       }
     });
   });

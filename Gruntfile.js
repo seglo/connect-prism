@@ -39,50 +39,42 @@ module.exports = function(grunt) {
     prism: {
       proxyTest: {
         options: {
-          proxies: [{
-            mode: 'proxy',
-            mocksPath: './mocks',
-            context: '/proxyRequest',
-            host: 'localhost',
-            port: 8090,
-            https: false
-          }]
+          mode: 'proxy',
+          mocksPath: './mocks',
+          context: '/proxyRequest',
+          host: 'localhost',
+          port: 8090,
+          https: false
         }
       },
       recordTest: {
         options: {
-          proxies: [{
-            mode: 'record',
-            mocksPath: './mocks',
-            context: '/recordRequest',
-            host: 'localhost',
-            port: 8090,
-            https: false
-          }]
+          mode: 'record',
+          mocksPath: './mocks',
+          context: '/recordRequest',
+          host: 'localhost',
+          port: 8090,
+          https: false
         }
       },
       mockTest: {
         options: {
-          proxies: [{
-            mode: 'mock',
-            mocksPath: './mocksToRead',
-            context: '/readRequest',
-            host: 'localhost',
-            port: 8090,
-            https: false
-          }]
+          mode: 'mock',
+          mocksPath: './mocksToRead',
+          context: '/readRequest',
+          host: 'localhost',
+          port: 8090,
+          https: false
         }
       },
       modeOverrideTest: {
         options: {
-          proxies: [{
-            mode: 'proxy',
-            mocksPath: './mocks',
-            context: '/proxyOverrideRequest',
-            host: 'localhost',
-            port: 8090,
-            https: false
-          }]
+          mode: 'proxy',
+          mocksPath: './mocks',
+          context: '/proxyOverrideRequest',
+          host: 'localhost',
+          port: 8090,
+          https: false
         }
       }
     },
