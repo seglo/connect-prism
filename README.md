@@ -76,19 +76,25 @@ In your project's Gruntfile, add a section named `prism`.
 
 ### Adding prism configuration.
 
+You can add all the options in the root task options, in a target options, or a mix of both (where the target options will inherit from the root options).
+
 ```js
   prism: {
+    options: {
+      host: 'localhost',
+      port: 8090,
+      https: false
+    },
     server: {
       options: {
         mode: 'record',
         mocksPath: './mocks',
-        context: '/api',
-        host: 'localhost',
-        port: 8090,
-        https: false
+        context: '/api'
       }
     }
 ```
+
+### Inheriting options
 
 ### Adding the prism task to the server task
 For the server task, add the configureProxies task before the connect task
@@ -124,7 +130,7 @@ i.e. `grunt prism:server:mock`
 Type: `String`
 Default: `'./mocks'`
 
-Path to the directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it.
+Path to the root directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it.  If prism is executed with a target then recorded and mocked responses will be read from `'./mocks/targetName'`.  If no target is defined then only the default prism options will be used.
 
 #### context:
 

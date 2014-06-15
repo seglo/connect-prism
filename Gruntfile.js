@@ -2,8 +2,6 @@
 
 module.exports = function(grunt) {
 
-  var prismMiddleware = require("./lib/events.js").handleRequest;
-
   // Project configuration.
   grunt.initConfig({
     jshint: {
@@ -30,13 +28,21 @@ module.exports = function(grunt) {
           port: 9000,
           hostname: 'localhost',
           middleware: function(connect, options) {
-            return [prismMiddleware];
+            return [require("./lib/events.js").handleRequest];
           }
         }
       }
     },
 
     prism: {
+      options: {
+        mode: 'proxy',
+        mocksPath: './mocks',
+        context: '/defaultContext',
+        host: 'localhost',
+        port: 8090,
+        https: false
+      },
       proxyTest: {
         options: {
           mode: 'proxy',
@@ -76,6 +82,9 @@ module.exports = function(grunt) {
           port: 8090,
           https: false
         }
+      },
+      inheritRootOptionsTest: {
+        options: {}
       }
     },
 
@@ -109,6 +118,7 @@ module.exports = function(grunt) {
     'prism:recordTest',
     'prism:mockTest',
     'prism:modeOverrideTest:record',
+    'prism:inheritRootOptionsTest',
     'connect:server',
     'mochaTest'
   ]);

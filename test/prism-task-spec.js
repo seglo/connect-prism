@@ -7,15 +7,15 @@ var path = require('path');
 var _ = require('lodash');
 var assert = require("assert");
 
-var proxies = require('../lib/proxies.js');
-var utils = require('../lib/utils.js');
+var proxies = require('../lib/proxies');
+var utils = require('../lib/utils');
 
 var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 4 proxies', function() {
-      assert.equal(4, proxies.proxies().length);
+    it('should have initialized 5 proxies', function() {
+      assert.equal(5, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -24,6 +24,10 @@ describe('Prism', function() {
       assert.equal(_.isUndefined(proxy), false);
       assert.equal(proxy.config.mode, 'proxy');
       assert.equal(proxy.config.mocksPath, './mocks');
+      assert.equal(proxy.config.context, '/proxyRequest');
+      assert.equal(proxy.config.host, 'localhost');
+      assert.equal(proxy.config.port, 8090);
+      assert.equal(proxy.config.https, false);
     });
 
     it('mode can be overridden', function() {
@@ -31,6 +35,18 @@ describe('Prism', function() {
 
       assert.equal(_.isUndefined(proxy), false);
       assert.equal(proxy.config.mode, 'record');
+    });
+
+    it('can inherit config from root task options', function(){
+      var proxy = proxies.getProxy('/defaultContext');
+
+      assert.equal(_.isUndefined(proxy), false);
+      assert.equal(proxy.config.mode, 'proxy');
+      assert.equal(proxy.config.mocksPath, './mocks');
+      assert.equal(proxy.config.context, '/defaultContext');
+      assert.equal(proxy.config.host, 'localhost');
+      assert.equal(proxy.config.port, 8090);
+      assert.equal(proxy.config.https, false);
     });
   });
 
@@ -76,7 +92,7 @@ describe('Prism', function() {
 
           assert.equal(_.isUndefined(proxy), false);
 
-          var pathToResponse = path.join(proxy.config.mocksPath, utils.hashUrl(res.req.path));
+          var pathToResponse = utils.getMockPath(proxy, res.req.path);
 
           var waitForFile = function() {
             if (fs.statSync(pathToResponse).size === 0) {

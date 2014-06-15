@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var httpProxy = require('http-proxy');
 var _ = require('lodash');
 var events = require('../lib/events');
@@ -20,8 +21,15 @@ module.exports = function(grunt) {
 
     var mocksPath = proxyOption.mocksPath;
     if (_.isUndefined(mocksPath) || !grunt.file.isDir(mocksPath)) {
-      grunt.log.warn('Mocks path did not exist \'' + mocksPath + '\'  Attempting to create...');
       grunt.file.mkdir(mocksPath);
+      grunt.log.warn('Mocks path did not exist \'' + mocksPath + '\'.  Created.');
+    }
+
+    var targetMocksPath = path.join(mocksPath, proxyOption._target);
+
+    if (proxyOption._target && !grunt.file.isDir(targetMocksPath)) {
+      grunt.file.mkdir(targetMocksPath);
+      grunt.log.warn('Target mocks path did not exist \'' + targetMocksPath + '\'.  Created.');
     }
 
     if (_.isUndefined(proxyOption.host) || _.isUndefined(proxyOption.context)) {
@@ -40,6 +48,10 @@ module.exports = function(grunt) {
 
     if (target) {
       var prismTargetOptions = grunt.config('prism.' + target + '.options') || {};
+
+      // use target name kind of like 'cassette' feature in VCR
+      prismTargetOptions._target = target;
+
       // set override mode for this target if supplied
       if (mode) {
         prismTargetOptions.mode = mode;
@@ -50,13 +62,14 @@ module.exports = function(grunt) {
 
     var rootProxyConfig = grunt.config('prism.options');
 
-    // if the root prism options are set, add'm
-    if (rootProxyConfig) {
+    // if the root prism options are set and we didn't execute a target then add it
+    if (rootProxyConfig && !target) {
+      rootProxyConfig._target = '_default';
       proxyConfigs.push(rootProxyConfig);
     }
 
     proxyConfigs.forEach(function(proxyConfig) {
-      proxyConfig = _.defaults(proxyConfig, {
+      proxyConfig = _.defaults(proxyConfig, rootProxyConfig, {
         port: 80,
         https: false,
         mode: 'proxy',
