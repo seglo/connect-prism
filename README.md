@@ -97,7 +97,12 @@ You can add all the options in the root task options, in a target options, or a 
 ### Inheriting options
 
 ### Adding the prism task to the server task
-For the server task, add the configureProxies task before the connect task
+For the server task, add the prism task before the connect task.
+
+If a target is supplied then only that prism target instanced will be created.
+
+If a target is not supplied then only the root prism options will be used to execute a single prism instance.
+
 ```js
   grunt.registerTask('server', function (target, prismMode) {
       grunt.task.run([
