@@ -80,14 +80,12 @@ In your project's Gruntfile, add a section named `prism`.
   prism: {
     server: {
       options: {
-        proxies: [{
-          mode: 'record',
-          mocksPath: './mocks',
-          context: '/api',
-          host: 'localhost',
-          port: 8090,
-          https: false
-        }]
+        mode: 'record',
+        mocksPath: './mocks',
+        context: '/api',
+        host: 'localhost',
+        port: 8090,
+        https: false
       }
     }
 ```
