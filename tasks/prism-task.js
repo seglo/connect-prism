@@ -64,8 +64,11 @@ module.exports = function(grunt) {
       });
 
       if (validateProxyConfig(proxyOption)) {
-        var proxyServer = httpProxy.createProxyServer()
-          .on('proxyRes', events.handleResponse);
+        var proxyServer = httpProxy.createProxyServer();
+
+        if (proxyOption.mode === 'record') {
+          proxyServer.on('proxyRes', events.handleResponse);
+        }
 
         proxies.add({
           server: proxyServer,
