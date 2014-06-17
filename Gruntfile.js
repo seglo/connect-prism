@@ -63,11 +63,31 @@ module.exports = function(grunt) {
           https: false
         }
       },
+      jsonRecordTest: {
+        options: {
+          mode: 'record',
+          mocksPath: './mocks',
+          context: '/jsonRecordRequest',
+          host: 'localhost',
+          port: 8090,
+          https: false
+        }
+      },
       mockTest: {
         options: {
           mode: 'mock',
           mocksPath: './mocksToRead',
           context: '/readRequest',
+          host: 'localhost',
+          port: 8090,
+          https: false
+        }
+      },
+      jsonMockTest: {
+        options: {
+          mode: 'mock',
+          mocksPath: './mocksToRead',
+          context: '/jsonMockRequest',
           host: 'localhost',
           port: 8090,
           https: false
@@ -116,7 +136,9 @@ module.exports = function(grunt) {
     'jshint',
     'prism:proxyTest',
     'prism:recordTest',
+    'prism:jsonRecordTest',
     'prism:mockTest',
+    'prism:jsonMockTest',
     'prism:modeOverrideTest:record',
     'prism:inheritRootOptionsTest',
     'connect:server',

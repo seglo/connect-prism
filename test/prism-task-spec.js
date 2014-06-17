@@ -14,8 +14,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 5 proxies', function() {
-      assert.equal(5, proxies.proxies().length);
+    it('should have initialized 7 proxies', function() {
+      assert.equal(7, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -37,7 +37,7 @@ describe('Prism', function() {
       assert.equal(proxy.config.mode, 'record');
     });
 
-    it('can inherit config from root task options', function(){
+    it('can inherit config from root task options', function() {
       var proxy = proxies.getProxy('/defaultContext');
 
       assert.equal(_.isUndefined(proxy), false);
@@ -51,12 +51,39 @@ describe('Prism', function() {
   });
 
   describe('proxy modes', function() {
-    var testServer = http.createServer(function(req, res) {
-      res.writeHead(200, {
-        'Content-Type': 'text/plain'
+    function onEnd(res, callback) {
+      var data = '';
+      res.on('data', function(chunk) {
+        data += chunk;
       });
-      res.write('a server response');
-      res.end();
+      res.on('end', function() {
+        callback(data);
+      });
+    }
+
+    function waitForFile(filePath, callback) {
+      if (fs.statSync(filePath).size === 0) {
+        setTimeout(waitForFile, 0, filePath, callback);
+        return;
+      }
+
+      callback(filePath);
+    }
+
+    var testServer = http.createServer(function(req, res) {
+      if (req.url === '/jsonRecordRequest') {
+        res.writeHead(200, {
+          'Content-Type': 'application/json'
+        });
+        res.write('{"text": "a server response"}');
+        res.end();
+      } else {
+        res.writeHead(200, {
+          'Content-Type': 'text/plain'
+        });
+        res.write('a server response');
+        res.end();
+      }
     }).listen(8090);
 
     it('can proxy a response', function(done) {
@@ -65,11 +92,7 @@ describe('Prism', function() {
         path: '/proxyRequest',
         port: 9000
       }, function(res) {
-        var data = '';
-        res.on('data', function(chunk) {
-          data += chunk;
-        });
-        res.on('end', function() {
+        onEnd(res, function(data) {
           assert.equal(data, 'a server response');
           done();
         });
@@ -83,34 +106,51 @@ describe('Prism', function() {
         path: '/recordRequest',
         port: 9000
       }, function(res) {
-        var data = '';
-        res.on('data', function(chunk) {
-          data += chunk;
-        });
-        res.on('end', function() {
+        onEnd(res, function(data) {
           var proxy = proxies.getProxy(res.req.path);
 
           assert.equal(_.isUndefined(proxy), false);
-
           var pathToResponse = utils.getMockPath(proxy, res.req.path);
 
-          var waitForFile = function() {
-            if (fs.statSync(pathToResponse).size === 0) {
-              setTimeout(waitForFile, 20);
-              return;
-            }
+          waitForFile(pathToResponse, function(pathToResponse) {
 
             var recordedResponse = fs.readFileSync(pathToResponse).toString();
             var deserializedResponse = JSON.parse(recordedResponse);
 
             assert.equal(_.isUndefined(deserializedResponse), false);
             assert.equal(deserializedResponse.requestUrl, '/recordRequest');
+            assert.equal(deserializedResponse.contentType, 'text/plain');
+            assert.equal(deserializedResponse.statusCode, 200);
             assert.equal(deserializedResponse.data, 'a server response');
 
             done();
-          };
+          });
+        });
+      });
+      request.end();
+    });
 
-          waitForFile();
+    it('can record a JSON response', function(done) {
+      var request = http.request({
+        host: 'localhost',
+        path: '/jsonRecordRequest',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+          var proxy = proxies.getProxy(res.req.path);
+
+          assert.equal(_.isUndefined(proxy), false);
+          var pathToResponse = utils.getMockPath(proxy, res.req.path);
+
+          waitForFile(pathToResponse, function(pathToResponse) {
+            var recordedResponse = fs.readFileSync(pathToResponse).toString();
+            var deserializedResponse = JSON.parse(recordedResponse);
+
+            assert.equal(_.isUndefined(deserializedResponse), false);
+            assert.equal(deserializedResponse.data.text, 'a server response');
+
+            done();
+          });
         });
       });
       request.end();
@@ -122,16 +162,26 @@ describe('Prism', function() {
         path: '/readRequest',
         port: 9000
       }, function(res) {
-        var data = '';
-        res.on('data', function(chunk) {
-          data += chunk;
-        });
-        res.on('end', function() {
+        onEnd(res, function(data) {
           assert.equal(res.statusCode, 200);
           assert.equal(res.req.path, '/readRequest');
           assert.equal(data, 'a server response');
           done();
+        });
+      });
+      request.end();
+    });
 
+    it('can mock a JSON response', function(done) {
+      var request = http.request({
+        host: 'localhost',
+        path: '/jsonMockRequest',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+          assert.equal(res.statusCode, 200);
+          assert.equal(data, '{"text":"a server response"}');
+          done();
         });
       });
       request.end();
@@ -143,16 +193,11 @@ describe('Prism', function() {
         path: '/readRequestThatDoesntExist',
         port: 9000
       }, function(res) {
-        var data = '';
-        res.on('data', function(chunk) {
-          data += chunk;
-        });
-        res.on('end', function() {
+        onEnd(res, function(data) {
           assert.equal(res.statusCode, 404);
           assert.equal(res.req.path, '/readRequestThatDoesntExist');
           assert.equal(data, 'No mock exists for /readRequestThatDoesntExist');
           done();
-
         });
       });
       request.end();
