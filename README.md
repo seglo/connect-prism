@@ -48,9 +48,7 @@ And finally, prism supports simple proxying in much the same way as the [grunt-c
 
 #### Adding the middleware
 
-This configuration is based on a modification to the connect middleware configuration that the yeoman [angular-generator](https://github.com/yeoman/generator-angular)
-
-Add the middleware call to prism.
+This configuration is based on a modification to the connect middleware configuration that the yeoman [angular-generator](https://github.com/yeoman/generator-angular) will create.
 
 ```js
   connect: {
