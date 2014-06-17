@@ -36,6 +36,19 @@ The record mode will allow you to both record and proxy all HTTP traffic for a c
 
 To make mocks more readable, responses with a content-type of `json` or `javascript` will have their data stringified as an object.  If the content-type is anything other than json or if stringification fails then it falls back to a string.
 
+Example mock generated:
+
+```javascript
+  {
+    "requestUrl": "/api/ponies",
+    "contentType": "application/json",
+    "statusCode": 200,
+    "data": {
+      "text": "my little ponies"
+    }
+  }
+```
+
 #### Mock
 
 The mock (read) mode will listen for requests to a certain endpoint.  When a request matches an endpoint it will attempt to find a previously recorded response in the directory you defined mocks to be saved in (./mocks by default).  If a matching response is not found then prism will return a 404.
@@ -166,7 +179,6 @@ Default: false
 The http scheme of the API you are proxying.  `true` === `https`, `false` === `http`
 
 ## TODO Wishlist
-* Detect json responses and format data property appropriately.
 
 ## Release History
 * 0.1.0 Initial release
