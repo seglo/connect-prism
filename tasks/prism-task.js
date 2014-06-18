@@ -73,14 +73,15 @@ module.exports = function(grunt) {
         port: 80,
         https: false,
         mode: 'proxy',
-        mocksPath: './mocks'
+        mocksPath: './mocks',
+        changeOrigin: false
       });
 
       if (validateProxyConfig(proxyConfig)) {
         //var proxyServer = httpProxy.createProxyServer();
         var proxyServer = new httpProxy.HttpProxy({
           target: proxyConfig,
-          changeOrigin: false,
+          changeOrigin: proxyConfig.changeOrigin,
           enable: {
             xforward: false // enables X-Forwarded-For
           },

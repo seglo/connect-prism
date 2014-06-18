@@ -97,7 +97,8 @@ You can add all the options in the root task options, in a target options, or a 
       mocksPath: './mocks',
       host: 'localhost',
       port: 8090,
-      https: false
+      https: false,
+      changeOrigin: true
     },
     server: {
       options: {
@@ -121,7 +122,7 @@ If a target is not supplied then only the root prism options will be used to exe
       grunt.task.run([
           'clean:server',
           'compass:server',
-          'prism:' + target + ':' prismMode, /* see mode configuration for more details */
+          'prism:' + target + ':' + prismMode, /* see mode configuration for more details */
           'livereload-start',
           'connect:livereload',
           'open',
@@ -178,6 +179,13 @@ Default: false
 
 The http scheme of the API you are proxying.  `true` === `https`, `false` === `http`
 
+#### changeOrigin:
+
+Type: `Boolean`
+Default: false
+
+Whether to change the origin on the request to the proxy, or keep the original origin.
+
 ## TODO Wishlist
 
 ## Release History
@@ -185,3 +193,4 @@ The http scheme of the API you are proxying.  `true` === `https`, `false` === `h
 * 0.1.1 Stop recording all response headers.  Only capture content-type.
 * 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
 * 0.2.1 Fixed record mode and tests so we don't release broken again!
+* 0.2.2 Support change origin.
