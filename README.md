@@ -184,3 +184,4 @@ The http scheme of the API you are proxying.  `true` === `https`, `false` === `h
 * 0.1.0 Initial release
 * 0.1.1 Stop recording all response headers.  Only capture content-type.
 * 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
+* 0.2.1 Fixed record mode and tests so we don't release broken again!
