@@ -88,7 +88,7 @@ module.exports = function(grunt) {
         });
 
         if (proxyConfig.mode === 'record') {
-          proxyServer.on('proxyRes', events.handleResponse);
+          proxyServer.on('proxyResponse', events.handleResponse);
         }
 
         proxies.add({

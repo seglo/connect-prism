@@ -101,17 +101,22 @@ describe('Prism', function() {
     });
 
     it('can record a response', function(done) {
+      var recordRequest = '/recordRequest';
+      var proxy = proxies.getProxy(recordRequest);
+
+      assert.equal(_.isUndefined(proxy), false);
+
+      var pathToResponse = utils.getMockPath(proxy, recordRequest);
+      if (fs.existsSync(pathToResponse)) {
+        fs.unlinkSync(pathToResponse);
+      }
+
       var request = http.request({
         host: 'localhost',
         path: '/recordRequest',
         port: 9000
       }, function(res) {
         onEnd(res, function(data) {
-          var proxy = proxies.getProxy(res.req.path);
-
-          assert.equal(_.isUndefined(proxy), false);
-          var pathToResponse = utils.getMockPath(proxy, res.req.path);
-
           waitForFile(pathToResponse, function(pathToResponse) {
 
             var recordedResponse = fs.readFileSync(pathToResponse).toString();
@@ -131,17 +136,22 @@ describe('Prism', function() {
     });
 
     it('can record a JSON response', function(done) {
+      var recordRequest = '/jsonRecordRequest';
+      var proxy = proxies.getProxy(recordRequest);
+
+      assert.equal(_.isUndefined(proxy), false);
+
+      var pathToResponse = utils.getMockPath(proxy, recordRequest);
+      if (fs.existsSync(pathToResponse)) {
+        fs.unlinkSync(pathToResponse);
+      }
+
       var request = http.request({
         host: 'localhost',
         path: '/jsonRecordRequest',
         port: 9000
       }, function(res) {
         onEnd(res, function(data) {
-          var proxy = proxies.getProxy(res.req.path);
-
-          assert.equal(_.isUndefined(proxy), false);
-          var pathToResponse = utils.getMockPath(proxy, res.req.path);
-
           waitForFile(pathToResponse, function(pathToResponse) {
             var recordedResponse = fs.readFileSync(pathToResponse).toString();
             var deserializedResponse = JSON.parse(recordedResponse);
