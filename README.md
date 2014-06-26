@@ -1,21 +1,15 @@
-# grunt-connect-prism
+# connect-prism
 
-> Record, mock, and proxy HTTP traffic as middleware for the grunt-contrib-connect plugin.
+> Record, mock, and proxy HTTP traffic as middleware for the connect plugin.
 
 ## Getting Started
-This plugin requires Grunt `~0.4.1` and the [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect) `~0.7.1` plugin to already be installed.
 
-If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
+This middleware can be installed a la npm with the following command.
 
 ```shell
-npm install grunt-connect-prism --save-dev
+npm install connect-prism --save-dev
 ```
 
-One the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
-
-```js
-grunt.loadNpmTasks('grunt-connect-prism');
-```
 ## Overview
 
 Prism is similar to the Ruby project [VCR](https://github.com/elcuervo/vcr.js).
@@ -24,7 +18,7 @@ The purpose of this plugin is to provide an easy way for front end developers to
 
 It's useful for mocking complex & high latency API calls during development.  It's also useful when writing e2e tests for your SPA only, removing the server from the equation.  This results in much faster execution of your e2e test suite.
 
-Prism works by adding a custom connect middleware to the connect server provided by the [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect) plugin.
+Prism works by adding a custom connect middleware to a the [connect](https://www.npmjs.org/package/connect) server.
 
 ### Modes
 
@@ -55,11 +49,11 @@ The mock (read) mode will listen for requests to a certain endpoint.  When a req
 
 #### Proxy
 
-And finally, prism supports simple proxying in much the same way as the [grunt-connect-prism](https://github.com/drewzboto/grunt-connect-proxy) plugin works.  In fact, this plugin is heavily inspired by that project.  While in proxy mode, listening events for recording and mocking are disabled.
+And finally, prism supports simple proxying in much the same way as the [grunt-connect-proxy](https://github.com/drewzboto/grunt-connect-proxy) plugin works.  In fact, this plugin is heavily inspired by that project.  While in proxy mode, listening events for recording and mocking are disabled.
 
 ### Adapting the "connect" task
 
-#### Adding the middleware
+#### Adding the middleware using grunt-contrib-connect
 
 This configuration is based on a modification to the connect middleware configuration that the yeoman [angular-generator](https://github.com/yeoman/generator-angular) will create.
 
@@ -83,16 +77,20 @@ This configuration is based on a modification to the connect middleware configur
   }
 ```
 
+#### Adding the middleware using gulp
+
+ADDME
+
 ## Configuration 
 
-In your project's Gruntfile, add a section named `prism`.
-
-### Adding prism configuration.
+### Setting up prism
 
 You can add all the options in the root task options, in a target options, or a mix of both (where the target options will inherit from the root options).
 
 ```js
-  prism: {
+  var prism = require('connect-prism');
+  
+  prism({
     options: {
       mocksPath: './mocks',
       host: 'localhost',
@@ -106,28 +104,6 @@ You can add all the options in the root task options, in a target options, or a 
         context: '/api'
       }
     }
-```
-
-### Inheriting options
-
-### Adding the prism task to the server task
-For the server task, add the prism task before the connect task.
-
-If a target is supplied then only that prism target instanced will be created.
-
-If a target is not supplied then only the root prism options will be used to execute a single prism instance.
-
-```js
-  grunt.registerTask('server', function (target, prismMode) {
-      grunt.task.run([
-          'clean:server',
-          'compass:server',
-          'prism:' + target + ':' + prismMode, /* see mode configuration for more details */
-          'livereload-start',
-          'connect:livereload',
-          'open',
-          'watch'
-      ]);
   });
 ```
 
