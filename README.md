@@ -1,6 +1,6 @@
 # grunt-connect-prism
 
-> Record, playback, and proxy HTTP traffic as middleware for the grunt-contrib-connect plugin.
+> Record, mock, and proxy HTTP traffic as middleware for the grunt-contrib-connect plugin.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1` and the [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect) `~0.7.1` plugin to already be installed.
