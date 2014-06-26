@@ -1,6 +1,6 @@
 {
   "name": "connect-prism",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Record, mock, and proxy HTTP traffic.",
   "main": "Gruntfile.js",
   "scripts": {
