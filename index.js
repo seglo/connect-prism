@@ -1,2 +1,6 @@
-// TODO: supply alias for prism initialization as well as middleware eventhandler
-module.exports = require('./lib/prism');
+'use strict';
+
+module.exports = {
+  create: require('./lib/prism'),
+  middleware: require('./lib/events').handleRequest
+};

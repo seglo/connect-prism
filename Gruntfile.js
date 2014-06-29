@@ -1,6 +1,6 @@
 'use strict';
 
-var prism = require('./lib/prism');
+var prism = require('./index');
 
 module.exports = function(grunt) {
 
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
           port: 9000,
           hostname: 'localhost',
           middleware: function(connect, options) {
-            return [require("./lib/events.js").handleRequest];
+            return [prism.middleware];
           }
         }
       }
@@ -135,13 +135,13 @@ module.exports = function(grunt) {
   grunt.registerTask('test', function() {
     grunt.task.run(['clean', 'jshint']);
 
-    prism(options, 'proxyTest');
-    prism(options, 'recordTest');
-    prism(options, 'jsonRecordTest');
-    prism(options, 'mockTest');
-    prism(options, 'jsonMockTest');
-    prism(options, 'modeOverrideTest', 'record');
-    prism(options, 'inheritRootOptionsTest');
+    prism.create(options, 'proxyTest');
+    prism.create(options, 'recordTest');
+    prism.create(options, 'jsonRecordTest');
+    prism.create(options, 'mockTest');
+    prism.create(options, 'jsonMockTest');
+    prism.create(options, 'modeOverrideTest', 'record');
+    prism.create(options, 'inheritRootOptionsTest');
 
     grunt.task.run(['connect:server', 'mochaTest']);
   });
