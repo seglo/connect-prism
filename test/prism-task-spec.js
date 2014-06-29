@@ -14,8 +14,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 7 proxies', function() {
-      assert.equal(7, proxies.proxies().length);
+    it('should have initialized 5 proxies', function() {
+      assert.equal(5, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -31,14 +31,16 @@ describe('Prism', function() {
       assert.equal(proxy.config.changeOrigin, false);
     });
 
-    it('mode can be overridden', function() {
+    // TODO: remove this if it's only applicable to grunt-connect-prism
+    /*it('mode can be overridden', function() {
       var proxy = proxies.getProxy('/proxyOverrideRequest');
 
       assert.equal(_.isUndefined(proxy), false);
       assert.equal(proxy.config.mode, 'record');
-    });
+    });*/
 
-    it('can inherit config from root task options', function() {
+    // TODO: remove this if it's only applicable to grunt-connect-prism
+    /*it('can inherit config from root task options', function() {
       var proxy = proxies.getProxy('/defaultContext');
 
       assert.equal(_.isUndefined(proxy), false);
@@ -49,7 +51,7 @@ describe('Prism', function() {
       assert.equal(proxy.config.port, 8090);
       assert.equal(proxy.config.https, false);
       assert.equal(proxy.config.changeOrigin, false);
-    });
+    });*/
   });
 
   describe('proxy modes', function() {

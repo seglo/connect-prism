@@ -44,82 +44,7 @@ module.exports = function(grunt) {
         src: ['test/**/*.js']
       }
     }
-
   });
-
-  var options = {
-    options: {
-      mode: 'proxy',
-      mocksPath: './mocks',
-      context: '/defaultContext',
-      host: 'localhost',
-      port: 8090,
-      https: false
-    },
-    proxyTest: {
-      options: {
-        mode: 'proxy',
-        mocksPath: './mocks',
-        context: '/proxyRequest',
-        host: 'localhost',
-        port: 8090,
-        https: false
-      }
-    },
-    recordTest: {
-      options: {
-        mode: 'record',
-        mocksPath: './mocks',
-        context: '/recordRequest',
-        host: 'localhost',
-        port: 8090,
-        https: false
-      }
-    },
-    jsonRecordTest: {
-      options: {
-        mode: 'record',
-        mocksPath: './mocks',
-        context: '/jsonRecordRequest',
-        host: 'localhost',
-        port: 8090,
-        https: false
-      }
-    },
-    mockTest: {
-      options: {
-        mode: 'mock',
-        mocksPath: './mocksToRead',
-        context: '/readRequest',
-        host: 'localhost',
-        port: 8090,
-        https: false
-      }
-    },
-    jsonMockTest: {
-      options: {
-        mode: 'mock',
-        mocksPath: './mocksToRead',
-        context: '/jsonMockRequest',
-        host: 'localhost',
-        port: 8090,
-        https: false
-      }
-    },
-    modeOverrideTest: {
-      options: {
-        mode: 'proxy',
-        mocksPath: './mocks',
-        context: '/proxyOverrideRequest',
-        host: 'localhost',
-        port: 8090,
-        https: false
-      }
-    },
-    inheritRootOptionsTest: {
-      options: {}
-    }
-  };
 
   // Actually load this plugin's task(s).
   grunt.loadTasks('tasks');
@@ -133,17 +58,57 @@ module.exports = function(grunt) {
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
   grunt.registerTask('test', function() {
-    grunt.task.run(['clean', 'jshint']);
+    grunt.task.run(['clean', 'jshint', 'connect:server']);
 
-    prism.create(options, 'proxyTest');
-    prism.create(options, 'recordTest');
-    prism.create(options, 'jsonRecordTest');
-    prism.create(options, 'mockTest');
-    prism.create(options, 'jsonMockTest');
-    prism.create(options, 'modeOverrideTest', 'record');
-    prism.create(options, 'inheritRootOptionsTest');
+    var proxyTest = {
+      name: 'proxyTest',
+      mode: 'proxy',
+      context: '/proxyRequest',
+      host: 'localhost',
+      port: 8090
+    };
 
-    grunt.task.run(['connect:server', 'mochaTest']);
+    var recordTest = {
+      name: 'recordTest',
+      mode: 'record',
+      context: '/recordRequest',
+      host: 'localhost',
+      port: 8090
+    };
+
+    var jsonRecordTest = {
+      name: 'jsonRecordTest',
+      mode: 'record',
+      context: '/jsonRecordRequest',
+      host: 'localhost',
+      port: 8090
+    };
+
+    var mockTest = {
+      name: 'mockTest',
+      mode: 'mock',
+      mocksPath: './mocksToRead',
+      context: '/readRequest',
+      host: 'localhost',
+      port: 8090
+    };
+
+    var jsonMockTest = {
+      name: 'jsonMockTest',
+      mode: 'mock',
+      mocksPath: './mocksToRead',
+      context: '/jsonMockRequest',
+      host: 'localhost',
+      port: 8090
+    };
+
+    prism.create(proxyTest);
+    prism.create(recordTest);
+    prism.create(jsonRecordTest);
+    prism.create(mockTest);
+    prism.create(jsonMockTest);
+
+    grunt.task.run(['mochaTest']);
   });
 
   // By default, lint and run all tests.
