@@ -202,14 +202,46 @@ describe('Prism', function() {
     it('can handle a 404 in mock mode', function(done) {
       var request = http.request({
         host: 'localhost',
-        path: '/readRequestThatDoesntExist',
+        path: '/readRequest/thatDoesntExist',
         port: 9000
       }, function(res) {
         onEnd(res, function(data) {
           assert.equal(res.statusCode, 404);
-          assert.equal(res.req.path, '/readRequestThatDoesntExist');
-          assert.equal(data, 'No mock exists for /readRequestThatDoesntExist');
+          assert.equal(res.req.path, '/readRequest/thatDoesntExist');
+          assert.equal(data, 'No mock exists for /readRequest/thatDoesntExist - (mocksToRead/mockTest/9ae58033c4010180f34fcabb83cd463466b8874c.json)');
           done();
+        });
+      });
+      request.end();
+    });
+
+    it('will create a mock for a 404', function(done) {
+      var readRequestThatDoesntExist = '/readRequest/thatDoesntExist';
+      var proxy = proxies.getProxy(readRequestThatDoesntExist);
+
+      var pathToResponse = utils.getMockPath(proxy, readRequestThatDoesntExist) + '.404';
+      if (fs.existsSync(pathToResponse)) {
+        fs.unlinkSync(pathToResponse);
+      }
+
+      var request = http.request({
+        host: 'localhost',
+        path: '/readRequest/thatDoesntExist',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+          waitForFile(pathToResponse, function(pathToResponse) {
+            var recordedResponse = fs.readFileSync(pathToResponse).toString();
+            var deserializedResponse = JSON.parse(recordedResponse);
+
+            assert.equal(_.isUndefined(deserializedResponse), false);
+            assert.equal(deserializedResponse.requestUrl, '/readRequest/thatDoesntExist');
+            assert.equal(deserializedResponse.contentType, 'application/javascript');
+            assert.equal(deserializedResponse.statusCode, 200);
+            assert.deepEqual(deserializedResponse.data, {});
+
+            done();
+          });
         });
       });
       request.end();
