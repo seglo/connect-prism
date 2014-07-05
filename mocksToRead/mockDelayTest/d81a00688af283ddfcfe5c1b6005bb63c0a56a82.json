@@ -1,0 +1,6 @@
+{
+  "requestUrl": "/mockDelayRequest",
+  "contentType": "text/plain",
+  "statusCode": 200,
+  "data": "a server response"
+}

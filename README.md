@@ -174,6 +174,8 @@ Default: 0
 
 Values: A number in milliseconds | `'auto'` | `'fast'` | `'slow'`
 
+Delay only works `'mock'` mode.
+
 This option allows you to simulate a delay when returning a mock response to the user.  Sometimes it's handy to simulate a delay because this will give you a better impression of how the user experience of your app will be when fully integrated with a backend server.
 
 You can configure an exact delay in milliseconds or one of the precreated options which returns a random delay in a certain range.

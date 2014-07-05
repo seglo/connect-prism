@@ -93,6 +93,16 @@ module.exports = function(grunt) {
       port: 8090
     };
 
+    var mockDelayTest = {
+      name: 'mockDelayTest',
+      mode: 'mock',
+      mocksPath: './mocksToRead',
+      context: '/mockDelayRequest',
+      host: 'localhost',
+      port: 8090,
+      delay: 50
+    };
+
     var jsonMockTest = {
       name: 'jsonMockTest',
       mode: 'mock',
@@ -118,6 +128,7 @@ module.exports = function(grunt) {
     prism.create(recordTest);
     prism.create(jsonRecordTest);
     prism.create(mockTest);
+    prism.create(mockDelayTest);
     prism.create(jsonMockTest);
     prism.create(rewriteTest);
 

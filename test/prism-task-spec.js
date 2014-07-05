@@ -14,8 +14,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 6 proxies', function() {
-      assert.equal(6, proxies.proxies().length);
+    it('should have initialized 7 proxies', function() {
+      assert.equal(7, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -32,45 +32,47 @@ describe('Prism', function() {
     });
   });
 
-  describe('proxy modes', function() {
-    function onEnd(res, callback) {
-      var data = '';
-      res.on('data', function(chunk) {
-        data += chunk;
-      });
-      res.on('end', function() {
-        callback(data);
-      });
+  function onEnd(res, callback) {
+    var data = '';
+    res.on('data', function(chunk) {
+      data += chunk;
+    });
+    res.on('end', function() {
+      callback(data);
+    });
+  }
+
+  function waitForFile(filePath, callback) {
+    if (fs.statSync(filePath).size === 0) {
+      setTimeout(waitForFile, 0, filePath, callback);
+      return;
     }
 
-    function waitForFile(filePath, callback) {
-      if (fs.statSync(filePath).size === 0) {
-        setTimeout(waitForFile, 0, filePath, callback);
-        return;
-      }
+    callback(filePath);
+  }
 
-      callback(filePath);
+  var testServer = http.createServer(function(req, res) {
+    if (req.url === '/jsonRecordRequest') {
+      res.writeHead(200, {
+        'Content-Type': 'application/json'
+      });
+      res.write('{"text": "a server response"}');
+    } else if (req.url === '/rewrittenRequest') {
+      res.writeHead(200, {
+        'Content-Type': 'text/plain'
+      });
+      res.write('a rewritten server response');
+    } else {
+      res.writeHead(200, {
+        'Content-Type': 'text/plain'
+      });
+      res.write('a server response');
     }
+    res.end();
+  }).listen(8090);
 
-    var testServer = http.createServer(function(req, res) {
-      if (req.url === '/jsonRecordRequest') {
-        res.writeHead(200, {
-          'Content-Type': 'application/json'
-        });
-        res.write('{"text": "a server response"}');
-      } else if (req.url === '/rewrittenRequest') {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        res.write('a rewritten server response');
-      } else {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        });
-        res.write('a server response');
-      }
-      res.end();
-    }).listen(8090);
+
+  describe('proxy mode', function() {
 
     it('can proxy a response', function(done) {
       var request = http.request({
@@ -85,6 +87,10 @@ describe('Prism', function() {
       });
       request.end();
     });
+
+  });
+
+  describe('record mode', function() {
 
     it('can record a response', function(done) {
       var recordRequest = '/recordRequest';
@@ -152,6 +158,10 @@ describe('Prism', function() {
       request.end();
     });
 
+  });
+
+  describe('mock mode', function() {
+
     it('can mock a response', function(done) {
       var request = http.request({
         host: 'localhost',
@@ -165,6 +175,24 @@ describe('Prism', function() {
           done();
         });
       });
+      request.end();
+    });
+
+    it('can delay a mock response by approximately 50ms', function(done) {
+      var startTime = Date.now();
+      var request = http.request({
+        host: 'localhost',
+        path: '/mockDelayRequest',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+          var delta = Date.now() - startTime;
+          assert.equal(delta > 40, true);
+          assert.equal(delta < 60, true);
+          done();
+        });
+      });
+
       request.end();
     });
 
