@@ -102,11 +102,24 @@ module.exports = function(grunt) {
       port: 8090
     };
 
+    var rewriteTest = {
+      name: 'rewriteTest',
+      mode: 'proxy',
+      mocksPath: './mocksToRead',
+      context: '/rewriteRequest',
+      host: 'localhost',
+      port: 8090,
+      rewrite: {
+        '^/rewriteRequest': '/rewrittenRequest',
+      }
+    };
+
     prism.create(proxyTest);
     prism.create(recordTest);
     prism.create(jsonRecordTest);
     prism.create(mockTest);
     prism.create(jsonMockTest);
+    prism.create(rewriteTest);
 
     grunt.task.run(['mochaTest']);
   });

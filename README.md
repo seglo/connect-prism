@@ -106,7 +106,7 @@ To initialize a prism instance call prism.create.  You can call prism.create mor
 
 ### Options
 
-#### mode:
+#### mode
 
 Type: `String`
 
@@ -118,7 +118,7 @@ By setting a mode you create an explicit declaration that the context you're pro
 
 i.e. `grunt prism:server:mock`
 
-#### mocksPath:
+#### mocksPath
 
 Type: `String`
 
@@ -126,7 +126,7 @@ Default: `'./mocks'`
 
 Path to the root directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it.  If prism is executed with a target then recorded and mocked responses will be read from `'./mocks/targetName'`.  If no target is defined then only the default prism options will be used.
 
-#### context:
+#### context
 
 Type: `String`
 
@@ -134,7 +134,7 @@ Default: n/a
 
 The starting context of your API that you are proxying.  This should be from the root of your webserver.  All requests that start with this context string will be used.
 
-#### host:
+#### host
 
 Type: `String`
 
@@ -142,7 +142,7 @@ Default: n/a
 
 The server name or IP of the API that you are proxying.
 
-#### port:
+#### port
 
 Type: `Integer`
 
@@ -150,7 +150,7 @@ Default: n/a
 
 The port number of the API that you are proxying.
 
-#### https:
+#### https
 
 Type: `Boolean`
 
@@ -158,7 +158,7 @@ Default: false
 
 The http scheme of the API you are proxying.  `true` === `https`, `false` === `http`
 
-#### changeOrigin:
+#### changeOrigin
 
 Type: `Boolean`
 
@@ -166,7 +166,7 @@ Default: false
 
 Whether to change the origin on the request to the proxy, or keep the original origin.
 
-#### delay:
+#### delay
 
 Type: `String` or `Integer`
 
@@ -184,8 +184,22 @@ You can configure an exact delay in milliseconds or one of the precreated option
 
 Thanks again to [Miloš Mošovský](https://github.com/MilosMosovsky) for this feature.
 
+#### rewrite
+
+Type: `Object`
+
+Default: `{}`
+
+Add rewrite rules that prism will apply to all requests.  This functionality was copied from [grunt-connect-proxy and works the exact same way](https://github.com/drewzboto/grunt-connect-proxy#optionsrewrite).  You can configure a list of rewrite rules with an object.
+
+```js
+  {
+    '^/removingcontext': '',
+    '^/changingcontext': '/anothercontext'
+  }
+```
+
 ## TODO Wishlist
-* URL rewrite support
 * mockrecord mode which will mock responses and attempt to record responses that don't exist yet.
 
 ## Release History

@@ -14,8 +14,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 5 proxies', function() {
-      assert.equal(5, proxies.proxies().length);
+    it('should have initialized 6 proxies', function() {
+      assert.equal(6, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -30,28 +30,6 @@ describe('Prism', function() {
       assert.equal(proxy.config.https, false);
       assert.equal(proxy.config.changeOrigin, false);
     });
-
-    // TODO: remove this if it's only applicable to grunt-connect-prism
-    /*it('mode can be overridden', function() {
-      var proxy = proxies.getProxy('/proxyOverrideRequest');
-
-      assert.equal(_.isUndefined(proxy), false);
-      assert.equal(proxy.config.mode, 'record');
-    });*/
-
-    // TODO: remove this if it's only applicable to grunt-connect-prism
-    /*it('can inherit config from root task options', function() {
-      var proxy = proxies.getProxy('/defaultContext');
-
-      assert.equal(_.isUndefined(proxy), false);
-      assert.equal(proxy.config.mode, 'proxy');
-      assert.equal(proxy.config.mocksPath, './mocks');
-      assert.equal(proxy.config.context, '/defaultContext');
-      assert.equal(proxy.config.host, 'localhost');
-      assert.equal(proxy.config.port, 8090);
-      assert.equal(proxy.config.https, false);
-      assert.equal(proxy.config.changeOrigin, false);
-    });*/
   });
 
   describe('proxy modes', function() {
@@ -80,14 +58,18 @@ describe('Prism', function() {
           'Content-Type': 'application/json'
         });
         res.write('{"text": "a server response"}');
-        res.end();
+      } else if (req.url === '/rewrittenRequest') {
+        res.writeHead(200, {
+          'Content-Type': 'text/plain'
+        });
+        res.write('a rewritten server response');
       } else {
         res.writeHead(200, {
           'Content-Type': 'text/plain'
         });
         res.write('a server response');
-        res.end();
       }
+      res.end();
     }).listen(8090);
 
     it('can proxy a response', function(done) {
@@ -244,6 +226,20 @@ describe('Prism', function() {
 
             done();
           });
+        });
+      });
+      request.end();
+    });
+
+    it('can rewrite a request', function(done) {
+      var request = http.request({
+        host: 'localhost',
+        path: '/rewriteRequest',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+          assert.equal(data, 'a rewritten server response');
+          done();
         });
       });
       request.end();
