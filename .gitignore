@@ -3,3 +3,4 @@ npm-debug.log
 tmp
 mocks/*
 mocksToRead/**/*.404
+mocksToRead/mockRecordTest/70576236d1814bb5e00ae4df080f4bc4ddfb4c49.json
