@@ -1,0 +1,6 @@
+{
+  "requestUrl": "/mockRecordTest/noMockExists",
+  "contentType": "text/plain",
+  "statusCode": 200,
+  "data": "a server response"
+}

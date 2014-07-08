@@ -14,8 +14,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 7 proxies', function() {
-      assert.equal(7, proxies.proxies().length);
+    it('should have initialized 8 proxies', function() {
+      assert.equal(8, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -32,6 +32,7 @@ describe('Prism', function() {
     });
   });
 
+  // integration test helpers
   function onEnd(res, callback) {
     var data = '';
     res.on('data', function(chunk) {
@@ -268,6 +269,55 @@ describe('Prism', function() {
         onEnd(res, function(data) {
           assert.equal(data, 'a rewritten server response');
           done();
+        });
+      });
+      request.end();
+    });
+  });
+
+  describe('mockrecord mode', function() {
+    it('can mock a response', function(done) {
+      var request = http.request({
+        host: 'localhost',
+        path: '/mockRecordTest',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+
+          assert.equal(res.req.path, '/mockRecordTest');
+          done();
+        });
+      });
+      request.end();
+    });
+
+    it('can record a new response', function(done) {
+      var recordRequest = '/mockRecordTest/noMockExists';
+      var proxy = proxies.getProxy(recordRequest);
+
+      assert.equal(_.isUndefined(proxy), false);
+
+      var pathToResponse = utils.getMockPath(proxy, recordRequest);
+      if (fs.existsSync(pathToResponse)) {
+        fs.unlinkSync(pathToResponse);
+      }
+
+      var request = http.request({
+        host: 'localhost',
+        path: '/mockRecordTest/noMockExists',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+          waitForFile(pathToResponse, function(pathToResponse) {
+
+            var recordedResponse = fs.readFileSync(pathToResponse).toString();
+            var deserializedResponse = JSON.parse(recordedResponse);
+
+            assert.equal(_.isUndefined(deserializedResponse), false);
+            assert.equal(deserializedResponse.requestUrl, '/mockRecordTest/noMockExists');
+
+            done();
+          });
         });
       });
       request.end();

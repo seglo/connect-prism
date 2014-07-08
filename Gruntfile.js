@@ -124,6 +124,15 @@ module.exports = function(grunt) {
       }
     };
 
+    var mockRecordTest = {
+      name: 'mockRecordTest',
+      mode: 'mockrecord',
+      mocksPath: './mocksToRead',
+      context: '/mockRecordTest',
+      host: 'localhost',
+      port: 8090
+    };
+
     prism.create(proxyTest);
     prism.create(recordTest);
     prism.create(jsonRecordTest);
@@ -131,6 +140,7 @@ module.exports = function(grunt) {
     prism.create(mockDelayTest);
     prism.create(jsonMockTest);
     prism.create(rewriteTest);
+    prism.create(mockRecordTest);
 
     grunt.task.run(['mochaTest']);
   });
