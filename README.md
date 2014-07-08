@@ -22,7 +22,7 @@ Prism works by adding a custom connect middleware to a the [connect](https://www
 
 ### Modes
 
-There are currently 3 supported modes of operation.
+There are currently 4 supported modes of operation.
 
 #### Record
 
@@ -48,6 +48,10 @@ Example mock generated:
 The mock (read) mode will listen for requests to a certain endpoint.  When a request matches an endpoint it will attempt to find a previously recorded response in the directory you defined mocks to be saved in (./mocks by default).  
 
 If a matching response is not found then prism will return a 404.  Prism will also create a mock during a 404.  This is useful when you want to mock API endpoints that may not exist yet.  To avoid having the subsequent request from returning the generated empty mock, the file has a .404 extension.  To use the mock, populate it with the appropriate values and remove the .404 extension.  This feature was contributed by [Miloš Mošovský](https://github.com/MilosMosovsky).
+
+#### Mock & Record
+
+As its name implies this operation will mock and record.  This mode will first attempt to load a mock if one exists.  If a mock does not exist it will then proxy the request and record the response instead of returning a 404.
 
 #### Proxy
 
@@ -112,7 +116,7 @@ Type: `String`
 
 Default: `'proxy'`
 
-Values: `'record'` | `'read'` | `'proxy'`
+Values: `'record'` | `'mock'` | `'proxy'` | `'mockrecord'`
 
 By setting a mode you create an explicit declaration that the context you're proxying will always be in the configured mode.  You can optionally override the mode of all the proxies for a target by passing in a 3rd parameter to the prism grunt task prism:[target]:[mode]
 
@@ -211,3 +215,4 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
 * 0.2.1 Fixed record mode and tests so we don't release broken again!
 * 0.2.2 Support change origin.
 * 0.3.0 Forked from grunt-connect-prism to core library.  Added delay and mock/404 feature from [Miloš Mošovský](https://github.com/MilosMosovsky).
+* 0.4.0 Added rewrite functionality.  'mockrecord' mode.  More non-verbose logging for mock and recording operations.
