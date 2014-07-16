@@ -68,6 +68,15 @@ module.exports = function(grunt) {
       port: 8090
     };
 
+    var proxyDelayTest = {
+      name: 'proxyDelayTest',
+      mode: 'proxy',
+      context: '/proxyDelayRequest',
+      host: 'localhost',
+      port: 8090,
+      delay: 50
+    };
+
     var recordTest = {
       name: 'recordTest',
       mode: 'record',
@@ -134,6 +143,7 @@ module.exports = function(grunt) {
     };
 
     prism.create(proxyTest);
+    prism.create(proxyDelayTest);
     prism.create(recordTest);
     prism.create(jsonRecordTest);
     prism.create(mockTest);

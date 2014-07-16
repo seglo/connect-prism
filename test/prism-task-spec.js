@@ -14,8 +14,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 8 proxies', function() {
-      assert.equal(8, proxies.proxies().length);
+    it('should have initialized 9 proxies', function() {
+      assert.equal(9, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -86,6 +86,24 @@ describe('Prism', function() {
           done();
         });
       });
+      request.end();
+    });
+
+    it('can delay a proxied response by approximately 50ms', function(done) {
+      var startTime = Date.now();
+      var request = http.request({
+        host: 'localhost',
+        path: '/proxyDelayRequest',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+          var delta = Date.now() - startTime;
+          assert.equal(delta > 40, true);
+          assert.equal(delta < 60, true);
+          done();
+        });
+      });
+
       request.end();
     });
 
