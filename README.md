@@ -178,7 +178,7 @@ Default: 0
 
 Values: A number in milliseconds | `'auto'` | `'fast'` | `'slow'`
 
-Delay only works `'mock'` mode.
+Delay will work with all modes.
 
 This option allows you to simulate a delay when returning a mock response to the user.  Sometimes it's handy to simulate a delay because this will give you a better impression of how the user experience of your app will be when fully integrated with a backend server.
 
@@ -216,3 +216,4 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
 * 0.2.2 Support change origin.
 * 0.3.0 Forked from grunt-connect-prism to core library.  Added delay and mock/404 feature from [Miloš Mošovský](https://github.com/MilosMosovsky).
 * 0.4.0 Added rewrite functionality.  'mockrecord' mode.  More non-verbose logging for mock and recording operations.
+* 0.4.1 Fix for delay auto > 0 bug and support delay in proxy mode by [generalov](https://github.com/generalov).  Fix for invalid SSL cert bug by [Josh Miller](https://github.com/velveteer).  Thanks much <3.  Made non-verbose logging more consistent.  Fixed broken verbose logging.
