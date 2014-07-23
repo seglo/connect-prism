@@ -209,7 +209,7 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
 * mockrecord mode which will mock responses and attempt to record responses that don't exist yet.
 
 ## Release History
-* 0.1.0 Initial release
+* 0.1.0 Initial release.
 * 0.1.1 Stop recording all response headers.  Only capture content-type.
 * 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
 * 0.2.1 Fixed record mode and tests so we don't release broken again!
@@ -217,3 +217,4 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
 * 0.3.0 Forked from grunt-connect-prism to core library.  Added delay and mock/404 feature from [Miloš Mošovský](https://github.com/MilosMosovsky).
 * 0.4.0 Added rewrite functionality.  'mockrecord' mode.  More non-verbose logging for mock and recording operations.
 * 0.4.1 Fix for delay auto > 0 bug and support delay in proxy mode by [generalov](https://github.com/generalov).  Fix for invalid SSL cert bug by [Josh Miller](https://github.com/velveteer).  Thanks much <3.  Made non-verbose logging more consistent.  Fixed broken verbose logging.
+* 0.4.2 Fix for recording response from a rewrite rule outside of the context of a prism configuration from [Mike Kibbel](https://github.com/skibblenybbles).
