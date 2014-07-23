@@ -142,6 +142,17 @@ module.exports = function(grunt) {
       port: 8090
     };
 
+    var rewriteAndRecordTest = {
+      name: 'rewriteAndRecordTest',
+      mode: 'record',
+      context: '/rewriteAndRecordTest',
+      host: 'localhost',
+      port: 8090,
+      rewrite: {
+        '^/rewriteAndRecordTest/foo': '/bar',
+      }
+    };
+
     prism.create(proxyTest);
     prism.create(proxyDelayTest);
     prism.create(recordTest);
@@ -151,6 +162,7 @@ module.exports = function(grunt) {
     prism.create(jsonMockTest);
     prism.create(rewriteTest);
     prism.create(mockRecordTest);
+    prism.create(rewriteAndRecordTest);
 
     grunt.task.run(['mochaTest']);
   });

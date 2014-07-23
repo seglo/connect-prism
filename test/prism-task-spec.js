@@ -14,8 +14,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 9 proxies', function() {
-      assert.equal(9, proxies.proxies().length);
+    it('should have initialized 10 proxies', function() {
+      assert.equal(10, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -169,6 +169,39 @@ describe('Prism', function() {
 
             assert.equal(_.isUndefined(deserializedResponse), false);
             assert.equal(deserializedResponse.data.text, 'a server response');
+
+            done();
+          });
+        });
+      });
+      request.end();
+    });
+
+    it('can record a response of a rewritten request outside the prism context', function(done) {
+      var recordRequest = '/rewriteAndRecordTest/foo';
+      var rewrittenRecordRequest = '/bar';
+      var proxy = proxies.getProxy(recordRequest);
+
+      assert.equal(_.isUndefined(proxy), false);
+
+      var pathToResponse = utils.getMockPath(proxy, rewrittenRecordRequest);
+      if (fs.existsSync(pathToResponse)) {
+        fs.unlinkSync(pathToResponse);
+      }
+
+      var request = http.request({
+        host: 'localhost',
+        path: '/rewriteAndRecordTest/foo',
+        port: 9000
+      }, function(res) {
+        onEnd(res, function(data) {
+          waitForFile(pathToResponse, function(pathToResponse) {
+
+            var recordedResponse = fs.readFileSync(pathToResponse).toString();
+            var deserializedResponse = JSON.parse(recordedResponse);
+
+            assert.equal(_.isUndefined(deserializedResponse), false);
+            assert.equal(deserializedResponse.requestUrl, '/bar');
 
             done();
           });
