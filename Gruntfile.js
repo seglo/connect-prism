@@ -153,6 +153,14 @@ module.exports = function(grunt) {
       }
     };
 
+    var handleCompressedResponse = {
+      name: 'compressedResponse',
+      mode: 'record',
+      context: '/compressedResponse',
+      host: 'localhost',
+      port: 8091 // created a 2nd connect instance that supports compression
+    };
+
     prism.create(proxyTest);
     prism.create(proxyDelayTest);
     prism.create(recordTest);
@@ -163,6 +171,7 @@ module.exports = function(grunt) {
     prism.create(rewriteTest);
     prism.create(mockRecordTest);
     prism.create(rewriteAndRecordTest);
+    prism.create(handleCompressedResponse);
 
     grunt.task.run(['mochaTest']);
   });

@@ -15,10 +15,12 @@
     "email": "seglo@randonom.com",
     "url": "http://randonom.com/blog/"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "https://github.com/seglo/connect-prism/blob/master/LICENSE-MIT"
-  }],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/seglo/connect-prism/blob/master/LICENSE-MIT"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/seglo/connect-prism/issues"
   },
@@ -26,10 +28,12 @@
     "node": ">= 0.8.0"
   },
   "devDependencies": {
-    "grunt-mocha-test": "~0.10.2",
+    "compression": "^1.0.9",
+    "connect": "^3.1.0",
+    "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-connect": "~0.7.1",
     "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-clean": "~0.5.0"
+    "grunt-mocha-test": "~0.10.2"
   },
   "dependencies": {
     "grunt": "~0.4.5",

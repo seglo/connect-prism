@@ -3,6 +3,7 @@
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
+var connect = require('connect');
 
 var _ = require('lodash');
 var assert = require("assert");
@@ -14,8 +15,8 @@ var requestTimeout = 5000; // 5 seconds
 
 describe('Prism', function() {
   describe('task initialization', function() {
-    it('should have initialized 10 proxies', function() {
-      assert.equal(10, proxies.proxies().length);
+    it('should have initialized 11 proxies', function() {
+      assert.equal(11, proxies.proxies().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -44,7 +45,7 @@ describe('Prism', function() {
   }
 
   function waitForFile(filePath, callback) {
-    if (fs.statSync(filePath).size === 0) {
+    if (!fs.existsSync(filePath) || fs.statSync(filePath).size === 0) {
       setTimeout(waitForFile, 0, filePath, callback);
       return;
     }
@@ -72,6 +73,17 @@ describe('Prism', function() {
     res.end();
   }).listen(8090);
 
+  var testCompressedServer = http.createServer(
+    connect()
+    .use(require('compression')())
+    .use(function(req, res) {
+      res.writeHead(200, {
+        'Content-Type': 'text/plain'
+      });
+      res.write('a decompressed server response');
+      res.end();
+    })
+  ).listen(8091);
 
   describe('proxy mode', function() {
 
@@ -202,6 +214,41 @@ describe('Prism', function() {
 
             assert.equal(_.isUndefined(deserializedResponse), false);
             assert.equal(deserializedResponse.requestUrl, '/bar');
+
+            done();
+          });
+        });
+      });
+      request.end();
+    });
+
+    it('can record a compressed response', function(done) {
+      var recordRequest = '/compressedResponse';
+      var proxy = proxies.getProxy(recordRequest);
+
+      assert.equal(_.isUndefined(proxy), false);
+
+      var pathToResponse = utils.getMockPath(proxy, recordRequest);
+      if (fs.existsSync(pathToResponse)) {
+        fs.unlinkSync(pathToResponse);
+      }
+
+      var request = http.request({
+        host: 'localhost',
+        path: '/compressedResponse',
+        port: 9000,
+        headers: {
+          'Accept-Encoding': 'gzip, deflate'
+        }
+      }, function(res) {
+        onEnd(res, function(data) {
+          waitForFile(pathToResponse, function(pathToResponse) {
+
+            var recordedResponse = fs.readFileSync(pathToResponse).toString();
+            var deserializedResponse = JSON.parse(recordedResponse);
+
+            assert.equal(_.isUndefined(deserializedResponse), false);
+            assert.equal(deserializedResponse.data, 'a decompressed server response');
 
             done();
           });
