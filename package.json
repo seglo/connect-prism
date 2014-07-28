@@ -1,6 +1,6 @@
 {
   "name": "connect-prism",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Record, mock, and proxy HTTP traffic.",
   "main": "index.js",
   "scripts": {
@@ -15,12 +15,10 @@
     "email": "seglo@randonom.com",
     "url": "http://randonom.com/blog/"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/seglo/connect-prism/blob/master/LICENSE-MIT"
-    }
-  ],
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://github.com/seglo/connect-prism/blob/master/LICENSE-MIT"
+  }],
   "bugs": {
     "url": "https://github.com/seglo/connect-prism/issues"
   },

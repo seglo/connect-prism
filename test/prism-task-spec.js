@@ -222,7 +222,15 @@ describe('Prism', function() {
       request.end();
     });
 
-    it('can record a compressed response', function(done) {
+    it('can record a deflate compressed response', function(done) {
+      decompressTest('deflate', done);
+    });
+
+    it('can record a gzip compressed response', function(done) {
+      decompressTest('gzip', done);
+    });
+
+    function decompressTest(encoding, done) {
       var recordRequest = '/compressedResponse';
       var proxy = proxies.getProxy(recordRequest);
 
@@ -238,7 +246,7 @@ describe('Prism', function() {
         path: '/compressedResponse',
         port: 9000,
         headers: {
-          'Accept-Encoding': 'gzip, deflate'
+          'Accept-Encoding': encoding
         }
       }, function(res) {
         onEnd(res, function(data) {
@@ -254,8 +262,8 @@ describe('Prism', function() {
           });
         });
       });
-      request.end();
-    });
+      request.end();  
+    }
 
   });
 
