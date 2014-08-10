@@ -1,6 +1,7 @@
 'use strict';
 
 var prism = require('./index');
+var path = require('path');
 
 module.exports = function(grunt) {
 
@@ -23,6 +24,15 @@ module.exports = function(grunt) {
       tests: ['tmp']
     },
 
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: ['test/**/*.js']
+      }
+    },
+
     // Stub connect server to add prism middleware to.
     connect: {
       server: {
@@ -36,14 +46,20 @@ module.exports = function(grunt) {
       }
     },
 
-    mochaTest: {
-      test: {
+    express: {
+      server: {
         options: {
-          reporter: 'spec'
-        },
-        src: ['test/**/*.js']
+          port: 8090,
+          server: path.resolve('./test/test-server.js')
+        }
+      },
+      serverCompression: {
+        options: {
+          port: 8091,
+          server: path.resolve('./test/test-server-compression.js')
+        }
       }
-    }
+    },
   });
 
   // Actually load this plugin's task(s).
@@ -54,127 +70,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-express');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', function() {
-    grunt.task.run(['clean', 'jshint', 'connect:server']);
-
-    var proxyTest = {
-      name: 'proxyTest',
-      mode: 'proxy',
-      context: '/proxyRequest',
-      host: 'localhost',
-      port: 8090
-    };
-
-    var proxyDelayTest = {
-      name: 'proxyDelayTest',
-      mode: 'proxy',
-      context: '/proxyDelayRequest',
-      host: 'localhost',
-      port: 8090,
-      delay: 50
-    };
-
-    var recordTest = {
-      name: 'recordTest',
-      mode: 'record',
-      context: '/recordRequest',
-      host: 'localhost',
-      port: 8090
-    };
-
-    var jsonRecordTest = {
-      name: 'jsonRecordTest',
-      mode: 'record',
-      context: '/jsonRecordRequest',
-      host: 'localhost',
-      port: 8090
-    };
-
-    var mockTest = {
-      name: 'mockTest',
-      mode: 'mock',
-      mocksPath: './mocksToRead',
-      context: '/readRequest',
-      host: 'localhost',
-      port: 8090
-    };
-
-    var mockDelayTest = {
-      name: 'mockDelayTest',
-      mode: 'mock',
-      mocksPath: './mocksToRead',
-      context: '/mockDelayRequest',
-      host: 'localhost',
-      port: 8090,
-      delay: 50
-    };
-
-    var jsonMockTest = {
-      name: 'jsonMockTest',
-      mode: 'mock',
-      mocksPath: './mocksToRead',
-      context: '/jsonMockRequest',
-      host: 'localhost',
-      port: 8090
-    };
-
-    var rewriteTest = {
-      name: 'rewriteTest',
-      mode: 'proxy',
-      mocksPath: './mocksToRead',
-      context: '/rewriteRequest',
-      host: 'localhost',
-      port: 8090,
-      rewrite: {
-        '^/rewriteRequest': '/rewrittenRequest',
-      }
-    };
-
-    var mockRecordTest = {
-      name: 'mockRecordTest',
-      mode: 'mockrecord',
-      mocksPath: './mocksToRead',
-      context: '/mockRecordTest',
-      host: 'localhost',
-      port: 8090
-    };
-
-    var rewriteAndRecordTest = {
-      name: 'rewriteAndRecordTest',
-      mode: 'record',
-      context: '/rewriteAndRecordTest',
-      host: 'localhost',
-      port: 8090,
-      rewrite: {
-        '^/rewriteAndRecordTest/foo': '/bar',
-      }
-    };
-
-    var handleCompressedResponse = {
-      name: 'compressedResponse',
-      mode: 'record',
-      context: '/compressedResponse',
-      host: 'localhost',
-      port: 8091 // created a 2nd connect instance that supports compression
-    };
-
-    prism.create(proxyTest);
-    prism.create(proxyDelayTest);
-    prism.create(recordTest);
-    prism.create(jsonRecordTest);
-    prism.create(mockTest);
-    prism.create(mockDelayTest);
-    prism.create(jsonMockTest);
-    prism.create(rewriteTest);
-    prism.create(mockRecordTest);
-    prism.create(rewriteAndRecordTest);
-    prism.create(handleCompressedResponse);
-
-    grunt.task.run(['mochaTest']);
-  });
+  grunt.registerTask('test', ['clean', 'jshint', 'express:server', 'express:serverCompression', 'connect:server', 'mochaTest']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
