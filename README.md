@@ -1,5 +1,7 @@
 # connect-prism
 
+[![Build Status](https://travis-ci.org/seglo/connect-prism.svg?branch=master)](https://travis-ci.org/seglo/connect-prism)
+
 > Record, mock, and proxy HTTP traffic as middleware for the connect middleware framework.
 
 ## Getting Started
