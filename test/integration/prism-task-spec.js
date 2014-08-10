@@ -3,8 +3,8 @@
 var _ = require('lodash');
 var assert = require('assert');
 
-var proxies = require('../lib/proxies');
-var prism = require('../index');
+var proxies = require('../../lib/proxies');
+var prism = require('../../');
 
 describe('prism', function() {
   afterEach(function() {

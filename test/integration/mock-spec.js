@@ -6,9 +6,9 @@ var connect = require('connect');
 var fs = require('fs');
 var http = require('http');
 
-var prism = require('../index');
-var proxies = require('../lib/proxies');
-var utils = require('../lib/utils');
+var prism = require('../../');
+var proxies = require('../../lib/proxies');
+var utils = require('../../lib/utils');
 var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;

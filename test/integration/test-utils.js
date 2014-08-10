@@ -3,7 +3,7 @@
 var connect = require('connect');
 var fs = require('fs');
 var http = require('http');
-var prism = require('../index');
+var prism = require('../../');
 
 function waitForFile(filePath, callback) {
   if (!fs.existsSync(filePath) || fs.statSync(filePath).size === 0) {

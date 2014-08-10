@@ -50,13 +50,13 @@ module.exports = function(grunt) {
       server: {
         options: {
           port: 8090,
-          server: path.resolve('./test/test-server.js')
+          server: path.resolve('./test/integration/test-server.js')
         }
       },
       serverCompression: {
         options: {
           port: 8091,
-          server: path.resolve('./test/test-server-compression.js')
+          server: path.resolve('./test/integration/test-server-compression.js')
         }
       }
     },

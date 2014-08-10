@@ -4,8 +4,8 @@ var assert = require('assert');
 var connect = require('connect');
 var http = require('http');
 
-var prism = require('../index');
-var proxies = require('../lib/proxies');
+var prism = require('../../');
+var proxies = require('../../lib/proxies');
 var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 
