@@ -5,6 +5,7 @@ var assert = require('assert');
 var connect = require('connect');
 var fs = require('fs');
 var http = require('http');
+var querystring = require('querystring');
 
 var prism = require('../../');
 var proxies = require('../../lib/proxies');
@@ -32,7 +33,9 @@ describe('record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, recordRequest);
+    var pathToResponse = utils.getMockPath(proxy, {
+      url: recordRequest
+    });
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
     }
@@ -75,7 +78,10 @@ describe('record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, recordRequest);
+    var pathToResponse = utils.getMockPath(proxy, {
+      url: recordRequest
+    });
+
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
     }
@@ -118,7 +124,10 @@ describe('record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, rewrittenRecordRequest);
+    var pathToResponse = utils.getMockPath(proxy, {
+      url: rewrittenRecordRequest
+    });
+
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
     }
@@ -168,13 +177,71 @@ describe('record mode', function() {
     decompressTest('gzip', done);
   });
 
+  it('can record a post response', function(done) {
+    //this.timeout(50000);
+    prism.create({
+      name: 'recordPostTest',
+      mode: 'record',
+      context: '/test',
+      host: 'localhost',
+      hashFullRequest: true,
+      port: 8090
+    });
+
+    var recordRequest = '/test';
+    var proxy = proxies.getProxy(recordRequest);
+
+    assert.equal(_.isUndefined(proxy), false);
+
+    var postData = querystring.stringify({
+      'foo': 'bar'
+    });
+
+    var pathToResponse = utils.getMockPath(proxy, {
+      url: recordRequest,
+      body: postData
+    });
+
+    if (fs.existsSync(pathToResponse)) {
+      fs.unlinkSync(pathToResponse);
+    }
+
+    var request = http.request({
+      host: 'localhost',
+      path: '/test',
+      port: 9000,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': postData.length
+      }
+    }, function(res) {
+      onEnd(res, function(data) {
+        waitForFile(pathToResponse, function(pathToResponse) {
+
+          var recordedResponse = fs.readFileSync(pathToResponse).toString();
+          var deserializedResponse = JSON.parse(recordedResponse);
+
+          assert.equal(_.isUndefined(deserializedResponse), false);
+          assert.equal(deserializedResponse.requestUrl, '/test');
+
+          done();
+        });
+      });
+    });
+    request.write(postData);
+    request.end();
+  });
+
   function decompressTest(encoding, done) {
     var recordRequest = '/test';
     var proxy = proxies.getProxy(recordRequest);
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, recordRequest);
+    var pathToResponse = utils.getMockPath(proxy, {
+      url: recordRequest
+    });
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
     }
@@ -202,4 +269,5 @@ describe('record mode', function() {
     });
     request.end();
   }
+
 });

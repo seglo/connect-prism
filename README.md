@@ -210,6 +210,18 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
   }
 ```
 
+#### hashFullRequest
+
+Type: `Boolean`
+
+Default: `false`
+
+Use the request body in conjunction with the request URL in order to generate a unique hash for the serialized response.  This is useful when you want to record responses for requests with distinct request bodies.
+
+i.e.) Require two different responses for a POST a request with a payload in the request body.
+
+Thanks to [Matt Philips](https://github.com/mattp-) for requesting and helping get this feature implemented.
+
 ## TODO Wishlist
 * mockrecord mode which will mock responses and attempt to record responses that don't exist yet.
 

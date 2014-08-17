@@ -133,7 +133,9 @@ describe('mock mode', function() {
     var readRequestThatDoesntExist = '/readRequest/thatDoesntExist';
     var proxy = proxies.getProxy(readRequestThatDoesntExist);
 
-    var pathToResponse = utils.getMockPath(proxy, readRequestThatDoesntExist) + '.404';
+    var pathToResponse = utils.getMockPath(proxy, {
+      url: readRequestThatDoesntExist
+    }) + '.404';
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
     }

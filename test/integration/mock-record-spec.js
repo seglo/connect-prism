@@ -40,7 +40,9 @@ describe('mock & record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, '/test');
+    var pathToResponse = utils.getMockPath(proxy, {
+      url: '/test'
+    });
 
     assert.equal(fs.existsSync(pathToResponse), true);
 
@@ -73,7 +75,9 @@ describe('mock & record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, recordRequest);
+    var pathToResponse = utils.getMockPath(proxy, {
+      url: recordRequest
+    });
 
     assert.equal(fs.existsSync(pathToResponse), false);
 
