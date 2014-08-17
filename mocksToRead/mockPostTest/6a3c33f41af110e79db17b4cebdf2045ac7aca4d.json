@@ -1,0 +1,6 @@
+{
+  "requestUrl": "/test",
+  "contentType": "text/html; charset=utf-8",
+  "statusCode": 200,
+  "data": "a server response"
+}

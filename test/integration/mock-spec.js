@@ -5,6 +5,7 @@ var assert = require('assert');
 var connect = require('connect');
 var fs = require('fs');
 var http = require('http');
+var querystring = require('querystring');
 
 var prism = require('../../');
 var proxies = require('../../lib/proxies');
@@ -160,6 +161,41 @@ describe('mock mode', function() {
         });
       });
     });
+    request.end();
+  });
+
+  it('can mock a response with request body', function(done) {
+    this.timeout(50000);
+    prism.create({
+      name: 'mockPostTest',
+      mode: 'mock',
+      mocksPath: './mocksToRead',
+      context: '/test',
+      host: 'localhost',
+      hashFullRequest: true,
+      port: 8090
+    });
+
+    var postData = querystring.stringify({
+      'foo': 'bar'
+    });
+
+    var request = http.request({
+      host: 'localhost',
+      path: '/test',
+      port: 9000,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': postData.length
+      }
+    }, function(res) {
+      onEnd(res, function(data) {
+        assert.equal(data, 'a server response');
+        done();
+      });
+    });
+    request.write(postData);
     request.end();
   });
 });
