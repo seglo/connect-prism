@@ -54,8 +54,8 @@ describe('proxy mode', function() {
     }, function(res) {
       onEnd(res, function(data) {
         var delta = Date.now() - startTime;
-        assert.equal(delta > 40, true);
-        assert.equal(delta < 60, true);
+        assert.equal(delta > 30, true);
+        assert.equal(delta < 70, true);
         done();
       });
     });
