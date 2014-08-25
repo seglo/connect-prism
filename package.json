@@ -39,9 +39,10 @@
     "querystring": "^0.2.0"
   },
   "dependencies": {
+    "di": "^2.0.0-pre-12",
     "grunt": "~0.4.5",
-    "lodash": "~2.4.1",
-    "http-proxy": "~0.10.3"
+    "http-proxy": "~0.10.3",
+    "lodash": "~2.4.1"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"
