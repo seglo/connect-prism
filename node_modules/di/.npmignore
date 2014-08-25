@@ -1,0 +1,12 @@
+test/
+visualize/
+*.sublime-project
+*.sublime-workspace
+gulpfile.js
+karma.conf.js
+/index.html
+test-main.js
+.*
+*.orig
+Gruntfile.*
+compiled/

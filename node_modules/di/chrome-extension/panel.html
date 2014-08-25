@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="visualize/injectors/style.css">
+<title>Visualization of injectors</title>
+
+<body ng-app="di-visualiser" ng-controller="Main" ng-cloak>
+
+  <span ng-show="message">{{message}}</span>
+
+  <div class="control-panel">
+    <ul class="providers" ng-show="providers.length">
+      <li ng-repeat="provider in providers" ng-class="{highlighted: provider.highlighted}" on-toggle="highlight(provider, toggled)">
+      {{provider.name}}
+      </li>
+    </ul>
+    <label><input type="checkbox" ng-model="showAllDependencies"> show all deps</label>
+  </div>
+
+
+  <graph width="800" height="800"></graph>
+
+<!-- CDN
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+-->
+
+<script src="visualize/lib/d3.v3.js"></script>
+<script src="visualize/lib/angular.js"></script>
+
+<script src="visualize/injectors/app.js"></script>
+<script src="panel.js"></script>
+
+</body>
+
+
+</body>
+</html>
