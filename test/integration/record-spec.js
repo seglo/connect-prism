@@ -154,6 +154,7 @@ describe('record mode', function() {
   });
 
   it('can record a deflate compressed response', function(done) {
+    this.timeout(50000);
     prism.create({
       name: 'compressedResponse',
       mode: 'record',
@@ -166,6 +167,7 @@ describe('record mode', function() {
   });
 
   it('can record a gzip compressed response', function(done) {
+    this.timeout(50000);
     prism.create({
       name: 'compressedResponse',
       mode: 'record',
