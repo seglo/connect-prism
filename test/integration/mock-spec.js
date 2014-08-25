@@ -97,6 +97,7 @@ describe('mock mode', function() {
   });
 
   it('can handle a 404 in mock mode', function(done) {
+    this.timeout(50000);
     prism.create({
       name: 'mockTest',
       mode: 'mock',
