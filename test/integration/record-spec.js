@@ -17,6 +17,7 @@ var ResponseHash = require('../../lib/services/response-hash');
 
 var injector = new di.Injector([]);
 
+// TODO: create test for 303 redirects as described in PR #9
 describe('record mode', function() {
   var manager = prism.manager;
   var responseHashUtils = injector.get(ResponseHash);
