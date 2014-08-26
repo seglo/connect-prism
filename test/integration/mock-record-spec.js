@@ -13,7 +13,7 @@ var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
-var ResponseHash = require('../../lib/modes/response-hash');
+var ResponseHash = require('../../lib/services/response-hash');
 
 var injector = new di.Injector([]);
 
