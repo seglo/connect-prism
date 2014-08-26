@@ -3,20 +3,26 @@
 var _ = require('lodash');
 var assert = require('assert');
 var connect = require('connect');
+var di = require('di');
 var fs = require('fs');
 var http = require('http');
 var querystring = require('querystring');
 
 var prism = require('../../');
-var proxies = require('../../lib/proxies');
-var utils = require('../../lib/utils');
 var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
+var ResponseHash = require('../../lib/modes/response-hash');
+
+var injector = new di.Injector([]);
+
 describe('mock mode', function() {
+  var manager = prism.manager;
+  var responseHashUtils = injector.get(ResponseHash);
+
   afterEach(function() {
-    proxies.reset();
+    manager.reset();
   });
 
   it('can mock a response', function(done) {
@@ -132,9 +138,9 @@ describe('mock mode', function() {
     });
 
     var readRequestThatDoesntExist = '/readRequest/thatDoesntExist';
-    var proxy = proxies.getProxy(readRequestThatDoesntExist);
+    var proxy = manager.get(readRequestThatDoesntExist);
 
-    var pathToResponse = utils.getMockPath(proxy, {
+    var pathToResponse = responseHashUtils.getMockPath(proxy, {
       url: readRequestThatDoesntExist
     }) + '.404';
     if (fs.existsSync(pathToResponse)) {

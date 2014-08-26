@@ -3,20 +3,26 @@
 var _ = require('lodash');
 var assert = require('assert');
 var connect = require('connect');
+var di = require('di');
 var fs = require('fs');
 var http = require('http');
 var querystring = require('querystring');
 
 var prism = require('../../');
-var proxies = require('../../lib/proxies');
-var utils = require('../../lib/utils');
 var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
+var ResponseHash = require('../../lib/modes/response-hash');
+
+var injector = new di.Injector([]);
+
 describe('record mode', function() {
+  var manager = prism.manager;
+  var responseHashUtils = injector.get(ResponseHash);
+
   afterEach(function() {
-    proxies.reset();
+    manager.reset();
   });
 
   it('can record a response', function(done) {
@@ -29,11 +35,11 @@ describe('record mode', function() {
     });
 
     var recordRequest = '/test';
-    var proxy = proxies.getProxy(recordRequest);
+    var proxy = manager.get(recordRequest);
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, {
+    var pathToResponse = responseHashUtils.getMockPath(proxy, {
       url: recordRequest
     });
     if (fs.existsSync(pathToResponse)) {
@@ -74,11 +80,11 @@ describe('record mode', function() {
     });
 
     var recordRequest = '/json';
-    var proxy = proxies.getProxy(recordRequest);
+    var proxy = manager.get(recordRequest);
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, {
+    var pathToResponse = responseHashUtils.getMockPath(proxy, {
       url: recordRequest
     });
 
@@ -120,11 +126,11 @@ describe('record mode', function() {
 
     var recordRequest = '/test';
     var rewrittenRecordRequest = '/rewrite';
-    var proxy = proxies.getProxy(recordRequest);
+    var proxy = manager.get(recordRequest);
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, {
+    var pathToResponse = responseHashUtils.getMockPath(proxy, {
       url: rewrittenRecordRequest
     });
 
@@ -154,7 +160,6 @@ describe('record mode', function() {
   });
 
   it('can record a deflate compressed response', function(done) {
-    this.timeout(50000);
     prism.create({
       name: 'compressedResponse',
       mode: 'record',
@@ -167,7 +172,6 @@ describe('record mode', function() {
   });
 
   it('can record a gzip compressed response', function(done) {
-    this.timeout(50000);
     prism.create({
       name: 'compressedResponse',
       mode: 'record',
@@ -191,7 +195,7 @@ describe('record mode', function() {
     });
 
     var recordRequest = '/test';
-    var proxy = proxies.getProxy(recordRequest);
+    var proxy = manager.get(recordRequest);
 
     assert.equal(_.isUndefined(proxy), false);
 
@@ -199,7 +203,7 @@ describe('record mode', function() {
       'foo': 'bar'
     });
 
-    var pathToResponse = utils.getMockPath(proxy, {
+    var pathToResponse = responseHashUtils.getMockPath(proxy, {
       url: recordRequest,
       body: postData
     });
@@ -237,11 +241,11 @@ describe('record mode', function() {
 
   function decompressTest(encoding, done) {
     var recordRequest = '/test';
-    var proxy = proxies.getProxy(recordRequest);
+    var proxy = manager.get(recordRequest);
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, {
+    var pathToResponse = responseHashUtils.getMockPath(proxy, {
       url: recordRequest
     });
     if (fs.existsSync(pathToResponse)) {

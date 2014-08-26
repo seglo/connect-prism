@@ -2,13 +2,17 @@
 
 var _ = require('lodash');
 var assert = require('assert');
+var di = require('di');
 
-var proxies = require('../../lib/proxies');
 var prism = require('../../');
 
+var injector = new di.Injector([]);
+
 describe('prism', function() {
+  var manager = prism.manager;
+
   afterEach(function() {
-    proxies.reset();
+    manager.reset();
   });
 
   describe('task initialization', function() {
@@ -24,7 +28,7 @@ describe('prism', function() {
         host: 'localhost'
       });
 
-      assert.equal(2, proxies.proxies().length);
+      assert.equal(2, manager.prisms().length);
     });
 
     it('request options should be correctly mapped', function() {
@@ -36,7 +40,7 @@ describe('prism', function() {
         port: 8090
       });
 
-      var proxy = proxies.getProxy('/proxyRequest');
+      var proxy = manager.get('/proxyRequest');
 
       assert.equal(_.isUndefined(proxy), false);
       assert.equal(proxy.config.mode, 'proxy');

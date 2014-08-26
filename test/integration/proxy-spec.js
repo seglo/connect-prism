@@ -2,16 +2,20 @@
 
 var assert = require('assert');
 var connect = require('connect');
+var di = require('di');
 var http = require('http');
 
 var prism = require('../../');
-var proxies = require('../../lib/proxies');
 var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 
+var injector = new di.Injector([]);
+
 describe('proxy mode', function() {
+  var manager = prism.manager;
+
   afterEach(function() {
-    proxies.reset();
+    manager.reset();
   });
 
   it('can proxy a response', function(done) {

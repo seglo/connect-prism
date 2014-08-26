@@ -3,19 +3,26 @@
 var _ = require('lodash');
 var assert = require('assert');
 var connect = require('connect');
+var di = require('di');
 var fs = require('fs');
 var http = require('http');
 
 var prism = require('../../');
-var proxies = require('../../lib/proxies');
-var utils = require('../../lib/utils');
+
 var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
+var ResponseHash = require('../../lib/modes/response-hash');
+
+var injector = new di.Injector([]);
+
 describe('mock & record mode', function() {
+  var manager = prism.manager;
+  var responseHashUtils = injector.get(ResponseHash);
+
   afterEach(function() {
-    proxies.reset();
+    manager.reset();
   });
 
   // clean up files after spec runs
@@ -27,6 +34,7 @@ describe('mock & record mode', function() {
   });
 
   it('can mock a response', function(done) {
+    this.timeout(50000);
     prism.create({
       name: 'mockRecordTest',
       mode: 'mockrecord',
@@ -36,11 +44,11 @@ describe('mock & record mode', function() {
       port: 8090
     });
 
-    var proxy = proxies.getProxy('/test');
+    var proxy = manager.get('/test');
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, {
+    var pathToResponse = responseHashUtils.getMockPath(proxy, {
       url: '/test'
     });
 
@@ -71,11 +79,11 @@ describe('mock & record mode', function() {
     });
 
     var recordRequest = '/json';
-    var proxy = proxies.getProxy(recordRequest);
+    var proxy = manager.get(recordRequest);
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = utils.getMockPath(proxy, {
+    var pathToResponse = responseHashUtils.getMockPath(proxy, {
       url: recordRequest
     });
 
