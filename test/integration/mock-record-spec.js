@@ -13,13 +13,13 @@ var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
-var ResponseHash = require('../../lib/services/response-hash');
+var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
 
 var injector = new di.Injector([]);
 
 describe('mock & record mode', function() {
   var manager = prism.manager;
-  var responseHashUtils = injector.get(ResponseHash);
+  var mockFilenameGenerator = injector.get(MockFilenameGenerator);
 
   afterEach(function() {
     manager.reset();
@@ -48,7 +48,7 @@ describe('mock & record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = responseHashUtils.getMockPath(proxy, {
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: '/test'
     });
 
@@ -83,7 +83,7 @@ describe('mock & record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = responseHashUtils.getMockPath(proxy, {
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
     });
 

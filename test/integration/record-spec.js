@@ -13,14 +13,14 @@ var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
-var ResponseHash = require('../../lib/services/response-hash');
+var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
 
 var injector = new di.Injector([]);
 
 // TODO: create test for 303 redirects as described in PR #9
 describe('record mode', function() {
   var manager = prism.manager;
-  var responseHashUtils = injector.get(ResponseHash);
+  var mockFilenameGenerator = injector.get(MockFilenameGenerator);
 
   afterEach(function() {
     manager.reset();
@@ -40,7 +40,7 @@ describe('record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = responseHashUtils.getMockPath(proxy, {
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
     });
     if (fs.existsSync(pathToResponse)) {
@@ -85,7 +85,7 @@ describe('record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = responseHashUtils.getMockPath(proxy, {
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
     });
 
@@ -131,7 +131,7 @@ describe('record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = responseHashUtils.getMockPath(proxy, {
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: rewrittenRecordRequest
     });
 
@@ -204,7 +204,7 @@ describe('record mode', function() {
       'foo': 'bar'
     });
 
-    var pathToResponse = responseHashUtils.getMockPath(proxy, {
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest,
       body: postData
     });
@@ -246,7 +246,7 @@ describe('record mode', function() {
 
     assert.equal(_.isUndefined(proxy), false);
 
-    var pathToResponse = responseHashUtils.getMockPath(proxy, {
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
     });
     if (fs.existsSync(pathToResponse)) {

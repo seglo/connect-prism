@@ -13,14 +13,14 @@ var testUtils = require('./test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
-var ResponseHash = require('../../lib/services/response-hash');
+var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
 
 var injector = new di.Injector([]);
 
 // TODO: create test for 303 redirects as described in PR #9
 describe('mock mode', function() {
   var manager = prism.manager;
-  var responseHashUtils = injector.get(ResponseHash);
+  var mockFilenameGenerator = injector.get(MockFilenameGenerator);
 
   afterEach(function() {
     manager.reset();
@@ -141,7 +141,7 @@ describe('mock mode', function() {
     var readRequestThatDoesntExist = '/readRequest/thatDoesntExist';
     var proxy = manager.get(readRequestThatDoesntExist);
 
-    var pathToResponse = responseHashUtils.getMockPath(proxy, {
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: readRequestThatDoesntExist
     }) + '.404';
     if (fs.existsSync(pathToResponse)) {
