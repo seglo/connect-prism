@@ -222,17 +222,47 @@ i.e.) Require two different responses for a POST a request with a payload in the
 
 Thanks to [Matt Philips](https://github.com/mattp-) for requesting and helping get this feature implemented.
 
-## TODO Wishlist
-* mockrecord mode which will mock responses and attempt to record responses that don't exist yet.
+#### mockFilenameCallback
+
+Type: `Function`
+
+Default: `false` (will builtin mock filename generator function)
+
+Use your own strategy to generate and read mock response filenames.  This function accepts a function that takes 2 parameters:
+
+1. The prism config associated with this request context.
+2. The request object.
+
+i.e.) Generate a filename based on the SHA1 hash of the request URL.
+
+```js
+  function(config, req) {
+    var crypto = require('crypto');
+    var path = require('path');
+
+    var shasum = crypto.createHash('sha1');
+    shasum.update(req.url);
+    return shasum.digest('hex');
+  }
+```
 
 ## Release History
-* 0.1.0 Initial release.
-* 0.1.1 Stop recording all response headers.  Only capture content-type.
-* 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
-* 0.2.1 Fixed record mode and tests so we don't release broken again!
-* 0.2.2 Support change origin.
-* 0.3.0 Forked from grunt-connect-prism to core library.  Added delay and mock/404 feature from [Miloš Mošovský](https://github.com/MilosMosovsky).
-* 0.4.0 Added rewrite functionality.  'mockrecord' mode.  More non-verbose logging for mock and recording operations.
-* 0.4.1 Fix for delay auto > 0 bug and support delay in proxy mode by [generalov](https://github.com/generalov).  Fix for invalid SSL cert bug by [Josh Miller](https://github.com/velveteer).  Thanks much <3.  Made non-verbose logging more consistent.  Fixed broken verbose logging.
-* 0.4.2 Fix for recording response from a rewrite rule outside of the context of a prism configuration from [Mike Kibbel](https://github.com/skibblenybbles).
+* 0.6.0 
+Use [angular/di.js](https://github.com/angular/di.js/) project.  
+Support using request body for mock response hash.  
+Support redirects.  
+Support mock response filename override config. 
+Make logging less noisey when not in verbose mode. 
+Significant re-factoring into separate deps per feature.  
+Broke out integration tests into separate specs.  
+Starting to add unit tests.
 * 0.5.0 Decompress responses when recording responses.
+* 0.4.2 Fix for recording response from a rewrite rule outside of the context of a prism configuration from [Mike Kibbel](https://github.com/skibblenybbles).
+* 0.4.1 Fix for delay auto > 0 bug and support delay in proxy mode by [generalov](https://github.com/generalov).  Fix for invalid SSL cert bug by [Josh Miller](https://github.com/velveteer).  Thanks much <3.  Made non-verbose logging more consistent.  Fixed broken verbose logging.
+* 0.4.0 Added rewrite functionality.  'mockrecord' mode.  More non-verbose logging for mock and recording operations.
+* 0.3.0 Forked from grunt-connect-prism to core library.  Added delay and mock/404 feature from [Miloš Mošovský](https://github.com/MilosMosovsky).
+* 0.2.2 Support change origin.
+* 0.2.1 Fixed record mode and tests so we don't release broken again!
+* 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
+* 0.1.1 Stop recording all response headers.  Only capture content-type.
+* 0.1.0 Initial release.
