@@ -25,6 +25,6 @@ describe('mock filename generator', function() {
 
     var mockResponsePath = mockFilenameGenerator.getMockPath(prism, undefined); 
 
-    assert.equal(mockResponsePath, 'mocks/foo/test.json');
+    assert.equal(mockResponsePath.replace(/\\/g, '/'), 'mocks/foo/test.json'.replace(/\\/g, '/'));
   });
 });

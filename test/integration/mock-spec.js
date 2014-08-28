@@ -121,7 +121,7 @@ describe('mock mode', function() {
       onEnd(res, function(data) {
         assert.equal(res.statusCode, 404);
         assert.equal(res.req.path, '/readRequest/thatDoesntExist');
-        assert.equal(data, 'No mock exists for /readRequest/thatDoesntExist - (mocksToRead/mockTest/9ae58033c4010180f34fcabb83cd463466b8874c.json)');
+        assert.equal(data.replace(/\\/g, '/'), 'No mock exists for /readRequest/thatDoesntExist - (mocksToRead/mockTest/9ae58033c4010180f34fcabb83cd463466b8874c.json)'.replace(/\\/g, '/'));
         done();
       });
     });

@@ -246,6 +246,15 @@ i.e.) Generate a filename based on the SHA1 hash of the request URL.
   }
 ```
 
+#### ignoreParameters
+
+Type: `Boolean` or [] of String or Regular expression
+
+Default: `false`
+
+This will filter parameters out of both the saved requestUrl and the hash used in the default file generation algorithm. This allows users to replay requests which use for example today's date or a random number as query parameters.
+
+
 ## Release History
 * 0.6.0 
 Use [angular/di.js](https://github.com/angular/di.js/) project.  

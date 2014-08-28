@@ -59,7 +59,7 @@ module.exports = function(grunt) {
           server: path.resolve('./test/integration/test-server-compression.js')
         }
       }
-    },
+    }
   });
 
   // Actually load this plugin's task(s).
