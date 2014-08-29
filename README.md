@@ -38,14 +38,14 @@ If the server returns a compressed response (gzip or deflate are supported), the
 Example mock generated:
 
 ```javascript
-  {
-    "requestUrl": "/api/ponies",
-    "contentType": "application/json",
-    "statusCode": 200,
-    "data": {
-      "text": "my little ponies"
-    }
+{
+  "requestUrl": "/api/ponies",
+  "contentType": "application/json",
+  "statusCode": 200,
+  "data": {
+    "text": "my little ponies"
   }
+}
 ```
 
 #### Mock
@@ -67,23 +67,23 @@ And finally, prism supports simple proxying in much the same way as the [grunt-c
 Simple add the middleware to your connect instance as in the example.  You can configure prism before or after the middleware is added.
 
 ```js
-  var connect = require('connect');
-  var prism = require('connect-prism');
+var connect = require('connect');
+var prism = require('connect-prism');
 
-  prism.create({
-    name: 'api',
-    context: '/api'
-    host: 'localhost'
-  });
+prism.create({
+  name: 'api',
+  context: '/api'
+  host: 'localhost'
+});
 
-  var app = connect()
-    .use(prism.middleware)
-    .use(connect.static('public'))
-    .use(function(req, res){
-      res.end('hello world\n');
-    })
+var app = connect()
+  .use(prism.middleware)
+  .use(connect.static('public'))
+  .use(function(req, res){
+    res.end('hello world\n');
+  })
 
-  http.createServer(app).listen(3000);
+http.createServer(app).listen(3000);
 ```
 
 ### Using connect-prism with Grunt.js
@@ -101,16 +101,16 @@ If you're using gulp then you would just use the core library along with gulp.  
 To initialize a prism instance call prism.create.  You can call prism.create more than once to run multiple configurations.
 
 ```js
-  var prism = require('connect-prism');
-  
-  prism.create({
-    name: 'api',
-    mode: 'record',
-    context: '/api'
-    host: 'localhost',
-    port: 8090,
-    changeOrigin: true
-  });
+var prism = require('connect-prism');
+
+prism.create({
+  name: 'api',
+  mode: 'record',
+  context: '/api'
+  host: 'localhost',
+  port: 8090,
+  changeOrigin: true
+});
 ```
 
 ### Options
@@ -204,10 +204,10 @@ Default: `{}`
 Add rewrite rules that prism will apply to all requests.  This functionality was copied from [grunt-connect-proxy and works the exact same way](https://github.com/drewzboto/grunt-connect-proxy#optionsrewrite).  You can configure a list of rewrite rules with an object.
 
 ```js
-  {
-    '^/removingcontext': '',
-    '^/changingcontext': '/anothercontext'
-  }
+{
+  '^/removingcontext': '',
+  '^/changingcontext': '/anothercontext'
+}
 ```
 
 #### hashFullRequest
@@ -236,14 +236,14 @@ Use your own strategy to generate and read mock response filenames.  This functi
 i.e.) Generate a filename based on the SHA1 hash of the request URL.
 
 ```js
-  function(config, req) {
-    var crypto = require('crypto');
-    var path = require('path');
+function(config, req) {
+  var crypto = require('crypto');
+  var path = require('path');
 
-    var shasum = crypto.createHash('sha1');
-    shasum.update(req.url);
-    return shasum.digest('hex');
-  }
+  var shasum = crypto.createHash('sha1');
+  shasum.update(req.url);
+  return shasum.digest('hex');
+}
 ```
 
 #### ignoreParameters
@@ -256,6 +256,7 @@ This will filter parameters out of both the saved requestUrl and the hash used i
 
 
 ## Release History
+* 0.7.0 Implementation of ignoreParameters feature courtesy of [brianfoody](https://github.com/brianfoody).
 * 0.6.0 
 Use [angular/di.js](https://github.com/angular/di.js/) project.  
 Support using request body for mock response hash.  
