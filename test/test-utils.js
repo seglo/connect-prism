@@ -1,9 +1,7 @@
 'use strict';
 
-var connect = require('connect');
+var assert = require('assert');
 var fs = require('fs');
-var http = require('http');
-var prism = require('../../');
 
 function waitForFile(filePath, callback) {
   if (!fs.existsSync(filePath) || fs.statSync(filePath).size === 0) {
@@ -24,5 +22,8 @@ module.exports = {
       callback(data);
     });
   },
-  waitForFile: waitForFile
+  waitForFile: waitForFile,
+  assertPathEqual: function(path1, path2) {
+    assert.equal(path1.replace(/\\/g, '/'), path2.replace(/\\/g, '/'));
+  }
 };

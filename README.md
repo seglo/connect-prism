@@ -222,13 +222,43 @@ i.e.) Require two different responses for a POST a request with a payload in the
 
 Thanks to [Matt Philips](https://github.com/mattp-) for requesting and helping get this feature implemented.
 
-#### mockFilenameCallback
+#### mockFilenameGenerator
 
-Type: `Function`
+Type: `Function` | `String`
 
-Default: `false` (will builtin mock filename generator function)
+Default: `'default'`
 
-Use your own strategy to generate and read mock response filenames.  This function accepts a function that takes 2 parameters:
+Use one of the builtin or your own strategy to generate and read mock response filenames.  
+
+Builtin generators:
+
+##### default
+
+`'default'`
+
+Generates filenames strictly based on request URL and request body (when `hashFullRequest` is configured).  Generates a SHA1 hash.
+
+i.e.)
+
+```
+04d5d366d8e8dbea60bb9187f7610423a527ca24.json
+```
+
+##### humanReadable
+
+`'humanReadable'`
+
+Generates a somewhat readable filename based on the request URL.  The request URL will replace characters `/ ? < > \ : * | " \`.  A hash from the `'default'` generator is appended to the end of the scrubbed request URL.  The filename is truncated to 255 characters for maximum compatibility across filesystems.
+
+i.e.)
+
+```
+_is_this_url_really=that&readable=at&all_09b2ed55fb2b388fbe02c69e94bca5d86ff7247c.json
+```
+
+##### A Custom Function
+
+This function accepts a function that takes 2 parameters:
 
 1. The prism config associated with this request context.
 2. The request object.
@@ -257,22 +287,29 @@ This will filter parameters out of both the saved requestUrl and the hash used i
 
 ## Release History
 * 0.7.0 Implementation of ignoreParameters feature courtesy of [brianfoody](https://github.com/brianfoody).
-* 0.6.0 
-Use [angular/di.js](https://github.com/angular/di.js/) project.  
+* 0.6.0 Use [angular/di.js](https://github.com/angular/di.js/) project.  
 Support using request body for mock response hash.  
 Support redirects.  
-Support mock response filename override config. 
-Make logging less noisey when not in verbose mode. 
+Support mock response filename override config.  
+Make logging less noisey when not in verbose mode.  
 Significant re-factoring into separate deps per feature.  
 Broke out integration tests into separate specs.  
 Starting to add unit tests.
 * 0.5.0 Decompress responses when recording responses.
 * 0.4.2 Fix for recording response from a rewrite rule outside of the context of a prism configuration from [Mike Kibbel](https://github.com/skibblenybbles).
-* 0.4.1 Fix for delay auto > 0 bug and support delay in proxy mode by [generalov](https://github.com/generalov).  Fix for invalid SSL cert bug by [Josh Miller](https://github.com/velveteer).  Thanks much <3.  Made non-verbose logging more consistent.  Fixed broken verbose logging.
-* 0.4.0 Added rewrite functionality.  'mockrecord' mode.  More non-verbose logging for mock and recording operations.
-* 0.3.0 Forked from grunt-connect-prism to core library.  Added delay and mock/404 feature from [Miloš Mošovský](https://github.com/MilosMosovsky).
+* 0.4.1 Fix for delay auto > 0 bug and support delay in proxy mode by [generalov](https://github.com/generalov).  
+Fix for invalid SSL cert bug by [Josh Miller](https://github.com/velveteer).  Thanks much <3.  
+Made non-verbose logging more consistent.  
+Fixed broken verbose logging.
+* 0.4.0 Added rewrite functionality.  
+'mockrecord' mode.  
+More non-verbose logging for mock and recording operations.
+* 0.3.0 Forked from grunt-connect-prism to core library.  
+Added delay and mock/404 feature from [Miloš Mošovský](https://github.com/MilosMosovsky).
 * 0.2.2 Support change origin.
 * 0.2.1 Fixed record mode and tests so we don't release broken again!
-* 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
-* 0.1.1 Stop recording all response headers.  Only capture content-type.
+* 0.2.0 Support 'cassettes' by putting mocks into directories named after target.  
+Use http-proxy 0.10.4 to workaround around socket hangup issues in 1.1.4.
+* 0.1.1 Stop recording all response headers.  
+Only capture content-type.
 * 0.1.0 Initial release.

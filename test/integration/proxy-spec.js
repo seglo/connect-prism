@@ -6,7 +6,7 @@ var di = require('di');
 var http = require('http');
 
 var prism = require('../../');
-var testUtils = require('./test-utils');
+var testUtils = require('../test-utils');
 var onEnd = testUtils.onEnd;
 
 var injector = new di.Injector([]);

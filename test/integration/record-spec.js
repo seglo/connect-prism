@@ -9,7 +9,7 @@ var http = require('http');
 var querystring = require('querystring');
 
 var prism = require('../../');
-var testUtils = require('./test-utils');
+var testUtils = require('../test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
