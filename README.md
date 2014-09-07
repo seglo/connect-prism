@@ -2,6 +2,8 @@
 
 [![NPM version](https://badge.fury.io/js/connect-prism.svg)](http://badge.fury.io/js/connect-prism)
 [![Build Status](https://travis-ci.org/seglo/connect-prism.svg?branch=master)](https://travis-ci.org/seglo/connect-prism)
+[![Dependency Status](https://david-dm.org/seglo/connect-prism.svg)](https://david-dm.org/seglo/connect-prism)
+[![devDependency Status](https://david-dm.org/seglo/connect-prism/dev-status.svg)](https://david-dm.org/seglo/connect-prism#info=devDependencies)
 
 > Record, mock, and proxy HTTP traffic as middleware for the connect middleware framework.
 
