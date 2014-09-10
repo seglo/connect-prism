@@ -169,14 +169,6 @@ Default: false
 
 The http scheme of the API you are proxying.  `true` === `https`, `false` === `http`
 
-#### changeOrigin
-
-Type: `Boolean`
-
-Default: false
-
-Whether to change the origin on the request to the proxy, or keep the original origin.
-
 #### delay
 
 Type: `String` or `Integer`
