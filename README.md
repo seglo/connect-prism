@@ -280,6 +280,7 @@ This will filter parameters out of both the saved requestUrl and the hash used i
 
 
 ## Release History
+* 0.7.2 Update to latest http-proxy.
 * 0.7.0 Implementation of ignoreParameters feature courtesy of [brianfoody](https://github.com/brianfoody).
 * 0.6.0 Use [angular/di.js](https://github.com/angular/di.js/) project.  
 Support using request body for mock response hash.  
