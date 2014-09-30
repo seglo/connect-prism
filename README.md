@@ -280,6 +280,7 @@ This will filter parameters out of both the saved requestUrl and the hash used i
 
 
 ## Release History
+* 0.7.4 Update to latest http-proxy 1.5.0.
 * 0.7.3 Compat with latest http-proxy broken.  Using specific version 1.3.0 for now.
 * 0.7.2 Update to latest http-proxy.
 * 0.7.0 Implementation of ignoreParameters feature courtesy of [brianfoody](https://github.com/brianfoody).
