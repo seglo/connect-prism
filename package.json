@@ -1,6 +1,6 @@
 {
   "name": "connect-prism",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "Record, mock, and proxy HTTP traffic.",
   "main": "index.js",
   "scripts": {
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "di": "^2.0.0-pre-12",
+    "forwarded-for": "^0.1.1",
     "grunt": "~0.4.5",
     "http-proxy": "^1.5.0",
     "lodash": "~2.4.1"

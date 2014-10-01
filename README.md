@@ -280,6 +280,8 @@ This will filter parameters out of both the saved requestUrl and the hash used i
 
 
 ## Release History
+* 0.7.5 Fix socket hang up issue by handling aborted requests appropriately.
+[Issue #527 from node-http-proxy project.](https://github.com/nodejitsu/node-http-proxy/issues/527)
 * 0.7.4 Update to latest http-proxy 1.5.0.
 * 0.7.3 Compat with latest http-proxy broken.  Using specific version 1.3.0 for now.
 * 0.7.2 Update to latest http-proxy.
