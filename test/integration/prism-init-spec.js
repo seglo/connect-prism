@@ -70,8 +70,10 @@ describe('prism', function() {
 
       beforeEach(function() {
         config.mode = 'proxy';
+        if (!fs.existsSync(config.mocksPath)) {
+          fs.mkdirSync(config.mocksPath);
+        }
         if (!fs.existsSync(mocksDir)) {
-          console.log('creating mocksDir: ' + mocksDir);
           fs.mkdirSync(mocksDir);
         }
         fs.openSync(testMockFile, 'w');
