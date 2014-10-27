@@ -64,11 +64,15 @@ describe('prism', function() {
         clearOnStart: true
       };
 
+      var mocksDir = path.join(config.mocksPath, config.name);
       var testMockFile = path.join(config.mocksPath, config.name, 'foo.json');
       var test404File = path.join(config.mocksPath, config.name, 'foo.json.404');
 
       beforeEach(function() {
         config.mode = 'proxy';
+        if (!fs.existsSync(mocksDir)) {
+          fs.mkdirSync(mocksDir);
+        }
         fs.openSync(testMockFile, 'w');
         fs.openSync(test404File, 'w');
       });
