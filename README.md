@@ -278,8 +278,34 @@ Default: `false`
 
 This will filter parameters out of both the saved requestUrl and the hash used in the default file generation algorithm. This allows users to replay requests which use for example today's date or a random number as query parameters.
 
+#### clearOnStart
+
+Type: `Boolean`
+
+Default: `false`
+
+Clear the `mocks/target` directory when prism is initialized.  The mocks directory will only be cleared of `.json` and `.json.404` files and is not recursive.  The mocks directory will only be cleared when in `record` or `mockrecord` modes.
+
+## Contributing
+
+Try to stay within conventions already laid out in project.  Write unit tests where appropriate.
+
+Run tests:
+
+```
+grunt test
+```
+
+Run tests with node debugger:
+
+```
+node-debug $(which grunt) test
+```
+
+Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
+* 0.8.0 Add clearOnStart setting.
 * 0.7.5 Fix socket hang up issue by handling aborted requests appropriately.
 [Issue #527 from node-http-proxy project.](https://github.com/nodejitsu/node-http-proxy/issues/527)
 * 0.7.4 Update to latest http-proxy 1.5.0.
