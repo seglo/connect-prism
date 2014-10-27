@@ -56,7 +56,7 @@ describe('prism', function() {
 
     describe('clear mocks on start', function() {
       var config = {
-        mode: 'mock',
+        mode: 'proxy',
         name: 'clearOnStartTest',
         mocksPath: 'mocks',
         host: 'foo',
@@ -64,11 +64,15 @@ describe('prism', function() {
         clearOnStart: true
       };
 
+      var mocksDir = path.join(config.mocksPath, config.name);
       var testMockFile = path.join(config.mocksPath, config.name, 'foo.json');
       var test404File = path.join(config.mocksPath, config.name, 'foo.json.404');
 
       beforeEach(function() {
         config.mode = 'proxy';
+        if (!fs.existsSync(mocksDir)) {
+          fs.mkdirSync(mocksDir);
+        }
         fs.openSync(testMockFile, 'w');
         fs.openSync(test404File, 'w');
       });
@@ -94,7 +98,7 @@ describe('prism', function() {
 
         assert.equal(fs.existsSync(testMockFile), true);
       });
-      it('in record mode clear mocks', function() {
+      it('in record mode don\'t clear mocks', function() {
         config.mode = 'record';
         prism.create(config);
 
