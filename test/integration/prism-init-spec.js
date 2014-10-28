@@ -51,7 +51,6 @@ describe('prism', function() {
       assert.equal(proxy.config.host, 'localhost');
       assert.equal(proxy.config.port, 8090);
       assert.equal(proxy.config.https, false);
-      assert.equal(proxy.config.changeOrigin, false);
     });
 
     describe('clear mocks on start', function() {
