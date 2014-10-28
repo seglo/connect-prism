@@ -74,7 +74,7 @@ var prism = require('connect-prism');
 
 prism.create({
   name: 'api',
-  context: '/api'
+  context: '/api',
   host: 'localhost'
 });
 
@@ -108,10 +108,9 @@ var prism = require('connect-prism');
 prism.create({
   name: 'api',
   mode: 'record',
-  context: '/api'
+  context: '/api',
   host: 'localhost',
-  port: 8090,
-  changeOrigin: true
+  port: 8090
 });
 ```
 
