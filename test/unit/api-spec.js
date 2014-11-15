@@ -1,48 +1,46 @@
 'use strict';
 
-var _ = require('lodash');
 var assert = require('assert');
-var connect = require('connect');
 var di = require('di');
-var fs = require('fs');
-var http = require('http');
 
 var prism = require('../../');
 
-var testUtils = require('../test-utils');
-var onEnd = testUtils.onEnd;
-var waitForFile = testUtils.waitForFile;
-
-//var Api = require('../../lib/services/api');
-
-var injector = new di.Injector([]);
+var Api = require('../../lib/services/api');
+var PrismManager = require('../../lib/prism-manager');
 
 describe('api', function() {
-  it('should create new prism configuration', function(done) {
-    done();
-/*    this.timeout(50000);
-    
-    var prismConfig = {
-      name: 'mockTest',
-      mode: 'mock',
-      mocksPath: './mocksToRead',
-      context: '/readRequest',
-      host: 'localhost',
-      port: 8090
-    };
+  var api;
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/_prism',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        assert.equal(res.statusCode, 200);
-        done();
-      });
-    });
-    request.end();
-    */
+  beforeEach(function() {
+    function MockPrismManager() {
+      this.getApiConfig = function() {
+        return {
+          enabled: true,
+          route: '/_prism/'
+        };
+      };
+    }
+    
+    // NOTE: it's important to annotate before getting the injector instance
+    di.annotate(MockPrismManager, new di.Provide(PrismManager));
+    var injector = new di.Injector([MockPrismManager]);    
+       
+    api = injector.get(Api);
   });
 
+  it('should validate a real prism api request', function() {
+    var validApiRequest = api.isApiRequest({
+      "url": "/_prism/foo"
+    });
+
+    assert.equal(validApiRequest, true);
+  });
+
+  it('should invalidate an incorrect prism api request', function() {
+    var validApiRequest = api.isApiRequest({
+      "url": "/anyOtherRequest/foo"
+    });
+
+    assert.equal(validApiRequest, false);
+  });
 });
