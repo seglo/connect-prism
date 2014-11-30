@@ -80,8 +80,8 @@ describe('mock mode', function() {
     prism.create({
       name: 'mockTest',
       mode: 'mock',
-      mocksPath: ['./mocksToRead/secondMocksPath', './mocksToRead'],
-      context: '/readRequest',
+      mocksPath: ['mocksToRead/secondMocksPath', 'mocksToRead'],
+      context: '/readRequestSecond',
       host: 'localhost',
       port: 8090
     });
@@ -101,6 +101,36 @@ describe('mock mode', function() {
     request.end();
 
   });
+
+  it('can mock a response additionally searching directories given via a "request-mock-custom-namespace" header', function(done) {
+    prism.create({
+      name: 'mockTest',
+      mode: 'mock',
+      mocksPath: ['mocksToRead'],
+      context: '/readRequest',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var request = http.request({
+      host: 'localhost',
+      path: '/readRequest',
+      port: 9000,
+      headers: {
+	"REQUEST-MOCK-CUSTOM-NAMESPACE": "mocksToRead/secondMocksPath"
+      }
+    }, function(res) {
+      onEnd(res, function(data) {
+	assert.equal(res.statusCode, 200);
+	assert.equal(res.req.path, '/readRequest');
+	assert.equal(data, 'the first given path answers');
+	done();
+      });
+    });
+    request.end();
+
+  });
+
   
   it('can delay a mock response by approximately 50ms', function(done) {
     prism.create({
@@ -206,16 +236,16 @@ describe('mock mode', function() {
     }, function(res) {
       onEnd(res, function(data) {
 	waitForFile(pathToResponse, function(pathToResponse) {
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+	  var recordedResponse = fs.readFileSync(pathToResponse).toString();
+	  var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, '/readRequest/thatDoesntExist');
-          assert.equal(deserializedResponse.contentType, 'application/javascript');
-          assert.equal(deserializedResponse.statusCode, 200);
-          assert.deepEqual(deserializedResponse.data, {});
+	  assert.equal(_.isUndefined(deserializedResponse), false);
+	  assert.equal(deserializedResponse.requestUrl, '/readRequest/thatDoesntExist');
+	  assert.equal(deserializedResponse.contentType, 'application/javascript');
+	  assert.equal(deserializedResponse.statusCode, 200);
+	  assert.deepEqual(deserializedResponse.data, {});
 
-          done();
+	  done();
 	});
       });
     });
