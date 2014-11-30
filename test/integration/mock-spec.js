@@ -51,6 +51,63 @@ describe('mock mode', function() {
     request.end();
   });
 
+  it('can mock a response sequentially looking for files in several directories', function(done) {
+    prism.create({
+      name: 'mockTest',
+      mode: 'mock',
+      sequential: true,
+      mocksPath: ['./mocksToRead'],
+      context: '/readRequest',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var req = {
+      host: 'localhost',
+      path: '/readRequestSpecial',
+      port: 9000,
+      headers: {
+	"REQUEST-MOCK-CUSTOM-NAMESPACE": "mocksToRead/mockTestFeature"
+      }
+    };
+
+    var callbackFactory = function(values) {
+      var iterator = values.shift();
+
+      if (typeof iterator === 'string') {
+	
+	var callback = function(res) {
+	  if (res) {
+	    onEnd(res, function(data) {
+	      assert.equal(res.statusCode, 200);
+	      assert.equal(res.req.path, '/readRequestSpecial');	      
+	      assert.equal(data, iterator);
+	      var response = http.request(req, callbackFactory(values));
+	      response.end();
+
+	    });
+	  }
+	  else {
+	    var response = http.request(req, callbackFactory(values));
+	    response.end();
+	  }
+	};
+	return callback;
+      }
+      else {
+	iterator();
+      }
+    };
+    
+    callbackFactory(['get started',  // just to get the recursion started
+		     '0 from tape',  // there are 4 responses on the tape
+		     '1 from tape',  // serve them one after another
+		     '2 from tape',
+		     '3 from tape',
+		     'default response', // when you run empty, switch to the default
+		     'default response', done])();
+  });
+  
   it('can mock a response and choose the first existing response from several directories [choose first]', function(done) {
     prism.create({
       name: 'mockTest',

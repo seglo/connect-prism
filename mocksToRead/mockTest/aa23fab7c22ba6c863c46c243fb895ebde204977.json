@@ -1,0 +1,6 @@
+{
+  "requestUrl": "/readRequestSpecial",
+  "contentType": "application/javascript",
+  "statusCode": 200,
+  "data": "default response"
+}
