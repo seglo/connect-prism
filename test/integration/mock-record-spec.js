@@ -62,7 +62,7 @@ describe('mock & record mode', function() {
 
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: '/test'
-    });
+    })[0];
 
     assert.equal(fs.existsSync(pathToResponse), true);
 
@@ -97,7 +97,7 @@ describe('mock & record mode', function() {
 
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
-    });
+    })[0];
 
     assert.equal(fs.existsSync(pathToResponse), false);
 
@@ -138,14 +138,14 @@ describe('mock & record mode', function() {
 
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
-    });
+    })[0];
 
     var parameterisedRecordRequest = '/json?testParam1=abc&testParam2=def';
     var parameterisedProxy = manager.get(parameterisedRecordRequest);
 
     var pathToParameterisedResponse = mockFilenameGenerator.getMockPath(parameterisedProxy, {
       url: parameterisedRecordRequest
-    });
+    })[0];
 
     assert.equal(pathToResponse, pathToParameterisedResponse);
 
@@ -186,14 +186,14 @@ describe('mock & record mode', function() {
 
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
-    });
+    })[0];
 
     var parameterisedRecordRequest = '/json?testParam1=abc&testParam2=def';
     var parameterisedProxy = manager.get(parameterisedRecordRequest);
 
     var pathToParameterisedResponse = mockFilenameGenerator.getMockPath(parameterisedProxy, {
       url: parameterisedRecordRequest
-    });
+    })[0];
 
     assert.equal(pathToResponse, pathToParameterisedResponse);
 
@@ -241,7 +241,7 @@ describe('mock & record mode', function() {
 
     var pathToParameterisedResponse = mockFilenameGenerator.getMockPath(parameterisedProxy, {
       url: parameterisedRecordRequest
-    });
+    })[0];
 
     assert.equal(pathToResponse, pathToParameterisedResponse);
 

@@ -1,0 +1,6 @@
+{
+  "requestUrl": "/readRequestSecond",
+  "contentType": "application/javascript",
+  "statusCode": 200,
+  "data": "the second given path answers"
+}

@@ -42,7 +42,7 @@ describe('record mode', function() {
 
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
-    });
+    })[0];
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
     }
@@ -87,7 +87,7 @@ describe('record mode', function() {
 
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
-    });
+    })[0];
 
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
@@ -133,7 +133,7 @@ describe('record mode', function() {
 
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: rewrittenRecordRequest
-    });
+    })[0];
 
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
@@ -207,7 +207,7 @@ describe('record mode', function() {
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest,
       body: postData
-    });
+    })[0];
 
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
@@ -248,7 +248,7 @@ describe('record mode', function() {
 
     var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
       url: recordRequest
-    });
+    })[0];
     if (fs.existsSync(pathToResponse)) {
       fs.unlinkSync(pathToResponse);
     }
