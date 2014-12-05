@@ -1,6 +1,0 @@
-{
-  "requestUrl": "/readRequestSpecial",
-  "contentType": "text/html; charset=utf-8",
-  "statusCode": 200,
-  "data": "2 from tape"
-}

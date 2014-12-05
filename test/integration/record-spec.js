@@ -14,7 +14,6 @@ var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
-var RequestStateMachine = require('../../lib/services/request-state-machine');
 
 var injector = new di.Injector([]);
 
@@ -22,7 +21,6 @@ var injector = new di.Injector([]);
 describe('record mode', function() {
   var manager = prism.manager;
   var mockFilenameGenerator = injector.get(MockFilenameGenerator);
-  var rsmachine = injector.get(RequestStateMachine);
 
   afterEach(function() {
     manager.reset();
@@ -115,73 +113,6 @@ describe('record mode', function() {
     request.end();
   });
 
-  it('can record responses sequentially', function(done) {
-    prism.create({
-      name: 'mockRecordTest',
-      mode: 'record',
-      sequential: true, 
-      context: '/json',
-      host: 'localhost',
-      port: 8090
-    });
-
-    var recordRequest = '/json';
-    var proxy = manager.get(recordRequest);
-
-    assert.equal(_.isUndefined(proxy), false);
-    var testPathToResponse = /^(.*)_\d(\.\w+)$/.exec(mockFilenameGenerator.getMockPath(proxy, {
-      url: recordRequest
-    })[0]);
-    console.log(testPathToResponse);
-    assert.equal(fs.existsSync(testPathToResponse), false);
-    rsmachine.reset();
-
-    var req = {
-      host: 'localhost',
-      path: '/json',
-      port: 9000
-    };
-
-
-    var callbackFactory = function(values) {
-      var iterator = values.shift();
-
-      if (typeof iterator === 'string') {
-	
-	var callback = function(res) {
-	  if (res) {
-	    onEnd(res, function(data) {
-
-	      waitForFile(testPathToResponse[1]+'_'+iterator+testPathToResponse[2], function(pathToResponse) {
-		var recordedResponse = fs.readFileSync(pathToResponse).toString();
-		var deserializedResponse = JSON.parse(recordedResponse);
-		assert.equal(_.isUndefined(deserializedResponse), false);
-		assert.equal(deserializedResponse.requestUrl, '/json');
-		var response = http.request(req, callbackFactory(values));
-		response.end();
-	      });
-	    });
-	  }
-	  else {
-	    var response = http.request(req, callbackFactory(values));
-	    response.end();
-	  }
-	};
-	return callback;
-      }
-      else {
-	iterator();
-      }
-    };
-    
-    callbackFactory(['get started',  // just to get the recursion started
-		     '0',  // there are 4 responses on the tape
-		     '1',  // serve them one after another
-		     '2',
-		     '3',
-		     done])();
-  });
-  
   it('can record a response of a rewritten request outside the prism context', function(done) {
     prism.create({
       name: 'rewriteAndRecordTest',
@@ -190,7 +121,7 @@ describe('record mode', function() {
       host: 'localhost',
       port: 8090,
       rewrite: {
-	'^/test': '/rewrite',
+        '^/test': '/rewrite',
       }
     });
 
@@ -214,16 +145,16 @@ describe('record mode', function() {
       port: 9000
     }, function(res) {
       onEnd(res, function(data) {
-	waitForFile(pathToResponse, function(pathToResponse) {
+        waitForFile(pathToResponse, function(pathToResponse) {
 
-	  var recordedResponse = fs.readFileSync(pathToResponse).toString();
-	  var deserializedResponse = JSON.parse(recordedResponse);
+          var recordedResponse = fs.readFileSync(pathToResponse).toString();
+          var deserializedResponse = JSON.parse(recordedResponse);
 
-	  assert.equal(_.isUndefined(deserializedResponse), false);
-	  assert.equal(deserializedResponse.requestUrl, '/rewrite');
+          assert.equal(_.isUndefined(deserializedResponse), false);
+          assert.equal(deserializedResponse.requestUrl, '/rewrite');
 
-	  done();
-	});
+          done();
+        });
       });
     });
     request.end();
@@ -288,21 +219,21 @@ describe('record mode', function() {
       port: 9000,
       method: 'POST',
       headers: {
-	'Content-Type': 'application/x-www-form-urlencoded',
-	'Content-Length': postData.length
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': postData.length
       }
     }, function(res) {
       onEnd(res, function(data) {
-	waitForFile(pathToResponse, function(pathToResponse) {
+        waitForFile(pathToResponse, function(pathToResponse) {
 
-	  var recordedResponse = fs.readFileSync(pathToResponse).toString();
-	  var deserializedResponse = JSON.parse(recordedResponse);
+          var recordedResponse = fs.readFileSync(pathToResponse).toString();
+          var deserializedResponse = JSON.parse(recordedResponse);
 
-	  assert.equal(_.isUndefined(deserializedResponse), false);
-	  assert.equal(deserializedResponse.requestUrl, '/test');
+          assert.equal(_.isUndefined(deserializedResponse), false);
+          assert.equal(deserializedResponse.requestUrl, '/test');
 
-	  done();
-	});
+          done();
+        });
       });
     });
     request.write(postData);
@@ -327,20 +258,20 @@ describe('record mode', function() {
       path: '/test',
       port: 9000,
       headers: {
-	'Accept-Encoding': encoding
+        'Accept-Encoding': encoding
       }
     }, function(res) {
       onEnd(res, function(data) {
-	waitForFile(pathToResponse, function(pathToResponse) {
+        waitForFile(pathToResponse, function(pathToResponse) {
 
-	  var recordedResponse = fs.readFileSync(pathToResponse).toString();
-	  var deserializedResponse = JSON.parse(recordedResponse);
+          var recordedResponse = fs.readFileSync(pathToResponse).toString();
+          var deserializedResponse = JSON.parse(recordedResponse);
 
-	  assert.equal(_.isUndefined(deserializedResponse), false);
-	  assert.equal(deserializedResponse.data, 'a server response');
+          assert.equal(_.isUndefined(deserializedResponse), false);
+          assert.equal(deserializedResponse.data, 'a server response');
 
-	  done();
-	});
+          done();
+        });
       });
     });
     request.end();
