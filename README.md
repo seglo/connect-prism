@@ -134,7 +134,7 @@ Type: `String` | `Array`
 
 Default: `'./mocks'`
 
-Path to the root directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it as soon as it wants to place a (404 or recorded) respons in it.  If prism is executed with a target then recorded and mocked responses will be read from `'./mocks/targetName'`.  If no target is defined then only the default prism options will be used. If an Array is given, prism will use the Directories in the order given. This can be used to overwrite default mocks with per feature mocks if mocksPath is given like: ['./feature/feauture1/mocks', './mocks']
+Path to the root directory you want to record and mock responses.  If the directory does not exist then prism will attempt to create it as soon as it wants to place a (404 or recorded) respons in it.  If prism is executed with a target then recorded and mocked responses will be read from `'./mocks/targetName'`.  If no target is defined then only the default prism options will be used. If an Array is given, prism will use the Directories in the order given. This can be used to overwrite default mocks with per feature mocks if mocksPath is given like: ['./feature/feauture1/mocks', './mocks']. If the request has the "REQUEST-MOCK-CUSTOM-NAMESPACE" header set, the provided path will, for the request be prepended to to the mocksPath. This way mocking scenarios may be triggered via the browser. 
 
 #### context
 
