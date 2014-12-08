@@ -1,0 +1,6 @@
+{
+  "requestUrl": "/readRequest2",
+  "contentType": "application/javascript",
+  "statusCode": 200,
+  "data": "generic answer from the second given directory"
+}

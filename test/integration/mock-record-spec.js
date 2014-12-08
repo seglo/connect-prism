@@ -12,6 +12,8 @@ var prism = require('../../');
 var testUtils = require('../test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
+var start_sequential_calls = testUtils.start_sequential_calls;
+var make_wait_for_file_tester= testUtils.make_wait_for_file_tester;
 
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
 
@@ -26,7 +28,7 @@ describe('mock & record mode', function() {
   });
 
   // clean up files after spec runs
-  after(function() {
+  afterEach(function() {
     var recordResponse = 'mocksToRead/mockRecordTest/97bb3894d4aa3418d821bdc6f3a9a1ba792739e8.json';
     if (fs.existsSync(recordResponse)) {
       fs.unlinkSync(recordResponse);
@@ -122,6 +124,59 @@ describe('mock & record mode', function() {
     request.end();
   });
 
+  it('can record a sequence of responses', function(done) {//    this.timeout(50000);
+    prism.create({
+      name: 'mockRecordTest',
+      mode: 'mockrecord',
+      mocksPath: './mocksToRead',
+      context: '/json',
+      host: 'localhost',
+      port: 8090,
+      sequential: true
+    });
+  
+    var recordRequest = '/json';
+    var proxy = manager.get(recordRequest);
+
+    assert.equal(_.isUndefined(proxy), false);
+
+    var segments = mockFilenameGenerator.getMockPath(proxy, {
+      url: recordRequest
+    })[0].match(/^(.*)(_\w+)\.(json)/);
+	 
+    var response_paths = [0, 1, 2, 3, 4].map(function(i){
+      var path = segments[1] + "_" + i + "." + segments[3];
+      if (fs.existsSync(path)) {
+	fs.unlinkSync(path);
+      }
+      return path;
+    });
+
+    var file_tests = function(deserializedResponse) {
+      assert.equal(_.isUndefined(deserializedResponse), false);
+      assert.equal(deserializedResponse.requestUrl, '/json');
+      assert.equal(deserializedResponse.contentType, 'application/json; charset=utf-8');
+      assert.equal(deserializedResponse.statusCode, 200);
+      assert.equal(deserializedResponse.data.text, "a server response");
+    };
+    
+    start_sequential_calls(
+      {
+	host: 'localhost',
+	path: '/json',
+	port: 9000
+      },
+      [
+	make_wait_for_file_tester(response_paths[0], file_tests),
+	make_wait_for_file_tester(response_paths[1], file_tests),
+	make_wait_for_file_tester(response_paths[2], file_tests),	
+	make_wait_for_file_tester(response_paths[3], file_tests)
+      ],
+      done
+    );
+  });
+
+  
   it('can ignore all url parameters', function(done) {
     prism.create({
       name: 'mockIgnoreTest',
@@ -155,16 +210,16 @@ describe('mock & record mode', function() {
       port: 9000
     }, function(res) {
       onEnd(res, function(data) {
-        waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
+	waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
 
-          var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+	  var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
+	  var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, recordRequest);
+	  assert.equal(_.isUndefined(deserializedResponse), false);
+	  assert.equal(deserializedResponse.requestUrl, recordRequest);
 
-          done();
-        });
+	  done();
+	});
       });
     });
     request.end();
@@ -203,16 +258,16 @@ describe('mock & record mode', function() {
       port: 9000
     }, function(res) {
       onEnd(res, function(data) {
-        waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
+	waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
 
-          var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+	  var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
+	  var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, recordRequest);
+	  assert.equal(_.isUndefined(deserializedResponse), false);
+	  assert.equal(deserializedResponse.requestUrl, recordRequest);
 
-          done();
-        });
+	  done();
+	});
       });
     });
     request.end();
@@ -251,16 +306,16 @@ describe('mock & record mode', function() {
       port: 9000
     }, function(res) {
       onEnd(res, function(data) {
-        waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
+	waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
 
-          var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+	  var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
+	  var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, recordRequest);
+	  assert.equal(_.isUndefined(deserializedResponse), false);
+	  assert.equal(deserializedResponse.requestUrl, recordRequest);
 
-          done();
-        });
+	  done();
+	});
       });
     });
     request.end();

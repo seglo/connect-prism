@@ -1,0 +1,6 @@
+{
+  "requestUrl": "/recordRequest",
+  "contentType": "text/plain",
+  "statusCode": 200,
+  "data": "the first given path answers with the first file in the sequence"
+}
