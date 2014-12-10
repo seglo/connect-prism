@@ -26,7 +26,6 @@ function onEnd(res, callback) {
 
 function make_body_tester(value) {
   return function(data, cb){
-    console.log('asserting for: ' + value);
     assert.equal(data, value);
     cb();
   };
@@ -34,9 +33,7 @@ function make_body_tester(value) {
 
 function make_wait_for_file_tester(path, tests) {
   return function(data, cb) {
-    console.log("waiting for file: " + path);
     waitForFile(path, function(pathToResponse) {
-      console.log("file appeared: " + path);
       var recordedResponse = fs.readFileSync(pathToResponse).toString();
       var deserializedResponse = JSON.parse(recordedResponse);
       if (tests) {
@@ -60,8 +57,6 @@ function start_sequential_calls(req_data, values, done) {
     onEnd(res, function(data) {
       assert.equal(res.statusCode, 200);
       values.shift()(data, function(){
-	console.log('after shifting: ');
-	console.log(values);
 	if (values.length !== 0 ) {
 	  start_sequential_calls(req_data, values, done);
 	}
