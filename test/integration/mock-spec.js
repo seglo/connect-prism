@@ -12,6 +12,8 @@ var prism = require('../../');
 var testUtils = require('../test-utils');
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
+var start_sequential_calls = testUtils.start_sequential_calls;
+var make_body_tester = testUtils.make_body_tester;
 
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
 
@@ -51,6 +53,146 @@ describe('mock mode', function() {
     request.end();
   });
 
+  it('can mock a response and choose the first existing response from several directories [choose first]', function(done) {
+    prism.create({
+      name: 'mockTest',
+      mode: 'mock',
+      mocksPath: ['./mocksToRead/secondMocksPath', './mocksToRead'],
+      context: '/readRequest',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var request = http.request({
+      host: 'localhost',
+      path: '/readRequest',
+      port: 9000
+    }, function(res) {
+      onEnd(res, function(data) {
+	assert.equal(res.statusCode, 200);
+	assert.equal(res.req.path, '/readRequest');
+	assert.equal(data, 'the first given path answers');
+	done();
+      });
+    });
+    request.end();
+  });
+
+  it('can mock a response and choose the first existing response from several directories [choose second]', function(done) {
+    prism.create({
+      name: 'mockTest',
+      mode: 'mock',
+      mocksPath: ['mocksToRead/secondMocksPath', 'mocksToRead'],
+      context: '/readRequestSecond',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var request = http.request({
+      host: 'localhost',
+      path: '/readRequestSecond',
+      port: 9000
+    }, function(res) {
+      onEnd(res, function(data) {
+	assert.equal(res.statusCode, 200);
+	assert.equal(res.req.path, '/readRequestSecond');
+	assert.equal(data, 'the second given path answers');
+	done();
+      });
+    });
+    request.end();
+
+  });
+
+  it('can mock a response additionally searching directories given via a "request-mock-custom-namespace" header', function(done) {
+    prism.create({
+      name: 'mockTest',
+      mode: 'mock',
+      mocksPath: ['mocksToRead'],
+      context: '/readRequest',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var request = http.request({
+      host: 'localhost',
+      path: '/readRequest',
+      port: 9000,
+      headers: {
+	"REQUEST-MOCK-CUSTOM-NAMESPACE": "mocksToRead/secondMocksPath"
+      }
+    }, function(res) {
+      onEnd(res, function(data) {
+	assert.equal(res.statusCode, 200);
+	assert.equal(res.req.path, '/readRequest');
+	assert.equal(data, 'the first given path answers');
+	done();
+      });
+    });
+    request.end();
+
+  });
+
+  it('can mock a response iterating over sequenced mock files and serving the generic one if the sequenced ones are used up', function(done) {
+    prism.create({
+      name: 'mockTest',
+      mode: 'mock',
+      mocksPath: ['mocksToRead'],
+      context: '/readRequest',
+      host: 'localhost',
+      port: 8090,
+      sequential: true
+    });
+    
+    start_sequential_calls(
+      {
+	host: 'localhost',
+	path: '/readRequest',
+	port: 9000,
+	headers: {
+	  "REQUEST-MOCK-CUSTOM-NAMESPACE": "mocksToRead/secondMocksPath"
+	}
+      },
+      [
+	make_body_tester('the first given path answers with the first file in the sequence'),
+	make_body_tester('the first given path answers with the second file in the sequence'),
+	make_body_tester('the first given path answers')
+      ],
+      done
+    );
+
+  });
+
+  it('can mock a response iterating over sequenced mock files and serving the generic from the secondary directory if the sequenced ones are used up', function(done) {
+    prism.create({
+      name: 'mockTest',
+      mode: 'mock',
+      mocksPath: ['mocksToRead'],
+      context: '/readRequest2',
+      host: 'localhost',
+      port: 8090,
+      sequential: true
+    });
+    
+    start_sequential_calls(
+      {
+	host: 'localhost',
+	path: '/readRequest2',
+	port: 9000,
+	headers: {
+	  "REQUEST-MOCK-CUSTOM-NAMESPACE": "mocksToRead/secondMocksPath"
+	}
+      },
+      [
+	make_body_tester('the first given path answers with the first file in the sequence'),
+	make_body_tester('generic answer from the second given directory')
+      ],
+      done
+    );
+
+  });
+
+  
   it('can delay a mock response by approximately 50ms', function(done) {
     prism.create({
       name: 'mockDelayTest',
@@ -69,10 +211,10 @@ describe('mock mode', function() {
       port: 9000
     }, function(res) {
       onEnd(res, function(data) {
-        var delta = Date.now() - startTime;
-        assert.equal(delta > 30, true);
-        assert.equal(delta < 70, true);
-        done();
+	var delta = Date.now() - startTime;
+	assert.equal(delta > 30, true);
+	assert.equal(delta < 70, true);
+	done();
       });
     });
 
@@ -95,9 +237,9 @@ describe('mock mode', function() {
       port: 9000
     }, function(res) {
       onEnd(res, function(data) {
-        assert.equal(res.statusCode, 200);
-        assert.equal(data, '{"text":"a server response"}');
-        done();
+	assert.equal(res.statusCode, 200);
+	assert.equal(data, '{"text":"a server response"}');
+	done();
       });
     });
     request.end();
@@ -119,10 +261,10 @@ describe('mock mode', function() {
       port: 9000
     }, function(res) {
       onEnd(res, function(data) {
-        assert.equal(res.statusCode, 404);
-        assert.equal(res.req.path, '/readRequest/thatDoesntExist');
-        assert.equal(data.replace(/\\/g, '/'), 'No mock exists for /readRequest/thatDoesntExist - (mocksToRead/mockTest/9ae58033c4010180f34fcabb83cd463466b8874c.json)'.replace(/\\/g, '/'));
-        done();
+	assert.equal(res.statusCode, 404);
+	assert.equal(res.req.path, '/readRequest/thatDoesntExist');
+	assert.equal(data.replace(/\\/g, '/'), 'No mock exists for /readRequest/thatDoesntExist - (mocksToRead/mockTest/9ae58033c4010180f34fcabb83cd463466b8874c.json)'.replace(/\\/g, '/'));
+	done();
       });
     });
     request.end();
@@ -154,18 +296,18 @@ describe('mock mode', function() {
       port: 9000
     }, function(res) {
       onEnd(res, function(data) {
-        waitForFile(pathToResponse, function(pathToResponse) {
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+	waitForFile(pathToResponse, function(pathToResponse) {
+	  var recordedResponse = fs.readFileSync(pathToResponse).toString();
+	  var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, '/readRequest/thatDoesntExist');
-          assert.equal(deserializedResponse.contentType, 'application/javascript');
-          assert.equal(deserializedResponse.statusCode, 200);
-          assert.deepEqual(deserializedResponse.data, {});
+	  assert.equal(_.isUndefined(deserializedResponse), false);
+	  assert.equal(deserializedResponse.requestUrl, '/readRequest/thatDoesntExist');
+	  assert.equal(deserializedResponse.contentType, 'application/javascript');
+	  assert.equal(deserializedResponse.statusCode, 200);
+	  assert.deepEqual(deserializedResponse.data, {});
 
-          done();
-        });
+	  done();
+	});
       });
     });
     request.end();
@@ -192,13 +334,13 @@ describe('mock mode', function() {
       port: 9000,
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': postData.length
+	'Content-Type': 'application/x-www-form-urlencoded',
+	'Content-Length': postData.length
       }
     }, function(res) {
       onEnd(res, function(data) {
-        assert.equal(data, 'a server response');
-        done();
+	assert.equal(data, 'a server response');
+	done();
       });
     });
     request.write(postData);

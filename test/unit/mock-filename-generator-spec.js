@@ -24,7 +24,7 @@ describe('mock filename generator', function() {
       }
     };
 
-    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, undefined);
+    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, undefined)[0];
 
     assertPathEqual(mockResponsePath, 'mocks/foo/test.json');
   });
@@ -42,7 +42,7 @@ describe('mock filename generator', function() {
       }
     };
 
-    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, req);
+    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, req)[0];
 
     assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_really=that&readable=at&all_09b2ed55fb2b388fbe02c69e94bca5d86ff7247c.json');
   });
@@ -60,7 +60,7 @@ describe('mock filename generator', function() {
       }
     };
 
-    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, req);
+    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, req)[0];
 
     assert.equal(mockResponsePath.split('/')[2].length, 255);
     assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_really=that&readable=at&all&aBigNumber=9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_ae2f067764e7839efdb85d791fbe031a9d1f63e9.json');

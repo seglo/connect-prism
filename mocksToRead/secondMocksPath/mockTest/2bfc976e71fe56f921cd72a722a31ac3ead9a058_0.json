@@ -1,0 +1,6 @@
+{
+  "requestUrl": "/readRequest2",
+  "contentType": "application/javascript",
+  "statusCode": 200,
+  "data": "the first given path answers with the first file in the sequence"
+  }
