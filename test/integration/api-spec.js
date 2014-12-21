@@ -1,93 +1,61 @@
-// 'use strict';
+'use strict';
 
-// var assert = require('assert');
-// var di = require('di');
-// var http = require('http');
-// var querystring = require('querystring');
+var assert = require('assert');
+var di = require('di');
+var fs = require('fs');
+var http = require('http');
+var querystring = require('querystring');
 
-// var prism = require('../../');
+var prism = require('../../');
+var testUtils = require('../test-utils');
 
-// var Api = require('../../lib/services/api');
-// var PrismManager = require('../../lib/prism-manager');
+describe('api', function() {
+  var manager = prism.manager;
 
-// describe('api', function() {
-//   var manager = prism.manager;
+  afterEach(function() {
+    manager.reset();
+  });
 
-//   afterEach(function() {
-//     manager.reset();
-//   });
+  it('should use api to change to record mode', function(done) {
+    prism.create({
+      name: 'setModeTest',
+      mode: 'proxy',
+      context: '/test',
+      host: 'localhost',
+      port: 8090
+    });
+    prism.useApi();
 
-//   var api;
+    var pathToResponse = testUtils.deleteMock('/test');
+    assert.equal(fs.existsSync(pathToResponse), false);
 
-//   // beforeEach(function() {
-//   //   function MockPrismManager() {
-//   //     this.getApiConfig = function() {
-//   //       return {
-//   //         enabled: true,
-//   //         route: '/_prism/'
-//   //       };
-//   //     };
-//   //   }
+    var apiReq = http.request({
+      host: 'localhost',
+      path: '/_prism/setmode/setModeTest/record',
+      port: 9000,
+      method: 'POST'
+    }, function(res) {
+      testUtils.onEnd(res, function(data) {
+        assert.equal(data, 'OK');
 
-//   //   // NOTE: it's important to annotate before getting the injector instance
-//   //   di.annotate(MockPrismManager, new di.Provide(PrismManager));
-//   //   var injector = new di.Injector([MockPrismManager]);
+        var request = http.request({
+          host: 'localhost',
+          path: '/test',
+          port: 9000
+        }, function(res) {
+          testUtils.onEnd(res, function(data) {
+            testUtils.waitForFile(pathToResponse, function(pathToResponse) {
 
-//   //   api = injector.get(Api);
-//   // });
+              assert.equal(fs.existsSync(pathToResponse), true);
 
+              done();
+            });
+          });
+        });
+        request.end();
 
-//   describe('api url validation', function() {
-//     var api;
-
-//     beforeEach(function() {
-//       prism.create({
-//         name: 'foo',
-//         context: '/test',
-//         host: 'localhost',
-//         port: 8090
-//       });
-
-//       api = injector.get(Api);
-//     });
-
-//     it('should validate a real prism api request', function() {
-//       var validApiRequest = api.isApiRequest({
-//         "url": "/_prism/foo"
-//       });
-
-//       assert.equal(validApiRequest, true);
-//     });
-
-//     it('should invalidate an incorrect prism api request', function() {
-//       var validApiRequest = api.isApiRequest({
-//         "url": "/anyOtherRequest/foo"
-//       });
-
-//       assert.equal(validApiRequest, false);
-//     });
-//   });
-
-//   it.only('should create a new prism instance', function() {
-//     var request = httpMocks.createRequest({
-//       method: 'POST',
-//       url: '/_prism/create'
-//     });
-
-//     var postData = querystring.stringify({
-//       name: 'mockTest',
-//       mode: 'mock',
-//       mocksPath: './mocksToRead',
-//       context: '/readRequest',
-//       host: 'localhost',
-//       port: 8090
-//     });
-
-//     request.write(postData);
-//     request.end();
-
-//     var response = httpMocks.createResponse();
-
-//     api.requestHandler(request, response);
-//   });
-// });
+      });
+    });
+    apiReq.end();
+  });
+});

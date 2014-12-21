@@ -36,6 +36,7 @@
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-express": "^1.4.1",
     "grunt-mocha-test": "^0.11.0",
+    "q": "^1.1.2",
     "querystring": "^0.2.0"
   },
   "dependencies": {

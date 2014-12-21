@@ -23,7 +23,7 @@ module.exports = {
 
     if (handledByApi) {
       // we can only resolve the request body when we're not
-      // proxying a connection (i.e for our api)
+      // proxying a request (i.e for our api)
       var buffer = '';
       req.on('data', function(data) {
         buffer += data;
