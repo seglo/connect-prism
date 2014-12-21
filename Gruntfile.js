@@ -9,10 +9,10 @@ module.exports = function(grunt) {
   grunt.initConfig({
     jshint: {
       all: [
-        'Gruntfile.js',
-        'tasks/*.js',
-        'lib/*.js',
-        'test/**/*.js'
+      'Gruntfile.js',
+      'tasks/*.js',
+      'lib/*.js',
+      'test/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -50,13 +50,19 @@ module.exports = function(grunt) {
       server: {
         options: {
           port: 8090,
-          server: path.resolve('./test/integration/test-server.js')
+          server: path.resolve('./test/express-servers/test-server.js')
         }
       },
       serverCompression: {
         options: {
           port: 8091,
-          server: path.resolve('./test/integration/test-server-compression.js')
+          server: path.resolve('./test/express-servers/test-server-compression.js')
+        }
+      },
+      dev: {
+        options: {
+          port: 8090,
+          server: path.resolve('./test/express-servers/dev.js')
         }
       }
     }
@@ -78,5 +84,25 @@ module.exports = function(grunt) {
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
+
+  // Run in dev mode
+  grunt.registerTask('dev', 'run in dev mode', function(prismMode) {
+    prismMode = prismMode || 'proxy';
+
+    prism.create({
+      name: 'dev',
+      mode: prismMode,
+      context: '/api',
+      host: 'localhost',
+      port: 8090,
+      rewrite: {
+        '^/api/bookauthors': '/api/authors',
+        '^/api/authors?/.*': '/api/authors'
+      }
+    });
+    prism.useApi();
+
+    grunt.task.run(['connect', 'express:dev', 'express-keepalive']);
+  });
 
 };
