@@ -61,7 +61,7 @@ module.exports = function(grunt) {
       },
       dev: {
         options: {
-          port: 8090,
+          port: 8092,
           server: path.resolve('./test/express-servers/dev.js')
         }
       }
@@ -94,7 +94,7 @@ module.exports = function(grunt) {
       mode: prismMode,
       context: '/api',
       host: 'localhost',
-      port: 8090,
+      port: 8092,
       rewrite: {
         '^/api/bookauthors': '/api/authors',
         '^/api/authors?/.*': '/api/authors'
@@ -102,7 +102,7 @@ module.exports = function(grunt) {
     });
     prism.useApi();
 
-    grunt.task.run(['connect', 'express:dev', 'express-keepalive']);
+    grunt.task.run(['connect', 'express:server', 'express:serverCompression', 'express:dev', 'express-keepalive']);
   });
 
 };

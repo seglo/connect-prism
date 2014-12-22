@@ -14,8 +14,8 @@ module.exports = {
   create: Prism.create,
   useApi: Api.init,
   middleware: function(req, res, next) {
-    if(!Api.handleRequest(req, res, next)) {
-      HttpEvents.handleRequest(req, res, next);
-    }
+    if (!HttpEvents.handleRequest(req, res) && !Api.handleRequest(req, res)) {
+      next();
+    } 
   }
 };
