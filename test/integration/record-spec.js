@@ -10,6 +10,8 @@ var querystring = require('querystring');
 
 var prism = require('../../');
 var testUtils = require('../test-utils');
+
+var deleteMock = testUtils.deleteMock;
 var onEnd = testUtils.onEnd;
 var waitForFile = testUtils.waitForFile;
 
@@ -35,17 +37,7 @@ describe('record mode', function() {
       port: 8090
     });
 
-    var recordRequest = '/test';
-    var proxy = manager.get(recordRequest);
-
-    assert.equal(_.isUndefined(proxy), false);
-
-    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
-      url: recordRequest
-    });
-    if (fs.existsSync(pathToResponse)) {
-      fs.unlinkSync(pathToResponse);
-    }
+    var pathToResponse = deleteMock('/test');
 
     var request = http.request({
       host: 'localhost',
@@ -80,18 +72,7 @@ describe('record mode', function() {
       port: 8090
     });
 
-    var recordRequest = '/json';
-    var proxy = manager.get(recordRequest);
-
-    assert.equal(_.isUndefined(proxy), false);
-
-    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
-      url: recordRequest
-    });
-
-    if (fs.existsSync(pathToResponse)) {
-      fs.unlinkSync(pathToResponse);
-    }
+    var pathToResponse = deleteMock('/json');
 
     var request = http.request({
       host: 'localhost',
@@ -241,17 +222,7 @@ describe('record mode', function() {
   });
 
   function decompressTest(encoding, done) {
-    var recordRequest = '/test';
-    var proxy = manager.get(recordRequest);
-
-    assert.equal(_.isUndefined(proxy), false);
-
-    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
-      url: recordRequest
-    });
-    if (fs.existsSync(pathToResponse)) {
-      fs.unlinkSync(pathToResponse);
-    }
+    var pathToResponse = deleteMock('/test');
 
     var request = http.request({
       host: 'localhost',

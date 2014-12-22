@@ -9,6 +9,10 @@ var querystring = require('querystring');
 var prism = require('../../');
 var testUtils = require('../test-utils');
 
+var deleteMock = testUtils.deleteMock;
+var onEnd = testUtils.onEnd;
+var waitForFile = testUtils.waitForFile;
+
 describe('api', function() {
   var manager = prism.manager;
 
@@ -26,8 +30,7 @@ describe('api', function() {
     });
     prism.useApi();
 
-    var pathToResponse = testUtils.deleteMock('/test');
-    assert.equal(fs.existsSync(pathToResponse), false);
+    var pathToResponse = deleteMock('/test');
 
     var apiReq = http.request({
       host: 'localhost',
@@ -35,7 +38,7 @@ describe('api', function() {
       port: 9000,
       method: 'POST'
     }, function(res) {
-      testUtils.onEnd(res, function(data) {
+      onEnd(res, function(data) {
         assert.equal(data, 'OK');
 
         var request = http.request({
@@ -43,8 +46,8 @@ describe('api', function() {
           path: '/test',
           port: 9000
         }, function(res) {
-          testUtils.onEnd(res, function(data) {
-            testUtils.waitForFile(pathToResponse, function(pathToResponse) {
+          onEnd(res, function(data) {
+            waitForFile(pathToResponse, function(pathToResponse) {
 
               assert.equal(fs.existsSync(pathToResponse), true);
 
