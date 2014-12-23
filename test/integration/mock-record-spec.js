@@ -10,7 +10,8 @@ var http = require('http');
 var prism = require('../../');
 
 var testUtils = require('../test-utils');
-var onEnd = testUtils.onEnd;
+var httpGet = testUtils.httpGet;
+var httpPost = testUtils.httpPost;
 var waitForFile = testUtils.waitForFile;
 
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
@@ -46,7 +47,6 @@ describe('mock & record mode', function() {
   });
 
   it('can mock a response', function(done) {
-    this.timeout(50000);
     prism.create({
       name: 'mockRecordTest',
       mode: 'mockrecord',
@@ -66,18 +66,10 @@ describe('mock & record mode', function() {
 
     assert.equal(fs.existsSync(pathToResponse), true);
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-
-        assert.equal(res.req.path, '/test');
-        done();
-      });
+    httpGet('/test', function(res, data) {
+      assert.equal(res.req.path, '/test');
+      done();
     });
-    request.end();
   });
 
   it('can record a new response', function(done) {
@@ -101,25 +93,15 @@ describe('mock & record mode', function() {
 
     assert.equal(fs.existsSync(pathToResponse), false);
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/json',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToResponse, function(pathToResponse) {
-
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
-
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, '/json');
-
-          done();
-        });
+    httpGet('/json', function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, '/json');
+        done();
       });
     });
-    request.end();
   });
 
   it('can ignore all url parameters', function(done) {
@@ -149,25 +131,18 @@ describe('mock & record mode', function() {
 
     assert.equal(pathToResponse, pathToParameterisedResponse);
 
-    var request = http.request({
-      host: 'localhost',
-      path: parameterisedRecordRequest,
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
+    httpGet(parameterisedRecordRequest, function(res, data) {
+      waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
 
-          var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+        var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, recordRequest);
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, recordRequest);
 
-          done();
-        });
+        done();
       });
     });
-    request.end();
   });
 
   it('can ignore certain parameters', function(done) {
@@ -197,25 +172,18 @@ describe('mock & record mode', function() {
 
     assert.equal(pathToResponse, pathToParameterisedResponse);
 
-    var request = http.request({
-      host: 'localhost',
-      path: parameterisedRecordRequest,
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
+    httpGet(parameterisedRecordRequest, function(res, data) {
+      waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
 
-          var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+        var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, recordRequest);
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, recordRequest);
 
-          done();
-        });
+        done();
       });
     });
-    request.end();
   });
 
   it('can ignore parameters by regular expression', function(done) {
@@ -245,24 +213,17 @@ describe('mock & record mode', function() {
 
     assert.equal(pathToResponse, pathToParameterisedResponse);
 
-    var request = http.request({
-      host: 'localhost',
-      path: parameterisedRecordRequest,
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
+    httpGet(parameterisedRecordRequest, function(res, data) {
+      waitForFile(pathToParameterisedResponse, function(pathToParameterisedResponse) {
 
-          var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+        var recordedResponse = fs.readFileSync(pathToParameterisedResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, recordRequest);
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, recordRequest);
 
-          done();
-        });
+        done();
       });
     });
-    request.end();
   });
 });

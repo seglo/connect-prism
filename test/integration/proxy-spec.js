@@ -7,7 +7,7 @@ var http = require('http');
 
 var prism = require('../../');
 var testUtils = require('../test-utils');
-var onEnd = testUtils.onEnd;
+var httpGet = testUtils.httpGet;
 
 var injector = new di.Injector([]);
 
@@ -27,17 +27,11 @@ describe('proxy mode', function() {
       port: 8090
     });
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        assert.equal(data, 'a server response');
-        done();
-      });
+    httpGet('/test', function(res, data) {
+      assert.equal(data, 'a server response');
+      done();
     });
-    request.end();
+
   });
 
   it('can delay a proxied response by approximately 50ms', function(done) {
@@ -51,20 +45,12 @@ describe('proxy mode', function() {
     });
 
     var startTime = Date.now();
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        var delta = Date.now() - startTime;
-        assert.equal(delta > 30, true);
-        assert.equal(delta < 70, true);
-        done();
-      });
+    httpGet('/test', function(res, data) {
+      var delta = Date.now() - startTime;
+      assert.equal(delta > 30, true);
+      assert.equal(delta < 70, true);
+      done();
     });
-
-    request.end();
   });
 
   it('can rewrite a request', function(done) {
@@ -79,16 +65,9 @@ describe('proxy mode', function() {
       }
     });
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        assert.equal(data, 'a rewritten server response');
-        done();
-      });
+    httpGet('/test', function(res, data) {
+      assert.equal(data, 'a rewritten server response');
+      done();
     });
-    request.end();
   });
 });

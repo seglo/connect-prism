@@ -13,6 +13,8 @@ var testUtils = require('../test-utils');
 
 var deleteMock = testUtils.deleteMock;
 var onEnd = testUtils.onEnd;
+var httpGet = testUtils.httpGet;
+var httpPost = testUtils.httpPost;
 var waitForFile = testUtils.waitForFile;
 
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
@@ -39,28 +41,21 @@ describe('record mode', function() {
 
     var pathToResponse = deleteMock('/test');
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToResponse, function(pathToResponse) {
+    httpGet('/test', function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
 
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, '/test');
-          assert.equal(deserializedResponse.contentType, 'text/html; charset=utf-8');
-          assert.equal(deserializedResponse.statusCode, 200);
-          assert.equal(deserializedResponse.data, 'a server response');
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, '/test');
+        assert.equal(deserializedResponse.contentType, 'text/html; charset=utf-8');
+        assert.equal(deserializedResponse.statusCode, 200);
+        assert.equal(deserializedResponse.data, 'a server response');
 
-          done();
-        });
+        done();
       });
     });
-    request.end();
   });
 
   it('can record a JSON response', function(done) {
@@ -74,24 +69,17 @@ describe('record mode', function() {
 
     var pathToResponse = deleteMock('/json');
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/json',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToResponse, function(pathToResponse) {
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+    httpGet('/json', function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.data.text, 'a server response');
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.data.text, 'a server response');
 
-          done();
-        });
+        done();
       });
     });
-    request.end();
   });
 
   it('can record a response of a rewritten request outside the prism context', function(done) {
@@ -120,25 +108,18 @@ describe('record mode', function() {
       fs.unlinkSync(pathToResponse);
     }
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToResponse, function(pathToResponse) {
+    httpGet('/test', function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
 
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, '/rewrite');
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, '/rewrite');
 
-          done();
-        });
+        done();
       });
     });
-    request.end();
   });
 
   it('can record a deflate compressed response', function(done) {
@@ -194,31 +175,17 @@ describe('record mode', function() {
       fs.unlinkSync(pathToResponse);
     }
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': postData.length
-      }
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToResponse, function(pathToResponse) {
+    httpPost('/test', function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
 
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, '/test');
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, '/test');
-
-          done();
-        });
+        done();
       });
-    });
-    request.write(postData);
-    request.end();
+    }, postData);
   });
 
   function decompressTest(encoding, done) {
@@ -232,7 +199,7 @@ describe('record mode', function() {
         'Accept-Encoding': encoding
       }
     }, function(res) {
-      onEnd(res, function(data) {
+      onEnd(res, function(res, data) {
         waitForFile(pathToResponse, function(pathToResponse) {
 
           var recordedResponse = fs.readFileSync(pathToResponse).toString();
@@ -247,5 +214,4 @@ describe('record mode', function() {
     });
     request.end();
   }
-
 });

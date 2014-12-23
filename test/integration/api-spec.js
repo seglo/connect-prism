@@ -3,14 +3,14 @@
 var assert = require('assert');
 var di = require('di');
 var fs = require('fs');
-var http = require('http');
 var querystring = require('querystring');
 
 var prism = require('../../');
 var testUtils = require('../test-utils');
 
 var deleteMock = testUtils.deleteMock;
-var onEnd = testUtils.onEnd;
+var httpGet = testUtils.httpGet;
+var httpPost = testUtils.httpPost;
 var waitForFile = testUtils.waitForFile;
 
 describe('api', function() {
@@ -35,63 +35,29 @@ describe('api', function() {
     it('should change to record mode', function(done) {
       var pathToResponse = deleteMock('/test');
 
-      var apiReq = http.request({
-        host: 'localhost',
-        path: '/_prism/setmode/setModeTest/record',
-        port: 9000,
-        method: 'POST'
-      }, function(res) {
-        onEnd(res, function(data) {
-          assert.equal(data, 'OK');
-
-          var request = http.request({
-            host: 'localhost',
-            path: '/test',
-            port: 9000
-          }, function(res) {
-            onEnd(res, function(data) {
-              waitForFile(pathToResponse, function(pathToResponse) {
-                assert.equal(fs.existsSync(pathToResponse), true);
-
-                done();
-              });
-            });
+      httpPost('/_prism/setmode/setModeTest/record', function(res, data) {
+        assert.equal(data, 'OK');
+        httpGet('/test', function(res, data) {
+          waitForFile(pathToResponse, function(pathToResponse) {
+            assert.equal(fs.existsSync(pathToResponse), true);
+            done();
           });
-          request.end();
-
         });
       });
-      apiReq.end();
     });
 
     it('should not accept invalid mode', function(done) {
-      var apiReq = http.request({
-        host: 'localhost',
-        path: '/_prism/setmode/setModeTest/foo',
-        port: 9000,
-        method: 'POST'
-      }, function(res) {
-        onEnd(res, function(data) {
-          assert.equal(data, 'An invalid prism mode was given.');
-          done();
-        });
+      httpPost('/_prism/setmode/setModeTest/foo', function(res, data) {
+        assert.equal(data, 'An invalid prism mode was given.');
+        done();
       });
-      apiReq.end();
     });
 
     it('should not accept invalid name', function(done) {
-      var apiReq = http.request({
-        host: 'localhost',
-        path: '/_prism/setmode/foo/record',
-        port: 9000,
-        method: 'POST'
-      }, function(res) {
-        onEnd(res, function(data) {
-          assert.equal(data, 'The prism name specified does not exist.');
-          done();
-        });
+      httpPost('/_prism/setmode/foo/record', function(res, data) {
+        assert.equal(data, 'The prism name specified does not exist.');
+        done();
       });
-      apiReq.end();
     });
   });
 
@@ -106,34 +72,12 @@ it('should create a new prism config', function(done) {
     "port": 8090
   });
 
-  var apiReq = http.request({
-    host: 'localhost',
-    path: '/_prism/create',
-    port: 9000,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': postData.length
-    }
-  }, function(res) {
-    onEnd(res, function(data) {
-      assert.equal(data, 'OK');
-
-      var request = http.request({
-        host: 'localhost',
-        path: '/test',
-        port: 9000
-      }, function(res) {
-        onEnd(res, function(data) {
-          assert.equal(data, 'a server response');
-          done();
-        });
-      });
-      request.end();
-
+  httpPost('/_prism/create', function(res, data) {
+    assert.equal(data, 'OK');
+    httpGet('/test', function(res, data) {
+      assert.equal(data, 'a server response');
+      done();
     });
-  });
-  apiReq.write(postData);
-  apiReq.end();
+  }, postData);
 });
 });

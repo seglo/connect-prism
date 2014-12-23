@@ -10,7 +10,8 @@ var querystring = require('querystring');
 
 var prism = require('../../');
 var testUtils = require('../test-utils');
-var onEnd = testUtils.onEnd;
+var httpGet = testUtils.httpGet;
+var httpPost = testUtils.httpPost;
 var waitForFile = testUtils.waitForFile;
 
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
@@ -36,19 +37,12 @@ describe('mock mode', function() {
       port: 8090
     });
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/readRequest',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        assert.equal(res.statusCode, 200);
-        assert.equal(res.req.path, '/readRequest');
-        assert.equal(data, 'a server response');
-        done();
-      });
+    httpGet('/readRequest', function(res, data) {
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.req.path, '/readRequest');
+      assert.equal(data, 'a server response');
+      done();
     });
-    request.end();
   });
 
   it('can delay a mock response by approximately 50ms', function(done) {
@@ -63,20 +57,13 @@ describe('mock mode', function() {
     });
 
     var startTime = Date.now();
-    var request = http.request({
-      host: 'localhost',
-      path: '/mockDelayRequest',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        var delta = Date.now() - startTime;
-        assert.equal(delta > 30, true);
-        assert.equal(delta < 70, true);
-        done();
-      });
-    });
 
-    request.end();
+    httpGet('/mockDelayRequest', function(res, data) {
+      var delta = Date.now() - startTime;
+      assert.equal(delta > 30, true);
+      assert.equal(delta < 70, true);
+      done();
+    });
   });
 
   it('can mock a JSON response', function(done) {
@@ -89,18 +76,11 @@ describe('mock mode', function() {
       port: 8090
     });
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/jsonMockRequest',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        assert.equal(res.statusCode, 200);
-        assert.equal(data, '{"text":"a server response"}');
-        done();
-      });
+    httpGet('/jsonMockRequest', function(res, data) {
+      assert.equal(res.statusCode, 200);
+      assert.equal(data, '{"text":"a server response"}');
+      done();
     });
-    request.end();
   });
 
   it('can handle a 404 in mock mode', function(done) {
@@ -113,19 +93,13 @@ describe('mock mode', function() {
       port: 8090
     });
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/readRequest/thatDoesntExist',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        assert.equal(res.statusCode, 404);
-        assert.equal(res.req.path, '/readRequest/thatDoesntExist');
-        assert.equal(data.replace(/\\/g, '/'), 'No mock exists for /readRequest/thatDoesntExist - (mocksToRead/mockTest/9ae58033c4010180f34fcabb83cd463466b8874c.json)'.replace(/\\/g, '/'));
-        done();
-      });
+    httpGet('/readRequest/thatDoesntExist', function(res, data) {
+      assert.equal(res.statusCode, 404);
+      assert.equal(res.req.path, '/readRequest/thatDoesntExist');
+      assert.equal(data.replace(/\\/g, '/'), 'No mock exists for /readRequest/thatDoesntExist - (mocksToRead/mockTest/9ae58033c4010180f34fcabb83cd463466b8874c.json)'.replace(/\\/g, '/'));
+      done();
     });
-    request.end();
+
   });
 
   it('will create a mock for a 404', function(done) {
@@ -148,27 +122,21 @@ describe('mock mode', function() {
       fs.unlinkSync(pathToResponse);
     }
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/readRequest/thatDoesntExist',
-      port: 9000
-    }, function(res) {
-      onEnd(res, function(data) {
-        waitForFile(pathToResponse, function(pathToResponse) {
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
+    httpGet('/readRequest/thatDoesntExist', function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
 
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.requestUrl, '/readRequest/thatDoesntExist');
-          assert.equal(deserializedResponse.contentType, 'application/javascript');
-          assert.equal(deserializedResponse.statusCode, 200);
-          assert.deepEqual(deserializedResponse.data, {});
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, '/readRequest/thatDoesntExist');
+        assert.equal(deserializedResponse.contentType, 'application/javascript');
+        assert.equal(deserializedResponse.statusCode, 200);
+        assert.deepEqual(deserializedResponse.data, {});
 
-          done();
-        });
+        done();
       });
+
     });
-    request.end();
   });
 
   it('can mock a response with request body', function(done) {
@@ -186,22 +154,9 @@ describe('mock mode', function() {
       'foo': 'bar'
     });
 
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': postData.length
-      }
-    }, function(res) {
-      onEnd(res, function(data) {
-        assert.equal(data, 'a server response');
-        done();
-      });
-    });
-    request.write(postData);
-    request.end();
+    httpPost('/test', function(res, data) {
+      assert.equal(data, 'a server response');
+      done();
+    }, postData);
   });
 });
