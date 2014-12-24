@@ -51,6 +51,13 @@ module.exports = {
 
     return pathToResponse;
   },
+  deleteMocks: function(paths) {
+    _.each(paths, function(path) {
+      if (fs.existsSync(path)) {
+        fs.unlinkSync(path);
+      }
+    });
+  },
   httpGet: function(path, cb) {
     var req = http.request({
       host: 'localhost',
