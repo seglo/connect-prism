@@ -124,6 +124,26 @@ describe('api', function() {
         });
       }, postData);
     });
+
+    it('should clear all mock overrides', function(done) {
+      prism.create({
+        name: 'overrideRemoveTest',
+        mode: 'mock',
+        context: '/test',
+        host: 'localhost',
+        mocksPath: 'mocksToRead',
+        port: 8090
+      });
+      prism.useApi();
+
+      httpPost('/_prism/override/overrideRemoveTest/clear', function(res, data) {
+        assert.equal(data, 'OK');
+        httpGet('/test', function(res, data) {
+          assert.equal(data, 'a server response');
+          done();
+        });
+      });
+    });
   });
 
 describe('set mode', function() {
