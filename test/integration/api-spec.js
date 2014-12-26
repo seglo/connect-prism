@@ -20,6 +20,15 @@ describe('api', function() {
     manager.reset();
   });
 
+  it('should report the correct version', function(done) {
+    prism.useApi();
+
+    httpGet('/_prism/version', function(res, data) {
+      assert.equal(data, require('../../package.json').version);
+      done();
+    });
+  });
+
   it('should create a new prism config', function(done) {
     prism.useApi();
 
