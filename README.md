@@ -54,6 +54,8 @@ Example mock generated:
 
 The mock (read) mode will listen for requests to a certain endpoint.  When a request matches an endpoint it will attempt to find a previously recorded response in the directory you defined mocks to be saved in (./mocks by default).  
 
+##### Stubbing new mocks
+
 If a matching response is not found then prism will return a 404.  Prism will also create a mock during a 404.  This is useful when you want to mock API endpoints that may not exist yet.  To avoid having the subsequent request from returning the generated empty mock, the file has a .404 extension.  To use the mock, populate it with the appropriate values and remove the .404 extension.  This feature was contributed by [Miloš Mošovský](https://github.com/MilosMosovsky).
 
 #### Mock & Record
@@ -285,6 +287,126 @@ Default: `false`
 
 Clear the `mocks/target` directory when prism is initialized.  The mocks directory will only be cleared of `.json` and `.json.404` files and is not recursive.  The mocks directory will only be cleared when in `record` or `mockrecord` modes.
 
+## API
+
+### Overview
+
+Prism has a REST API you can enable at run time.  This allows you to change, create, or remove prism configuration without having to update config files.  Some common use cases:
+
+* Switch to a different mode (i.e. mock to record)
+* Override mocked responses while testing
+
+To enable the API call the `useApi()` function of the root prism object.
+
+```javascript
+var prism = require('connect-prism');
+
+prism.useApi();
+```
+
+### API features
+
+When the API is enabled you can access it with the `/_prism` base path of your connect server.
+
+#### Version
+
+`GET` `/_prism/version`
+
+Returns the version of `connect-prism` curreently running.  i.e.) 1.0.0
+
+#### Set mode
+
+`POST` `/_prism/setmode/:prism_name/:mode`
+
+`prism_name`: The [`name`](#name) of the prism configuration.
+
+`mode`: The [`mode`](#mode) you want to switch to.
+
+#### Create prism instance
+
+`POST` `/_prism/create`
+
+Example Request body
+
+```javascript
+{
+  "name": "createTest",
+  "mode": "proxy",
+  "context": "/test",
+  "host": "localhost",
+  "port": 8090
+}
+```
+
+Any valid prism configuration can be sent in the request body.  Some validation errors are returned to the caller.  To assist in troubleshooting you should enable verbose logging when running prism and watch the console.
+
+#### Remove prism instance
+
+`POST` `/_prism/remove/:prism_name`
+
+`prism_name`: The [`name`](#name) of the prism configuration.
+
+#### Override a mock with a new response
+
+`POST` `/_prism/override/:prism_name/create`
+
+`prism_name`: The [`name`](#name) of the prism configuration.
+
+Example Request body
+
+```javascript
+{
+  "mock": {
+    "requestUrl": "/test",
+    "contentType": "text/plain",
+    "statusCode": 200,
+    "data": "an overidden server response"
+  }
+}
+```
+
+The `mock` object is the prism mock response that will be populated in the override.  This is the same as the mock responses that connect prism generates.  To see an example of the contents of a mock response see the [Record](#record) mode configuration.
+
+Prism will create a mock response with the extension `.override` to differentiate it from other mock responses.
+
+##### Fake request parameters for a mock
+
+Sometimes prism is configured in a way where it requires more than just the `requestUrl` of the mock response to generate a mock.  For example, when you use the [`hashFullRequest`](#hash-full-request) feature it will also use the request body to generate the mock response filename.  When using the [`mockFilenameGenerator`](#mock-filename-generator) it's possible to use any other property of the request object (i.e. http VERB).
+
+In order to support this capability when overriding mock responses you can also include a fake request (see the [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) documentation for properties of a request).
+
+```javascript
+{
+  "req": {
+    "url": "/test",
+    "method": "GET",
+    "body": "i like cheese"
+  },
+  "mock": {
+    "requestUrl": "/test",
+    "contentType": "text/plain",
+    "statusCode": 200,
+    "data": "an overidden server response"
+  }
+}
+```
+
+#### Remove an overriden mock response
+
+`POST` `/_prism/override/:prism_name/remove`
+
+`prism_name`: The [`name`](#name) of the prism configuration.
+
+Deletes the override mock response from the file system.  Doing this will allow you to call the originally recorded mocked.
+
+#### Clear all overriden mock responses
+
+`POST` `/_prism/override/:prism_name/clear`
+
+`prism_name`: The [`name`](#name) of the prism configuration.
+
+Deletes all the overrides (mock responses with a `.override` extension in the prism `mocksPath` directory).
+
 ## Contributing
 
 Try to stay within conventions already laid out in project.  Write unit tests where appropriate.
@@ -304,6 +426,7 @@ node-debug $(which grunt) test
 Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
+* 1.0.0 Added Prism API features.
 * 0.8.0 Add clearOnStart setting.
 * 0.7.5 Fix socket hang up issue by handling aborted requests appropriately.
 [Issue #527 from node-http-proxy project.](https://github.com/nodejitsu/node-http-proxy/issues/527)
