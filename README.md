@@ -19,6 +19,8 @@ npm install connect-prism --save-dev
 
 Prism is similar to the Ruby project [VCR](https://github.com/elcuervo/vcr.js).
 
+For sample use cases see the [Frequently Asked Questions (FAQ)](https://github.com/seglo/connect-prism/wiki) page on the wiki.
+
 The purpose of this middleware is to provide an easy way for front end developers to record HTTP responses returned by their API (or some other remote source) and then be able replay the responses in the future.  It's basically an HTTP cache, but for developers working on a Single Page Application (SPA).
 
 It's useful for mocking complex & high latency API calls during development.  It's also useful when writing e2e tests for your SPA only, removing the server from the equation.  This results in much faster execution of your e2e test suite.
