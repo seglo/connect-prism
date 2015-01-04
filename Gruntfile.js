@@ -101,6 +101,7 @@ module.exports = function(grunt) {
       }
     });
     prism.useApi();
+    prism.useVerboseLog();
 
     grunt.task.run(['connect', 'express:server', 'express:serverCompression', 'express:dev', 'express-keepalive']);
   });

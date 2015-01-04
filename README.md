@@ -409,6 +409,15 @@ Deletes the override mock response from the file system.  Doing this will allow 
 
 Deletes all the overrides (mock responses with a `.override` extension in the prism `mocksPath` directory).
 
+### Logging
+
+To enable verbose logging you need to call `useVerboseLog()`.  Prism uses the [`winston`](https://github.com/flatiron/winston) logging library.
+
+```javascript
+var prism = require('connect-prism');
+prism.useVerboseLog();
+```
+
 ## Contributing
 
 Try to stay within conventions already laid out in project.  Write unit tests where appropriate.
@@ -428,7 +437,8 @@ node-debug $(which grunt) test
 Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
-* 1.0.0 Added Prism API features.
+* 1.0.0 Added Prism API features.  
+Use winston for logging and removed grunt library dependency.
 * 0.8.0 Add clearOnStart setting.
 * 0.7.5 Fix socket hang up issue by handling aborted requests appropriately.
 [Issue #527 from node-http-proxy project.](https://github.com/nodejitsu/node-http-proxy/issues/527)
