@@ -72,18 +72,21 @@ describe('api', function() {
   });
 
   describe('mock override', function() {
-    beforeEach(function() {
+    beforeEach(function(done) {
       testUtils.deleteMocks([
         // should create a mock override
         './mocks/overrideCreateTest/2723f866830446c640c9cc9942fed2988e0a2c1a.json.override'
       ]);
-      fs.writeFile('./mocksToRead/overrideRemoveTest/f133a4599372cf531bcdbfeb1116b9afe8d09b4f.json.override',
-        JSON.stringify({
-          "requestUrl": "/test",
-          "contentType": "text/plain",
-          "statusCode": 200,
-          "data": "an overidden server response"
-        }, null, 2));
+
+      var mockPath = './mocksToRead/overrideRemoveTest/f133a4599372cf531bcdbfeb1116b9afe8d09b4f.json.override';
+      var mockContents = JSON.stringify({
+        "requestUrl": "/test",
+        "contentType": "text/plain",
+        "statusCode": 200,
+        "data": "an overidden server response"
+      }, null, 2);
+
+      testUtils.safeWriteFile(mockPath, mockContents, done);
     });
 
     it('should create a mock override', function(done) {
