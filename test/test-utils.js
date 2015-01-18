@@ -15,6 +15,28 @@ var mockFilenameGenerator = injector.get(require('../lib/services/mock-filename-
 
 var testUtils = {};
 
+/**
+ * Write a file to disk and call the callback only once the file has been closed.
+ * Used for maximum compatibility with different platforms.
+ */
+testUtils.safeWriteFile = function(filePath, contents, callback) {
+  var buffer = new Buffer(contents);
+  fs.open(filePath, 'w', function(err, fd) {
+    if (err) {
+      throw 'error opening file: ' + err;
+    } else {
+      fs.write(fd, buffer, 0, buffer.length, null, function(err) {
+        if (err) {
+          throw 'error writing file: ' + err;
+        }
+        fs.close(fd, function() {
+          callback();
+        });
+      });
+    }
+  });
+};
+
 testUtils.onEnd = function(res, callback) {
   var data = '';
   res.on('data', function(chunk) {
