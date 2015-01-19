@@ -13,13 +13,11 @@ var injector = new di.Injector([]);
 var manager = prism.manager;
 var mockFilenameGenerator = injector.get(require('../lib/services/mock-filename-generator'));
 
-var testUtils = {};
-
 /**
  * Write a file to disk and call the callback only once the file has been closed.
  * Used for maximum compatibility with different platforms.
  */
-testUtils.safeWriteFile = function(filePath, contents, callback) {
+exports.safeWriteFile = function(filePath, contents, callback) {
   var buffer = new Buffer(contents);
   fs.open(filePath, 'w', function(err, fd) {
     if (err) {
@@ -37,7 +35,7 @@ testUtils.safeWriteFile = function(filePath, contents, callback) {
   });
 };
 
-testUtils.onEnd = function(res, callback) {
+exports.onEnd = function(res, callback) {
   var data = '';
   res.on('data', function(chunk) {
     data += chunk;
@@ -47,20 +45,20 @@ testUtils.onEnd = function(res, callback) {
   });
 };
 
-testUtils.waitForFile = function(filePath, callback) {
+exports.waitForFile = function(filePath, callback) {
   if (!fs.existsSync(filePath) || fs.statSync(filePath).size === 0) {
-    setTimeout(testUtils.waitForFile, 0, filePath, callback);
+    setTimeout(exports.waitForFile, 0, filePath, callback);
     return;
   }
 
   callback(filePath);
 };
 
-testUtils.assertPathEqual = function(path1, path2) {
+exports.assertPathEqual = function(path1, path2) {
   assert.equal(path1.replace(/\\/g, '/'), path2.replace(/\\/g, '/'));
 };
 
-testUtils.deleteMock = function(url) {
+exports.deleteMock = function(url) {
   var prism = manager.get(url);
 
   assert.equal(_.isUndefined(prism), false);
@@ -75,7 +73,7 @@ testUtils.deleteMock = function(url) {
   return pathToResponse;
 };
 
-testUtils.deleteMocks = function(paths) {
+exports.deleteMocks = function(paths) {
   _.each(paths, function(path) {
     if (fs.existsSync(path)) {
       fs.unlinkSync(path);
@@ -83,55 +81,15 @@ testUtils.deleteMocks = function(paths) {
   });
 };
 
-testUtils.httpGet = function(path, cb) {
-  var req = http.request({
-    host: 'localhost',
-    path: path,
-    port: 9000
-  }, function(res) {
-    testUtils.onEnd(res, cb);
-  });
-  req.end();
+exports.httpPost = function(path, body) {
+  return exports.httpCall('POST', path, body);
 };
 
-testUtils.httpPost = function(path, cb, body) {
-  if (body) {
-    var req = http.request({
-      host: 'localhost',
-      path: path,
-      port: 9000,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': body.length
-      }
-    }, function(res) {
-      testUtils.onEnd(res, cb);
-    });
-    req.write(body);
-    req.end();
-  } else {
-    var req2 = http.request({
-      host: 'localhost',
-      path: path,
-      port: 9000,
-      method: 'POST'
-    }, function(res) {
-      testUtils.onEnd(res, cb);
-    });
-    req2.end();
-  }
+exports.httpGet = function(path, body) {
+  return exports.httpCall('GET', path, body);
 };
 
-testUtils.httpPost2 = function(path, body) {
-  return testUtils.httpCall('POST', path, body);
-};
-
-testUtils.httpGet2 = function(path, body) {
-  return testUtils.httpCall('GET', path, body);
-};
-
-testUtils.httpCall = function(method, path, body) {
+exports.httpCall = function(method, path, body) {
   var deferred = q.defer();
   var options = {
     host: 'localhost',
@@ -141,7 +99,7 @@ testUtils.httpCall = function(method, path, body) {
     agent: false
   };
   var cb = function(res) {
-    testUtils.onEnd(res, function(res, data) {
+    exports.onEnd(res, function(res, data) {
       res.body = data;
       deferred.resolve(res);
     });
@@ -161,5 +119,3 @@ testUtils.httpCall = function(method, path, body) {
   req.end();
   return deferred.promise;
 };
-
-module.exports = testUtils;

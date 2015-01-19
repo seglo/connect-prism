@@ -10,9 +10,7 @@ var testUtils = require('../test-utils');
 
 var deleteMock = testUtils.deleteMock;
 var httpGet = testUtils.httpGet;
-var httpGet2 = testUtils.httpGet2;
 var httpPost = testUtils.httpPost;
-var httpPost2 = testUtils.httpPost2;
 var waitForFile = testUtils.waitForFile;
 
 describe('api', function() {
@@ -26,7 +24,7 @@ describe('api', function() {
   it('should report the correct version', function(done) {
     prism.useApi();
 
-    httpGet2('/_prism/version').then(function(res) {
+    httpGet('/_prism/version').then(function(res) {
       assert.equal(res.body, require('../../package.json').version);
       done();
     });
@@ -43,14 +41,15 @@ describe('api', function() {
       "port": 8090
     });
 
-    httpPost2('/_prism/create', postData).then(function(res) {
+    httpPost('/_prism/create', postData).then(function(res) {
       assert.equal(res.body, 'OK');
-      httpGet('/test', function(res, data) {
-        assert.equal(data, 'a server response');
-        done();
-      });
+      return httpGet('/test');
+    }).then(function(res) {
+      assert.equal(res.body, 'a server response');
+      done();
     });
   });
+
 
   it('should remove a prism config', function(done) {
     prism.create({
@@ -62,9 +61,9 @@ describe('api', function() {
     });
     prism.useApi();
 
-    httpPost2('/_prism/remove/removeTest').then(function(res) {
+    httpPost('/_prism/remove/removeTest').then(function(res) {
       assert.equal(res.body, 'OK');
-      return httpGet2('/test');
+      return httpGet('/test');
     }).then(function(res) {
       assert.equal(res.statusCode, 404);
       done();
@@ -107,9 +106,9 @@ describe('api', function() {
           "data": "an overidden server response"
         }
       });
-      httpPost2('/_prism/override/overrideCreateTest/create', postData).then(function(res) {
+      httpPost('/_prism/override/overrideCreateTest/create', postData).then(function(res) {
         assert.equal(res.body, 'OK');
-        return httpGet2('/test');
+        return httpGet('/test');
       }).then(function(res) {
         assert.equal(res.body, 'an overidden server response');
         done();
@@ -131,9 +130,9 @@ describe('api', function() {
         "url": "/test",
         "body": ""
       });
-      httpPost2('/_prism/override/overrideRemoveTest/remove', postData).then(function(res) {
+      httpPost('/_prism/override/overrideRemoveTest/remove', postData).then(function(res) {
         assert.equal(res.body, 'OK');
-        return httpGet2('/test');
+        return httpGet('/test');
       }).then(function(res) {
         assert.equal(res.body, 'a server response');
         done();
@@ -151,9 +150,9 @@ describe('api', function() {
       });
       prism.useApi();
 
-      httpPost2('/_prism/override/overrideRemoveTest/clear').then(function(res) {
+      httpPost('/_prism/override/overrideRemoveTest/clear').then(function(res) {
         assert.equal(res.body, 'OK');
-        return httpGet2('/test');
+        return httpGet('/test');
       }).then(function(res) {
         assert.equal(res.body, 'a server response');
         done();
@@ -176,9 +175,9 @@ describe('api', function() {
     it('should change to record mode', function(done) {
       var pathToResponse = deleteMock('/test');
 
-      httpPost2('/_prism/setmode/setModeTest/record').then(function(res) {
+      httpPost('/_prism/setmode/setModeTest/record').then(function(res) {
         assert.equal(res.body, 'OK');
-        return httpGet2('/test');
+        return httpGet('/test');
       }).then(function(res) {
         waitForFile(pathToResponse, function(pathToResponse) {
           assert.equal(fs.existsSync(pathToResponse), true);
@@ -188,14 +187,14 @@ describe('api', function() {
     });
 
     it('should not accept invalid mode', function(done) {
-      httpPost2('/_prism/setmode/setModeTest/foo').then(function(res) {
+      httpPost('/_prism/setmode/setModeTest/foo').then(function(res) {
         assert.equal(res.body, 'An invalid prism mode was given.');
         done();
       });
     });
 
     it('should not accept invalid name', function(done) {
-      httpPost2('/_prism/setmode/foo/record').then(function(res) {
+      httpPost('/_prism/setmode/foo/record').then(function(res) {
         assert.equal(res.body, 'The prism name specified does not exist.');
         done();
       });

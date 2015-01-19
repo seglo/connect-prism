@@ -27,8 +27,8 @@ describe('proxy mode', function() {
       port: 8090
     });
 
-    httpGet('/test', function(res, data) {
-      assert.equal(data, 'a server response');
+    httpGet('/test').then(function(res) {
+      assert.equal(res.body, 'a server response');
       done();
     });
 
@@ -45,7 +45,7 @@ describe('proxy mode', function() {
     });
 
     var startTime = Date.now();
-    httpGet('/test', function(res, data) {
+    httpGet('/test').then(function(res) {
       var delta = Date.now() - startTime;
       assert.equal(delta > 30, true);
       assert.equal(delta < 70, true);
@@ -65,8 +65,8 @@ describe('proxy mode', function() {
       }
     });
 
-    httpGet('/test', function(res, data) {
-      assert.equal(data, 'a rewritten server response');
+    httpGet('/test').then(function(res) {
+      assert.equal(res.body, 'a rewritten server response');
       done();
     });
   });

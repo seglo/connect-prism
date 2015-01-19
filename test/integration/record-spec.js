@@ -41,7 +41,7 @@ describe('record mode', function() {
 
     var pathToResponse = deleteMock('/test');
 
-    httpGet('/test', function(res, data) {
+    httpGet('/test').then(function(res) {
       waitForFile(pathToResponse, function(pathToResponse) {
 
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
@@ -69,7 +69,7 @@ describe('record mode', function() {
 
     var pathToResponse = deleteMock('/json');
 
-    httpGet('/json', function(res, data) {
+    httpGet('/json').then(function(res) {
       waitForFile(pathToResponse, function(pathToResponse) {
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
         var deserializedResponse = JSON.parse(recordedResponse);
@@ -108,7 +108,7 @@ describe('record mode', function() {
       fs.unlinkSync(pathToResponse);
     }
 
-    httpGet('/test', function(res, data) {
+    httpGet('/test').then(function(res) {
       waitForFile(pathToResponse, function(pathToResponse) {
 
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
@@ -175,7 +175,7 @@ describe('record mode', function() {
       fs.unlinkSync(pathToResponse);
     }
 
-    httpPost('/test', function(res, data) {
+    httpPost('/test', postData).then(function(res) {
       waitForFile(pathToResponse, function(pathToResponse) {
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
         var deserializedResponse = JSON.parse(recordedResponse);
@@ -185,7 +185,7 @@ describe('record mode', function() {
 
         done();
       });
-    }, postData);
+    });
   });
 
   function decompressTest(encoding, done) {
