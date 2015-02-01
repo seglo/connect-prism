@@ -14,7 +14,7 @@ var httpPost = testUtils.httpPost;
 var waitForFile = testUtils.waitForFile;
 
 describe('api', function() {
-  this.timeout(50000);
+  //this.timeout(50000);
   var manager = prism.manager;
 
   afterEach(function() {

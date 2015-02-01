@@ -47,6 +47,7 @@
     "forwarded-for": "^0.1.1",
     "http-proxy": "^1.5.0",
     "lodash": "~2.4.1",
+    "q": "^1.1.2",
     "winston": "^0.8.3"
   },
   "peerDependencies": {
