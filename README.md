@@ -289,6 +289,25 @@ Default: `false`
 
 Clear the `mocks/target` directory when prism is initialized.  The mocks directory will only be cleared of `.json` and `.json.404` files and is not recursive.  The mocks directory will only be cleared when in `record` or `mockrecord` modes.
 
+#### proxyConfig
+Type: `Object`
+
+Default:
+
+```javascript
+{
+    options: {
+       target: // absolute URL as defined by config https, host, port, and context, override at your own risk
+       xfwd: false, // don't add x-forward headers
+       secure: false, // don't verify SSL certs
+       prependPath: false // don't prepend path to target context when proxying
+    },
+    onProxyCreated: function(proxyServer, prismConfig) { ... } // By default this is a no-op, can be used to attach to events on the proxyServer
+}
+```
+
+Allows configuration of the internal proxyServer to meet more custom proxy needs, see [documentation](https://github.com/nodejitsu/node-http-proxy) for further details. This is for advanced use-cases only and can cause prism to stop working if misconfigured, you have been warned.
+
 ## API
 
 ### Overview
