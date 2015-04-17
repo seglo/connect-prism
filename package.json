@@ -44,7 +44,7 @@
   "dependencies": {
     "di": "2.0.0-pre-14",
     "director": "^1.2.8",
-    "forwarded-for": "^0.1.1",
+    "forwarded-for": "^1.0.0",
     "http-proxy": "^1.10.1",
     "lodash": "^3.7.0",
     "q": "^1.2.0",
