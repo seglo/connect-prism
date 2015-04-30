@@ -5,7 +5,12 @@ var app = express();
 app.disable('etag');
 
 app.all('/test', function(req, res) {
-  res.send('a server response');
+  if (req.headers && req.headers['x-proxied-header']) {
+    res.send('a server response with proxied header value of "'+ req.headers['x-proxied-header'] +'"');
+  }
+  else {
+    res.send('a server response');
+  }
 });
 
 app.get('/json', function(req, res) {

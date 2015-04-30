@@ -207,6 +207,14 @@ Add rewrite rules that prism will apply to all requests.  This functionality was
 }
 ```
 
+#### headers
+
+Type: `Object`
+
+Default: `{}`
+
+A map of headers to be added to proxied requests.
+
 #### hashFullRequest
 
 Type: `Boolean`

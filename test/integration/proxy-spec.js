@@ -31,7 +31,24 @@ describe('proxy mode', function() {
       assert.equal(res.body, 'a server response');
       done();
     });
+  });
 
+  it('can proxy requests using custom headers', function(done) {
+    prism.create({
+      name: 'proxyHeaderTest',
+      mode: 'proxy',
+      context: '/test',
+      host: 'localhost',
+      port: 8090,
+      headers: {
+        'x-proxied-header': 'added'
+      }
+    });
+
+    httpGet('/test').then(function(res) {
+      assert.equal(res.body, 'a server response with proxied header value of "added"');
+      done();
+    });
   });
 
   it('can delay a proxied response by approximately 50ms', function(done) {
