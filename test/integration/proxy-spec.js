@@ -4,10 +4,12 @@ var assert = require('assert');
 var connect = require('connect');
 var di = require('di');
 var http = require('http');
+var querystring = require('querystring');
 
 var prism = require('../../');
 var testUtils = require('../test-utils');
 var httpGet = testUtils.httpGet;
+var httpPost = testUtils.httpPost;
 
 var injector = new di.Injector([]);
 
@@ -31,6 +33,26 @@ describe('proxy mode', function() {
       assert.equal(data, 'a server response');
       done();
     });
+
+  });
+
+  it('can proxy a post response', function(done) {
+    prism.create({
+      name: 'proxyPostTest',
+      mode: 'proxy',
+      context: '/test_post',
+      host: 'localhost',
+      hashFullRequest: true,
+      port: 8090
+    });
+
+    var postData = querystring.stringify({ 'foo': 'bar' });
+
+    httpPost('/test_post', function(res, data) {
+      assert.equal(res.statusCode, 200);
+      assert.equal(data, 'bar');
+      done();
+    }, postData);
 
   });
 
