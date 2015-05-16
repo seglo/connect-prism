@@ -464,7 +464,8 @@ node-debug $(which grunt) test
 Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
-* 1.0.3 Upgrade deps.
+* 1.0.4 Add header configuration ([csmosx](https://github.com/csmosx)).  Fix #21 (hashFullRequest bug) by using passthrough stream ([fcuenya](https://github.com/fcuenya)).
+* 1.0.3 Upgrade deps.  Re-add changeOrigin.
 * 1.0.1 Pin di to 2.0.0-pre-12.
 * 1.0.0 Added Prism API features.  
 Use winston for logging and removed grunt library dependency.

@@ -65,12 +65,11 @@ describe('proxy mode', function() {
 
     var postData = querystring.stringify({ 'foo': 'bar' });
 
-    httpPost('/test_post', function(res, data) {
+    httpPost('/test_post', postData).then(function(res) {
       assert.equal(res.statusCode, 200);
-      assert.equal(data, 'bar');
+      assert.equal(res.body, 'bar');
       done();
-    }, postData);
-
+    });
   });
 
   it('can delay a proxied response by approximately 50ms', function(done) {
