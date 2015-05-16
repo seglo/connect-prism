@@ -1,6 +1,8 @@
 var express = require('express');
-
+var bodyParser = require('body-parser');
 var app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.disable('etag');
 
@@ -11,6 +13,10 @@ app.all('/test', function(req, res) {
   else {
     res.send('a server response');
   }
+});
+
+app.post('/test_post', function(req, res) {
+  res.send(req.body.foo);
 });
 
 app.get('/json', function(req, res) {
