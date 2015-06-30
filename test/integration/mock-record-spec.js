@@ -6,11 +6,13 @@ var connect = require('connect');
 var di = require('di');
 var fs = require('fs');
 var http = require('http');
+var querystring = require('querystring');
 
 var prism = require('../../');
 
 var testUtils = require('../test-utils');
 var httpGet = testUtils.httpGet;
+var httpPost = testUtils.httpPost;
 var waitForFile = testUtils.waitForFile;
 
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
@@ -28,6 +30,10 @@ describe('mock & record mode', function() {
   // clean up files after spec runs
   after(function() {
     var recordResponse = 'mocksToRead/mockRecordTest/97bb3894d4aa3418d821bdc6f3a9a1ba792739e8.json';
+    if (fs.existsSync(recordResponse)) {
+      fs.unlinkSync(recordResponse);
+    }
+    recordResponse = 'mocksToRead/mockRecordTest/41684b2b4abaa44b662bba3284effdfebd55765f.json';
     if (fs.existsSync(recordResponse)) {
       fs.unlinkSync(recordResponse);
     }
@@ -71,6 +77,28 @@ describe('mock & record mode', function() {
     });
   });
 
+  it('can mock a response with request body', function(done) {
+    prism.create({
+      name: 'mockPostTest',
+      mode: 'mockrecord',
+      mocksPath: './mocksToRead',
+      context: '/test',
+      host: 'localhost',
+      hashFullRequest: true,
+      port: 8090
+    });
+
+    var postData = querystring.stringify({
+      'foo': 'bar'
+    });
+
+    httpPost('/test', postData).then(function(res) {
+      assert.equal(res.req.path, '/test');
+      assert.equal(res.body, 'a server response');
+      done();
+    });
+  });
+
   it('can record a new response', function(done) {
     prism.create({
       name: 'mockRecordTest',
@@ -102,6 +130,41 @@ describe('mock & record mode', function() {
       });
     });
   });
+
+  it('can record a post response', function(done) {
+    prism.create({
+      name: 'mockRecordTest',
+      mode: 'mockrecord',
+      mocksPath: './mocksToRead',
+      context: '/test_post',
+      host: 'localhost',
+      hashFullRequest: true,
+      port: 8090
+    });
+
+    var recordRequest = '/test_post';
+    var proxy = manager.get(recordRequest);
+    var postData = querystring.stringify({ 'foo': 'bar' });
+
+    var pathToResponse = mockFilenameGenerator.getMockPath(proxy, {
+      url: recordRequest,
+      body: postData
+    });
+
+    httpPost(recordRequest, postData).then(function() {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, recordRequest);
+        assert.equal(deserializedResponse.statusCode, 200);
+        assert.equal(deserializedResponse.data, 'bar');
+        done();
+      });
+
+    });
+  });
+
 
   it('can ignore all url parameters', function(done) {
     prism.create({
