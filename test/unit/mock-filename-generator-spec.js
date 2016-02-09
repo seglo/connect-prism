@@ -48,6 +48,25 @@ describe('mock filename generator', function() {
     assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_really=that&readable=at&all_09b2ed55fb2b388fbe02c69e94bca5d86ff7247c.json');
   });
 
+  it('should support a human readable filename generator function and support ignoreParameters configuration', function() {
+    var req = {
+      url: '/is/this/url?really=that&readable=at&all'
+    };
+
+    var prism = {
+      config: {
+        name: 'foo',
+        mocksPath: './mocks',
+        mockFilenameGenerator: 'humanReadable',
+        ignoreParameters: true
+      }
+    };
+
+    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, req);
+
+    assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_really=that_237a2df1a4dfefe26d84b37103583200b8cd9c48.json');
+  });
+
   it('should support a human readable filename generator function with truncation', function() {
     var req = {
       url: '/is/this/url?really=that&readable=at&all&aBigNumber=999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
