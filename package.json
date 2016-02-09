@@ -1,6 +1,6 @@
 {
   "name": "connect-prism",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Record, mock, and proxy HTTP traffic.",
   "main": "index.js",
   "scripts": {
@@ -28,28 +28,28 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
-    "compression": "^1.4.3",
-    "connect": "^3.3.5",
-    "express": "^4.12.3",
+    "body-parser": "^1.14.2",
+    "compression": "^1.6.1",
+    "connect": "^3.4.1",
+    "express": "^4.13.4",
     "grunt": "^0.4.5",
-    "body-parser": "^1.12.4",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-connect": "^0.9.0",
-    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-jshint": "^0.11.3",
     "grunt-express": "^1.4.1",
     "grunt-mocha-test": "^0.12.7",
-    "mocha": "^2.2.4",
+    "mocha": "^2.4.5",
     "q": "^1.1.2",
     "querystring": "^0.2.0"
   },
   "dependencies": {
-    "di": "2.0.0-pre-14",
+    "di": "^2.0.0-pre-14",
     "director": "^1.2.8",
     "forwarded-for": "^1.0.0",
-    "http-proxy": "^1.10.1",
-    "lodash": "^3.7.0",
-    "q": "^1.2.0",
-    "winston": "^1.0.0"
+    "http-proxy": "^1.13.1",
+    "lodash": "^3.10.1",
+    "q": "^1.4.1",
+    "winston": "^1.1.2"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"

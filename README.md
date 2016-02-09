@@ -464,6 +464,7 @@ node-debug $(which grunt) test
 Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
+* 1.1.0 Upgrade deps. Human readable filename generator should support ignoreParameters config.  Remove `grunt` for good from dependencies.  Merged in various PR's (thanks [acsl](https://github.com/acsl) and [danemacaulay](https://github.com/danemacaulay))
 * 1.0.4 Add header configuration ([csmosx](https://github.com/csmosx)).  Fix #21 (hashFullRequest bug) by using passthrough stream ([fcuenya](https://github.com/fcuenya)).
 * 1.0.3 Upgrade deps.  Re-add changeOrigin.
 * 1.0.1 Pin di to 2.0.0-pre-12.
