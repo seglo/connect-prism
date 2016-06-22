@@ -1,6 +1,6 @@
 {
   "name": "connect-prism",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Record, mock, and proxy HTTP traffic.",
   "main": "index.js",
   "scripts": {
@@ -50,9 +50,6 @@
     "lodash": "^4.3.0",
     "q": "^1.4.1",
     "winston": "^2.1.1"
-  },
-  "peerDependencies": {
-    "grunt": "~0.4.1"
   },
   "keywords": [
     "mock",
