@@ -82,6 +82,60 @@ describe('record mode', function() {
     });
   });
 
+  it('can record a binary response', function(done) {
+    prism.create({
+      name: 'binaryRecordTest',
+      mode: 'record',
+      context: '/binary',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var pathToResponse = deleteMock('/binary');
+
+    httpGet('/binary', function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var buffer = fs.readFileSync('mocksToRead/binaryMockTest/chrome-24x24.png');
+        var deserializedResponse = JSON.parse(recordedResponse);
+
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.isBase64, true);
+        // compare base64-encoded buffers
+        assert.equal(deserializedResponse.data, buffer.toString('base64'));
+
+        done();
+      });
+    });
+  });
+
+  it('can record an image response', function(done) {
+    prism.create({
+      name: 'imageRecordTest',
+      mode: 'record',
+      context: '/image',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var pathToResponse = deleteMock('/image');
+
+    httpGet('/image', function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var buffer = fs.readFileSync('mocksToRead/binaryMockTest/chrome-24x24.png');
+        var deserializedResponse = JSON.parse(recordedResponse);
+
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.isBase64, true);
+        // compare buffers
+        assert.equal(new Buffer(deserializedResponse.data, 'base64').compare(buffer), 0);
+
+        done();
+      });
+    });
+  });
+
   it('can record a response of a rewritten request outside the prism context', function(done) {
     prism.create({
       name: 'rewriteAndRecordTest',
