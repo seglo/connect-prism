@@ -316,6 +316,29 @@ Default:
 
 Allows configuration of the internal proxyServer to meet more custom proxy needs, see [documentation](https://github.com/nodejitsu/node-http-proxy) for further details. This is for advanced use-cases only and can cause prism to stop working if misconfigured, you have been warned.
 
+#### shouldRecord
+Type: `Function`
+Returns: `Boolean`
+
+Default: `null`
+
+User defined function that recieves the request and response objects and allows for user defined function to determine whether or not a particular request/response should result in a recording stored
+
+Example:
+
+```javascipt
+{
+  name: 'api',
+  mode: 'record',
+  context: '/api',
+  host: 'localhost',
+  port: 8090
+  shouldRecord: function (req, res) {
+      return res.statusCode !== 401;
+  }
+}
+```
+
 ## API
 
 ### Overview
