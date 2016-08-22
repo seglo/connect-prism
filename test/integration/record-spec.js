@@ -41,7 +41,7 @@ describe('record mode', function() {
 
     var pathToResponse = deleteMock('/test');
 
-    httpGet('/test', function(res, data) {
+    httpGet('/test').then(function(res) {
       waitForFile(pathToResponse, function(pathToResponse) {
 
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
@@ -69,7 +69,7 @@ describe('record mode', function() {
 
     var pathToResponse = deleteMock('/json');
 
-    httpGet('/json', function(res, data) {
+    httpGet('/json').then(function(res) {
       waitForFile(pathToResponse, function(pathToResponse) {
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
         var deserializedResponse = JSON.parse(recordedResponse);
@@ -93,7 +93,7 @@ describe('record mode', function() {
 
     var pathToResponse = deleteMock('/binary');
 
-    httpGet('/binary', function(res, data) {
+    httpGet('/binary').then(function(res, data) {
       waitForFile(pathToResponse, function(pathToResponse) {
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
         var buffer = fs.readFileSync('mocksToRead/binaryMockTest/chrome-24x24.png');
@@ -120,7 +120,7 @@ describe('record mode', function() {
 
     var pathToResponse = deleteMock('/image');
 
-    httpGet('/image', function(res, data) {
+    httpGet('/image').then(function(res, data) {
       waitForFile(pathToResponse, function(pathToResponse) {
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
         var buffer = fs.readFileSync('mocksToRead/binaryMockTest/chrome-24x24.png');
@@ -129,7 +129,7 @@ describe('record mode', function() {
         assert.equal(_.isUndefined(deserializedResponse), false);
         assert.equal(deserializedResponse.isBase64, true);
         // compare buffers
-        assert.equal(new Buffer(deserializedResponse.data, 'base64').compare(buffer), 0);
+        assert.equal(deserializedResponse.data, buffer.toString('base64'));
 
         done();
       });
@@ -162,7 +162,7 @@ describe('record mode', function() {
       fs.unlinkSync(pathToResponse);
     }
 
-    httpGet('/test', function(res, data) {
+    httpGet('/test').then(function(res) {
       waitForFile(pathToResponse, function(pathToResponse) {
 
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
@@ -229,7 +229,7 @@ describe('record mode', function() {
       fs.unlinkSync(pathToResponse);
     }
 
-    httpPost('/test', function(res, data) {
+    httpPost('/test', postData).then(function(res) {
       waitForFile(pathToResponse, function(pathToResponse) {
         var recordedResponse = fs.readFileSync(pathToResponse).toString();
         var deserializedResponse = JSON.parse(recordedResponse);
@@ -239,7 +239,7 @@ describe('record mode', function() {
 
         done();
       });
-    }, postData);
+    });
   });
 
   function decompressTest(encoding, done) {

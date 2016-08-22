@@ -75,11 +75,13 @@ describe('prism', function() {
         if (!fs.existsSync(mocksDir)) {
           fs.mkdirSync(mocksDir);
         }
-        fs.openSync(testMockFile, 'w');
-        fs.openSync(test404File, 'w');
+        // touch mock files
+        fs.closeSync(fs.openSync(testMockFile, 'w'));
+        fs.closeSync(fs.openSync(test404File, 'w'));
       });
 
       afterEach(function() {
+        console.log('delete mock files');
         if (fs.existsSync(testMockFile)) {
           fs.unlinkSync(testMockFile);
         }

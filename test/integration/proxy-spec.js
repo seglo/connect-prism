@@ -29,11 +29,28 @@ describe('proxy mode', function() {
       port: 8090
     });
 
-    httpGet('/test', function(res, data) {
-      assert.equal(data, 'a server response');
+    httpGet('/test').then(function(res) {
+      assert.equal(res.body, 'a server response');
       done();
     });
+  });
 
+  it('can proxy requests using custom headers', function(done) {
+    prism.create({
+      name: 'proxyHeaderTest',
+      mode: 'proxy',
+      context: '/test',
+      host: 'localhost',
+      port: 8090,
+      headers: {
+        'x-proxied-header': 'added'
+      }
+    });
+
+    httpGet('/test').then(function(res) {
+      assert.equal(res.body, 'a server response with proxied header value of "added"');
+      done();
+    });
   });
 
   it('can proxy a post response', function(done) {
@@ -48,12 +65,11 @@ describe('proxy mode', function() {
 
     var postData = querystring.stringify({ 'foo': 'bar' });
 
-    httpPost('/test_post', function(res, data) {
+    httpPost('/test_post', postData).then(function(res) {
       assert.equal(res.statusCode, 200);
-      assert.equal(data, 'bar');
+      assert.equal(res.body, 'bar');
       done();
-    }, postData);
-
+    });
   });
 
   it('can delay a proxied response by approximately 50ms', function(done) {
@@ -67,7 +83,7 @@ describe('proxy mode', function() {
     });
 
     var startTime = Date.now();
-    httpGet('/test', function(res, data) {
+    httpGet('/test').then(function(res) {
       var delta = Date.now() - startTime;
       assert.equal(delta > 30, true);
       assert.equal(delta < 70, true);
@@ -87,8 +103,8 @@ describe('proxy mode', function() {
       }
     });
 
-    httpGet('/test', function(res, data) {
-      assert.equal(data, 'a rewritten server response');
+    httpGet('/test').then(function(res) {
+      assert.equal(res.body, 'a rewritten server response');
       done();
     });
   });
