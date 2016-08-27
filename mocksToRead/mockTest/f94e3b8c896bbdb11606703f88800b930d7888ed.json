@@ -2,5 +2,8 @@
   "requestUrl": "/recordRequest",
   "contentType": "text/plain",
   "statusCode": 200,
-  "data": "a server response"
+  "data": "a server response",
+  "headers": {
+    "X-Header-1": "Copied"
+  }
 }

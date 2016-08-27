@@ -52,6 +52,69 @@ describe('record mode', function() {
         assert.equal(deserializedResponse.contentType, 'text/html; charset=utf-8');
         assert.equal(deserializedResponse.statusCode, 200);
         assert.equal(deserializedResponse.data, 'a server response');
+        assert.equal(deserializedResponse.headers, undefined, "should not have header but does");
+
+        done();
+      });
+    });
+  });
+
+  it('can record a response with specific header', function(done) {
+    prism.create({
+      name: 'recordTest',
+      mode: 'record',
+      context: '/test',
+      host: 'localhost',
+      recordHeaders: ["X-Header-1"],
+      port: 8090
+    });
+
+    var pathToResponse = deleteMock('/test');
+
+    httpGet('/test').then(function(res) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
+
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, '/test');
+        assert.equal(deserializedResponse.contentType, 'text/html; charset=utf-8');
+        assert.equal(deserializedResponse.statusCode, 200);
+        assert.equal(deserializedResponse.data, 'a server response');
+        assert.equal(deserializedResponse.headers['x-header-1'], "Recorded", "should have header 'X-Header-1: Recorded' but does not");
+        assert.equal(deserializedResponse.headers['x-header-2'], undefined, "should not have header 'X-Header-2: Recorded' but does");
+
+        done();
+      });
+    });
+  });
+
+  it('can record a response with specific all headers', function(done) {
+    prism.create({
+      name: 'recordTest',
+      mode: 'record',
+      context: '/test',
+      host: 'localhost',
+      recordHeaders: true,
+      port: 8090
+    });
+
+    var pathToResponse = deleteMock('/test');
+
+    httpGet('/test').then(function(res) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var deserializedResponse = JSON.parse(recordedResponse);
+
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.requestUrl, '/test');
+        assert.equal(deserializedResponse.contentType, 'text/html; charset=utf-8');
+        assert.equal(deserializedResponse.statusCode, 200);
+        assert.equal(deserializedResponse.data, 'a server response');
+        assert.equal(deserializedResponse.headers['x-header-1'], "Recorded", "should have header 'X-Header-1: Recorded' but does not");
+        assert.equal(deserializedResponse.headers['x-header-2'], "Recorded", "should have header 'X-Header-2: Recorded' but does not");
 
         done();
       });

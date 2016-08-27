@@ -11,6 +11,8 @@ app.all('/test', function(req, res) {
     res.send('a server response with proxied header value of "'+ req.headers['x-proxied-header'] +'"');
   }
   else {
+    res.set("X-Header-1", "Recorded");
+    res.set("X-Header-2", "Recorded");
     res.send('a server response');
   }
 });
