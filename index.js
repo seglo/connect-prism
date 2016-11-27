@@ -16,7 +16,7 @@ module.exports = {
   useApi: Api.init,
   useVerboseLog: Logger.useVerboseLog,
   middleware: function(req, res, next) {
-    if (!HttpEvents.handleRequest(req, res) && !Api.handleRequest(req, res)) {
+    if (!Api.handleRequest(req, res) && !HttpEvents.handleRequest(req, res)) {
       next();
     } 
   }
