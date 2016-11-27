@@ -487,7 +487,8 @@ node-debug $(which grunt) test
 Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
-* 1.1.1 Merged PR's: Should Record feature #45 ([danemacaulay](https://github.com/danemacaulay)).  Fix to confirm `Content-Type` exists in mock #47 ([danemacaulay](https://github.com/danemacaulay)).
+
+* 1.1.1 Merged PR's: Should Record feature #45 ([danemacaulay](https://github.com/danemacaulay)), fix to confirm `Content-Type` exists in mock #47 ([danemacaulay](https://github.com/danemacaulay)), useapi() doesn't work after creating a prism server with the POST /_prism/create method #54 ([jtbonhomme](https://github.com/jtbonhomme)).
 * 1.1.0 Upgrade deps. Human readable filename generator should support ignoreParameters config.  Remove `grunt` for good from dependencies.  Merged in various PR's (thanks [acsl](https://github.com/acsl) and [danemacaulay](https://github.com/danemacaulay))
 * 1.0.4 Add header configuration ([csmosx](https://github.com/csmosx)).  Fix #21 (hashFullRequest bug) by using passthrough stream ([fcuenya](https://github.com/fcuenya)).
 * 1.0.3 Upgrade deps.  Re-add changeOrigin.
