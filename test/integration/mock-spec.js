@@ -41,6 +41,7 @@ describe('mock mode', function() {
       assert.equal(res.statusCode, 200);
       assert.equal(res.req.path, '/readRequest');
       assert.equal(res.body, 'a server response');
+      assert.equal(res.headers['x-header-1'], 'Copied');
       done();
     });
   });
