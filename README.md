@@ -339,6 +339,14 @@ Example:
 }
 ```
 
+#### recordHeaders
+Type: `Array` or `Boolean`
+
+Default: `false`
+
+Allows recorded mocks to store specific headers that match the given header name array or all headers if set to true.  Note that the `Content-Type` and `Location` headers are always recorded.
+
+
 ## API
 
 ### Overview
