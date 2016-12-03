@@ -145,6 +145,60 @@ describe('record mode', function() {
     });
   });
 
+  it('can record a binary response', function(done) {
+    prism.create({
+      name: 'binaryRecordTest',
+      mode: 'record',
+      context: '/binary',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var pathToResponse = deleteMock('/binary');
+
+    httpGet('/binary').then(function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var buffer = fs.readFileSync('mocksToRead/binaryMockTest/chrome-24x24.png');
+        var deserializedResponse = JSON.parse(recordedResponse);
+
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.isBase64, true);
+        // compare base64-encoded buffers
+        assert.equal(deserializedResponse.data, buffer.toString('base64'));
+
+        done();
+      });
+    });
+  });
+
+  it('can record an image response', function(done) {
+    prism.create({
+      name: 'imageRecordTest',
+      mode: 'record',
+      context: '/image',
+      host: 'localhost',
+      port: 8090
+    });
+
+    var pathToResponse = deleteMock('/image');
+
+    httpGet('/image').then(function(res, data) {
+      waitForFile(pathToResponse, function(pathToResponse) {
+        var recordedResponse = fs.readFileSync(pathToResponse).toString();
+        var buffer = fs.readFileSync('mocksToRead/binaryMockTest/chrome-24x24.png');
+        var deserializedResponse = JSON.parse(recordedResponse);
+
+        assert.equal(_.isUndefined(deserializedResponse), false);
+        assert.equal(deserializedResponse.isBase64, true);
+        // compare buffers
+        assert.equal(deserializedResponse.data, buffer.toString('base64'));
+
+        done();
+      });
+    });
+  });
+
   it('can record a response of a rewritten request outside the prism context', function(done) {
     prism.create({
       name: 'rewriteAndRecordTest',
@@ -184,6 +238,33 @@ describe('record mode', function() {
       });
     });
   });
+
+  function decompressTest(encoding, done) {
+    var pathToResponse = deleteMock('/test');
+
+    var request = http.request({
+      host: 'localhost',
+      path: '/test',
+      port: 9000,
+      headers: {
+        'Accept-Encoding': encoding
+      }
+    }, function(res) {
+      onEnd(res, function(res, data) {
+        waitForFile(pathToResponse, function(pathToResponse) {
+
+          var recordedResponse = fs.readFileSync(pathToResponse).toString();
+          var deserializedResponse = JSON.parse(recordedResponse);
+
+          assert.equal(_.isUndefined(deserializedResponse), false);
+          assert.equal(deserializedResponse.data, 'a server response');
+
+          done();
+        });
+      });
+    });
+    request.end();
+  }
 
   it('can record a deflate compressed response', function(done) {
     prism.create({
@@ -250,31 +331,4 @@ describe('record mode', function() {
       });
     });
   });
-
-  function decompressTest(encoding, done) {
-    var pathToResponse = deleteMock('/test');
-
-    var request = http.request({
-      host: 'localhost',
-      path: '/test',
-      port: 9000,
-      headers: {
-        'Accept-Encoding': encoding
-      }
-    }, function(res) {
-      onEnd(res, function(res, data) {
-        waitForFile(pathToResponse, function(pathToResponse) {
-
-          var recordedResponse = fs.readFileSync(pathToResponse).toString();
-          var deserializedResponse = JSON.parse(recordedResponse);
-
-          assert.equal(_.isUndefined(deserializedResponse), false);
-          assert.equal(deserializedResponse.data, 'a server response');
-
-          done();
-        });
-      });
-    });
-    request.end();
-  }
 });

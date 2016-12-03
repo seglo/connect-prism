@@ -1,3 +1,4 @@
+var fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -23,6 +24,16 @@ app.post('/test_post', function(req, res) {
 
 app.get('/json', function(req, res) {
   res.json({"text": "a server response"});
+});
+
+app.get('/binary', function(req, res) {
+  res.setHeader('Content-Type', 'application/octet-stream');
+  res.send(fs.readFileSync('mocksToRead/binaryMockTest/chrome-24x24.png'));
+});
+
+app.get('/image', function(req, res) {
+  res.setHeader('Content-Type', 'image/png');
+  res.send(fs.readFileSync('mocksToRead/binaryMockTest/chrome-24x24.png'));
 });
 
 app.get('/rewrite', function(req, res) {
