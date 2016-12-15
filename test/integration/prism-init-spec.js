@@ -2,13 +2,10 @@
 
 var _ = require('lodash');
 var assert = require('assert');
-var di = require('di');
 var fs = require('fs');
 var path = require('path');
 
 var prism = require('../../');
-
-var injector = new di.Injector([]);
 
 describe('prism', function() {
   var manager = prism.manager;

@@ -1,15 +1,12 @@
 'use strict';
 
 var assert = require('assert');
-var di = require('di');
 
 var PrismUtils = require('../../lib/services/prism-utils');
 
-var injector = new di.Injector([]);
-
 describe('prism utils', function() {
 
-  var prismUtils = injector.get(PrismUtils);
+  var prismUtils = new PrismUtils();
 
   it('isValidValue should return true for a regular expression', function() {
     assert(prismUtils.isValidValue(/[a-b]/));

@@ -2,15 +2,14 @@
 
 var assert = require('assert');
 var assertPathEqual = require('../test-utils').assertPathEqual;
-var di = require('di');
 var path = require('path');
 
+var PrismUtils = require("../../lib/services/prism-utils");
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
 
-var injector = new di.Injector([]);
-
 describe('mock filename generator', function() {
-  var mockFilenameGenerator = injector.get(MockFilenameGenerator);
+  var prismUtils = new PrismUtils();
+  var mockFilenameGenerator = new MockFilenameGenerator(prismUtils);
 
   it('should support overriding of the filename generator function', function() {
     function testFilenameCallback(config, req) {

@@ -2,16 +2,17 @@
 
 var _ = require('lodash');
 var assert = require('assert');
-var di = require('di');
 var http = require('http');
 var fs = require('fs');
 var q = require('q');
 var prism = require('../');
 
-var injector = new di.Injector([]);
-
 var manager = prism.manager;
-var mockFilenameGenerator = injector.get(require('../lib/services/mock-filename-generator'));
+
+var PrismUtils = require("../lib/services/prism-utils");
+var MockFilenameGenerator = require('../lib/services/mock-filename-generator');
+
+var mockFilenameGenerator = new MockFilenameGenerator(new PrismUtils());
 
 /**
  * Write a file to disk and call the callback only once the file has been closed.
