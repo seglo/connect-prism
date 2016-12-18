@@ -3,7 +3,6 @@
 var _ = require('lodash');
 var assert = require('assert');
 var connect = require('connect');
-var di = require('di');
 var fs = require('fs');
 var http = require('http');
 var querystring = require('querystring');
@@ -15,13 +14,13 @@ var httpGet = testUtils.httpGet;
 var httpPost = testUtils.httpPost;
 var waitForFile = testUtils.waitForFile;
 
+var PrismUtils = require("../../lib/services/prism-utils");
 var MockFilenameGenerator = require('../../lib/services/mock-filename-generator');
-
-var injector = new di.Injector([]);
 
 describe('mock & record mode', function() {
   var manager = prism.manager;
-  var mockFilenameGenerator = injector.get(MockFilenameGenerator);
+  var prismUtils = new PrismUtils();
+  var mockFilenameGenerator = new MockFilenameGenerator(prismUtils);
 
   afterEach(function() {
     manager.reset();

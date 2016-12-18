@@ -1,7 +1,6 @@
 'use strict';
 
 var assert = require('assert');
-var di = require('di');
 var fs = require('fs');
 var querystring = require('querystring');
 

@@ -5,3 +5,4 @@ tmp
 mocks/*
 mocksToRead/**/*.404
 mocksToRead/mockRecordTest/97bb3894d4aa3418d821bdc6f3a9a1ba792739e8.json
+.idea

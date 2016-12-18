@@ -2,7 +2,6 @@
 
 var assert = require('assert');
 var connect = require('connect');
-var di = require('di');
 var http = require('http');
 var querystring = require('querystring');
 
@@ -10,8 +9,6 @@ var prism = require('../../');
 var testUtils = require('../test-utils');
 var httpGet = testUtils.httpGet;
 var httpPost = testUtils.httpPost;
-
-var injector = new di.Injector([]);
 
 describe('proxy mode', function() {
   var manager = prism.manager;
