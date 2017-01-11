@@ -281,6 +281,15 @@ function(config, req) {
 }
 ```
 
+#### mockFilenameMaxLength
+
+The maximum length of the generated readable filename. Long filenames can cause issues on Windows and Linux systems
+up to the point where the project cannot be checked out anymore because of the long mock filenames.
+
+##### default
+`255`
+
+
 #### ignoreParameters
 
 Type: `Boolean` or [] of String or Regular expression
