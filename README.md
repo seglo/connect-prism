@@ -94,7 +94,7 @@ http.createServer(app).listen(3000);
 
 ### Using connect-prism with Grunt.js
 
-If you're using grunt then head on over to the [grunt-connect-prism](http://github.com/seglo/grunt-connect-prism) page for more details.
+If you're using grunt then head on over to the [grunt-connect-prism](http://github.com/seglo/grunt-connect-prism) page for more details.  For a sample configuration see the [Gruntfile.js](https://github.com/seglo/prism-sample-project/blob/master/Gruntfile.js) in the [prism-sample-project](https://github.com/seglo/prism-sample-project).
 
 ### Using connect-prism with gulp
 
