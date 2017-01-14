@@ -505,6 +505,7 @@ Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
 
+* 1.0.14 Merged PR's: Make the maxLength value a configurable parameter #62 ([sbaechler](https://github.com/sbaechler)), Parse API request body only for API requests #63 ([morioust](https://github.com/morioust)), Add method verb into recorded files #65 ([KFMichael](https://github.com/KFMichael))
 * 1.0.13 Removed di dependency ([cthrax](https://github.com/cthrax))
 * 1.0.12 Pin di version #43
 * 1.0.11 Merged PR's: Should Record feature #45 ([danemacaulay](https://github.com/danemacaulay)), fix to confirm `Content-Type` exists in mock #47 ([danemacaulay](https://github.com/danemacaulay)), useapi() doesn't work after creating a prism server with the POST /_prism/create method #54 ([jtbonhomme](https://github.com/jtbonhomme)), Record additional headers #50 ([emhansen](https://github.com/emhansen)). Add support for binary responses #49 ([dreamind](https://github.com/dreamind))
