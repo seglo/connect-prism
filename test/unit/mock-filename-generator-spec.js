@@ -84,4 +84,24 @@ describe('mock filename generator', function() {
     assert.equal(mockResponsePath.split(path.sep)[2].length, 255);
     assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_really=that&readable=at&all&aBigNumber=9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999_ae2f067764e7839efdb85d791fbe031a9d1f63e9.json');
   });
+
+  it('should support a human readable filename generator function with shorter truncation', function () {
+    var req = {
+      url: '/is/this/url?really=that&readable=at&all&aBigNumber=999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999'
+    };
+
+    var prism = {
+      config: {
+        name: 'foo',
+        mocksPath: './mocks',
+        mockFilenameGenerator: 'humanReadable',
+        mockFilenameMaxLength: 120,
+      }
+    };
+
+    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, req);
+
+    assert.equal(mockResponsePath.split(path.sep)[2].length, 120);
+    assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_really=that&readable=at&all&aBigNumber=9999999999999999999999_ae2f067764e7839efdb85d791fbe031a9d1f63e9.json');
+  });
 });
