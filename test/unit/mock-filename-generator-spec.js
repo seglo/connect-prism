@@ -63,7 +63,26 @@ describe('mock filename generator', function() {
 
     var mockResponsePath = mockFilenameGenerator.getMockPath(prism, req);
 
-    assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_really=that_237a2df1a4dfefe26d84b37103583200b8cd9c48.json');
+    assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_237a2df1a4dfefe26d84b37103583200b8cd9c48.json');
+  });
+
+  it('should sanitize forbidden characters for human readable filename generator with the ignoreParameters configuration', function() {
+    var req = {
+        url: '/is/this/url?really=that&readable=at&all'
+    };
+
+    var prism = {
+        config: {
+            name: 'foo',
+            mocksPath: './mocks',
+            mockFilenameGenerator: 'humanReadable',
+            ignoreParameters: ['really']
+        }
+    };
+
+    var mockResponsePath = mockFilenameGenerator.getMockPath(prism, req);
+
+    assertPathEqual(mockResponsePath, 'mocks/foo/_is_this_url_readable=at&all_deb0c66cb08b81dd8233e55dfc7ecce1b3798a99.json');
   });
 
   it('should support a human readable filename generator function with truncation', function() {
