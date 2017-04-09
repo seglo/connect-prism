@@ -82,6 +82,20 @@ prism.create({
   host: 'localhost'
 });
 
+// for a third party api use this app as an HTTP proxy, setting tunnel to false for HTTPS requests
+prism.create({
+    name: 'ok.ru',
+    mode: 'mockrecord',
+    host: 'api.ok.ru',
+    context: 'https://api.ok.ru',
+    https: true,
+    delay: 'slow',
+    port: 443,
+    mocksPath: './mocks/apiokru',
+    hashFullRequest: true,
+    humanReadable: true
+});
+
 var app = connect()
   .use(prism.middleware)
   .use(connect.static('public'))
