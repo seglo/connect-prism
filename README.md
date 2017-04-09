@@ -505,6 +505,7 @@ Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
 
+* 1.0.16 Merged PR's: Remove deprecation warning in node v7 [maximkoretskiy](https://github.com/maximkoretskiy)
 * 1.0.15 Merged PR's: Fix a bug which prevented ignoreParameters flag from ignoring the first parameter and sanitizing special characters like the question mark. #66 ([brunnurs](https://github.com/brunnurs))
 * 1.0.14 Merged PR's: Make the maxLength value a configurable parameter #62 ([sbaechler](https://github.com/sbaechler)), Parse API request body only for API requests #63 ([morioust](https://github.com/morioust)), Add method verb into recorded files #65 ([KFMichael](https://github.com/KFMichael))
 * 1.0.13 Removed di dependency ([cthrax](https://github.com/cthrax))
