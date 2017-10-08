@@ -199,4 +199,32 @@ describe('api', function() {
       });
     });
   });
+
+  describe('get mode', function() {
+    beforeEach(function() {
+      prism.create({
+        name: 'setModeTest',
+        mode: 'proxy',
+        context: '/test',
+        host: 'localhost',
+        port: 8090,
+      });
+      prism.useApi();
+    });
+
+    it('should return mode', function(done) {
+      var pathToResponse = deleteMock('/test');
+      httpGet('/_prism/getmode/setModeTest').then(function(res) {
+        assert.equal(res.body, 'proxy');
+        done();
+      });
+    });
+
+    it('should not accept invalid name', function(done) {
+      httpGet('/_prism/getmode/foo').then(function(res) {
+        assert.equal(res.body, 'The prism name specified does not exist.');
+        done();
+      });
+    });
+  });
 });

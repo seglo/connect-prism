@@ -383,6 +383,12 @@ When the API is enabled you can access it with the `/_prism` base path of your c
 
 Returns the version of `connect-prism` curreently running.  i.e.) 1.0.0
 
+#### Get mode
+
+`GET` `/_prism/getmode/:prism_name`
+
+`prism_name`: The [`name`](#name) of the prism configuration.
+
 #### Set mode
 
 `POST` `/_prism/setmode/:prism_name/:mode`
