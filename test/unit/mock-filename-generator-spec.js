@@ -10,6 +10,7 @@ var MockFilenameGenerator = require('../../lib/services/mock-filename-generator'
 describe('mock filename generator', function() {
   var prismUtils = new PrismUtils();
   var mockFilenameGenerator = new MockFilenameGenerator(prismUtils);
+  var hashFullRequest = function(){};
 
   it('should support overriding of the filename generator function', function() {
     function testFilenameCallback(config, req) {
@@ -20,7 +21,8 @@ describe('mock filename generator', function() {
       config: {
         name: 'foo',
         mocksPath: './mocks',
-        mockFilenameGenerator: testFilenameCallback
+        mockFilenameGenerator: testFilenameCallback,
+        hashFullRequest: hashFullRequest
       }
     };
 
@@ -38,7 +40,8 @@ describe('mock filename generator', function() {
       config: {
         name: 'foo',
         mocksPath: './mocks',
-        mockFilenameGenerator: 'humanReadable'
+        mockFilenameGenerator: 'humanReadable',
+        hashFullRequest: hashFullRequest
       }
     };
 
@@ -57,7 +60,8 @@ describe('mock filename generator', function() {
         name: 'foo',
         mocksPath: './mocks',
         mockFilenameGenerator: 'humanReadable',
-        ignoreParameters: true
+        ignoreParameters: true,
+        hashFullRequest: hashFullRequest
       }
     };
 
@@ -76,7 +80,8 @@ describe('mock filename generator', function() {
             name: 'foo',
             mocksPath: './mocks',
             mockFilenameGenerator: 'humanReadable',
-            ignoreParameters: ['really']
+            ignoreParameters: ['really'],
+            hashFullRequest: hashFullRequest
         }
     };
 
@@ -94,7 +99,8 @@ describe('mock filename generator', function() {
       config: {
         name: 'foo',
         mocksPath: './mocks',
-        mockFilenameGenerator: 'humanReadable'
+        mockFilenameGenerator: 'humanReadable',
+        hashFullRequest: hashFullRequest
       }
     };
 
@@ -115,6 +121,7 @@ describe('mock filename generator', function() {
         mocksPath: './mocks',
         mockFilenameGenerator: 'humanReadable',
         mockFilenameMaxLength: 120,
+        hashFullRequest: hashFullRequest
       }
     };
 

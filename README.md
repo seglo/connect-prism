@@ -217,7 +217,7 @@ A map of headers to be added to proxied requests.
 
 #### hashFullRequest
 
-Type: `Boolean`
+Type: `Function` | `Boolean`
 
 Default: `false`
 
@@ -225,7 +225,14 @@ Use the request body in conjunction with the request URL in order to generate a 
 
 i.e.) Require two different responses for a POST a request with a payload in the request body.
 
-Thanks to [Matt Philips](https://github.com/mattp-) for requesting and helping get this feature implemented.
+##### A Custom Function
+
+A function can be used to dynamically determine whether to record the full request. This function accepts a function that takes 2 parameters:
+
+1. The prism config associated with this request context.
+2. The request object.
+
+Thanks to [Matt Philips](https://github.com/mattp-) and [Patrick Camacho](https://github.com/camacho) for requesting and helping get this feature implemented.
 
 #### mockFilenameGenerator
 
