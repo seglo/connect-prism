@@ -100,7 +100,7 @@ If you're using grunt then head on over to the [grunt-connect-prism](http://gith
 
 If you're using gulp then you would just use the core library along with gulp.  For a sample configuration see the [gulpfile.js](https://github.com/seglo/prism-sample-project/blob/master/gulpfile.js) in the [prism-sample-project](https://github.com/seglo/prism-sample-project).
 
-## Configuration 
+## Configuration
 
 ### Setting up prism
 
@@ -518,7 +518,8 @@ Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
 
-* 1.0.16 Merged PR's: Remove deprecation warning in node v7 [maximkoretskiy](https://github.com/maximkoretskiy)
+* 1.0.17 Merged PR's: Store POST body payload in JSON format if it exists #72 [ggmichaelgo](https://github.com/ggmichaelgo), Add getmode/:name route #73 [camacho](https://github.com/camacho), Support dynamic hashFullRequest based on config and req #74 [camacho](https://github.com/camacho)
+* 1.0.16 Merged PR's: Remove deprecation warning in node v7 #69 [maximkoretskiy](https://github.com/maximkoretskiy)
 * 1.0.15 Merged PR's: Fix a bug which prevented ignoreParameters flag from ignoring the first parameter and sanitizing special characters like the question mark. #66 ([brunnurs](https://github.com/brunnurs))
 * 1.0.14 Merged PR's: Make the maxLength value a configurable parameter #62 ([sbaechler](https://github.com/sbaechler)), Parse API request body only for API requests #63 ([morioust](https://github.com/morioust)), Add method verb into recorded files #65 ([KFMichael](https://github.com/KFMichael))
 * 1.0.13 Removed di dependency ([cthrax](https://github.com/cthrax))
