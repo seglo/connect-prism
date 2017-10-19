@@ -105,7 +105,7 @@ describe('api', function() {
           "data": "an overidden server response"
         }
       });
-      httpPost('/_prism/override/overrideCreateTest/create', postData).then(function(res) {
+      httpPost('/_prism/override/overrideCreateTest/create', postData, 'application/json').then(function(res) {
         assert.equal(res.body, 'OK');
         return httpGet('/test');
       }).then(function(res) {
@@ -129,7 +129,7 @@ describe('api', function() {
         "url": "/test",
         "body": ""
       });
-      httpPost('/_prism/override/overrideRemoveTest/remove', postData).then(function(res) {
+      httpPost('/_prism/override/overrideRemoveTest/remove', postData, 'application/json').then(function(res) {
         assert.equal(res.body, 'OK');
         return httpGet('/test');
       }).then(function(res) {
