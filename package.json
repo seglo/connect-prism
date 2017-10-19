@@ -4,7 +4,8 @@
   "description": "Record, mock, and proxy HTTP traffic.",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "test:watch": "grunt test:watch"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-express": "^1.4.1",
     "grunt-mocha-test": "^0.13.2",
     "mocha": "^3.2.0",
