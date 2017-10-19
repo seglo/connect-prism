@@ -82,15 +82,15 @@ exports.deleteMocks = function(paths) {
   });
 };
 
-exports.httpPost = function(path, body) {
-  return exports.httpCall('POST', path, body);
+exports.httpPost = function(path, body, contentType) {
+  return exports.httpCall('POST', path, body, contentType);
 };
 
-exports.httpGet = function(path, body) {
-  return exports.httpCall('GET', path, body);
+exports.httpGet = function(path, body, contentType) {
+  return exports.httpCall('GET', path, body, contentType);
 };
 
-exports.httpCall = function(method, path, body) {
+exports.httpCall = function(method, path, body, contentType) {
   var deferred = q.defer();
   var options = {
     host: 'localhost',
@@ -109,7 +109,7 @@ exports.httpCall = function(method, path, body) {
 
   if (body) {
     options.headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': contentType || 'application/x-www-form-urlencoded',
       'Content-Length': body.length
     };
     req = http.request(options, cb);
