@@ -24,6 +24,16 @@ module.exports = function(grunt) {
       tests: ['tmp']
     },
 
+    watch: {
+      test: {
+        options: {
+          atBegin: true
+        },
+        files: ['lib/**/*.js'],
+        tasks: ['test'],
+      },
+    },
+
     mochaTest: {
       test: {
         options: {
@@ -77,11 +87,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-express');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
   grunt.registerTask('test', ['clean', 'jshint', 'express:server', 'express:serverCompression', 'connect:server', 'mochaTest']);
 
+  // Watch mode for tests
+  grunt.registerTask('test:watch', ['watch:test']);
+  
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
 
