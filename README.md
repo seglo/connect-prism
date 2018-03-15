@@ -518,6 +518,7 @@ Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
 
+* 1.0.19 Merged PR's: remove json specific error message (messing with websocket proxying) #77 ([camacho](https://github.com/camacho))
 * 1.0.18 Merged PR's: add test:watch and clean up body parsing and restreaming #75 ([camacho](https://github.com/camacho), [kpruden](https://github.com/kpruden))
 * 1.0.17 Merged PR's: Store POST body payload in JSON format if it exists #72 ([ggmichaelgo](https://github.com/ggmichaelgo)), Add getmode/:name route #73 ([camacho](https://github.com/camacho)), Support dynamic hashFullRequest based on config and req #74 ([camacho](https://github.com/camacho))
 * 1.0.16 Merged PR's: Remove deprecation warning in node v7 #69 ([maximkoretskiy](https://github.com/maximkoretskiy))
