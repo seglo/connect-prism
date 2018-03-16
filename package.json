@@ -1,6 +1,6 @@
 {
   "name": "connect-prism",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Record, mock, and proxy HTTP traffic.",
   "main": "index.js",
   "scripts": {
