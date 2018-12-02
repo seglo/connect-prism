@@ -89,6 +89,26 @@ describe('Response delay', function () {
       });
     });
 
+    describe('Custom ranges', function() {
+      it('should use the given upper bound to calculate the delay', function () {
+        var fakeRandomNumberGenerator = function () {
+          return 1;
+        };
+        responseDelay = new ResponseDelay(fakeRandomNumberGenerator);
+
+        assert.equal(responseDelay.delayTimeInMs({lowerBound: 50, upperBound: 100}), 100);
+      });
+
+      it('should use the given lower bound to calculate the delay', function () {
+        var fakeRandomNumberGenerator = function () {
+          return 0;
+        };
+        responseDelay = new ResponseDelay(fakeRandomNumberGenerator);
+
+        assert.equal(responseDelay.delayTimeInMs({lowerBound: 50, upperBound: 100}), 50);
+      });
+    });
+
     it('should round delays to the millisecond', function () {
       var fakeRandomNumberGenerator = function () {
         return 0.001;
