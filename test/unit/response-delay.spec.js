@@ -80,6 +80,13 @@ describe('Response delay', function() {
                 assert(responseDelay.delayTimeInMs('invalid parameter') === 1);
             });
         });
+
+        it('should round delays to the millisecond', function() {
+            var fakeRandomNumberGenerator = function() {return 0.001;};
+            responseDelay = new ResponseDelay(fakeRandomNumberGenerator);
+
+            assert(responseDelay.delayTimeInMs('fast') === 150);
+        });
     });
 });
 
