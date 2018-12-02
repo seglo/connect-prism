@@ -57,6 +57,29 @@ describe('Response delay', function() {
                 assert(responseDelay.delayTimeInMs('invalid parameter') === 1);
             });
         });
+
+        describe('Upper range', function() {
+            beforeEach(function() {
+                var fakeRandomNumberGenerator = function() {return 1;};
+                responseDelay = new ResponseDelay(fakeRandomNumberGenerator);
+            });
+
+            it('should have maximum delay of 1750ms when using auto parameter', function() {
+                assert(responseDelay.delayTimeInMs('auto') === 1750);
+            });
+
+            it('should have maximum delay of 1000ms when using fast parameter', function() {
+                assert(responseDelay.delayTimeInMs('fast') === 1000);
+            });
+
+            it('should have maximum delay of 3000ms when using slow parameter', function() {
+                assert(responseDelay.delayTimeInMs('slow') === 3000);
+            });
+
+            it('should have maximum delay of 1ms when given an invalid parameter', function() {
+                assert(responseDelay.delayTimeInMs('invalid parameter') === 1);
+            });
+        });
     });
 });
 
