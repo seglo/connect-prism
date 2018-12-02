@@ -29,7 +29,7 @@ module.exports = function(grunt) {
         options: {
           atBegin: true
         },
-        files: ['lib/**/*.js'],
+        files: ['lib/**/*.js', 'test/**/*.js'],
         tasks: ['test'],
       },
     },
