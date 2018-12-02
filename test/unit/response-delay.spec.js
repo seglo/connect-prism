@@ -33,5 +33,30 @@ describe('Response delay', function() {
             assert(responseDelay.delayTimeInMs(42) === 42);
         });
     });
+
+    describe('Ranged delays', function() {
+        describe('Lower range', function() {
+            beforeEach(function() {
+                var fakeRandomNumberGenerator = function() {return 0;};
+                responseDelay = new ResponseDelay(fakeRandomNumberGenerator);
+            });
+
+            it('should have minimum delay of 500ms when using auto parameter', function() {
+                assert(responseDelay.delayTimeInMs('auto') === 500);
+            });
+
+            it('should have minimum delay of 150ms when using fast parameter', function() {
+                assert(responseDelay.delayTimeInMs('fast') === 150);
+            });
+
+            it('should have minimum delay of 1500ms when using slow parameter', function() {
+                assert(responseDelay.delayTimeInMs('slow') === 1500);
+            });
+
+            it('should have minimum delay of 1ms when given an invalid parameter', function() {
+                assert(responseDelay.delayTimeInMs('invalid parameter') === 1);
+            });
+        });
+    });
 });
 

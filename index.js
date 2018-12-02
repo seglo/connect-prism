@@ -22,7 +22,7 @@ var logger = new Logger(prismUtils);
 var urlRewrite = new UrlRewrite(logger);
 var prismManager = new PrismManager();
 var httpEvents = new HttpEvents(prismManager, urlRewrite, prismUtils);
-var responseDelay = new ResponseDelay();
+var responseDelay = new ResponseDelay(Math.random);
 var proxy = new PrismProxy(logger, prismUtils, responseDelay);
 
 var mockFilenameGenerator = new MockFilenameGenerator(prismUtils);
