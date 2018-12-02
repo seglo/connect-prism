@@ -32,6 +32,10 @@ describe('Response delay', function() {
         it('should have a simple delay when given a number', function() {
             assert(responseDelay.delayTimeInMs(42) === 42);
         });
+
+        it('should have a simple delay when given a string that coerce to a number', function() {
+            assert(responseDelay.delayTimeInMs('42') === 42);
+        });
     });
 
     describe('Ranged delays', function() {
