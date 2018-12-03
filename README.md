@@ -174,11 +174,11 @@ The http scheme of the API you are proxying.  `true` === `https`, `false` === `h
 
 #### delay
 
-Type: `String` or `Integer`
+Type: `String` or `Integer` or `Object`
 
 Default: 0
 
-Values: A number in milliseconds | `'auto'` | `'fast'` | `'slow'`
+Values: A number in milliseconds | `'auto'` | `'fast'` | `'slow'` | `{ lowerBound: Number, upperBound: Number}`
 
 Delay will work with all modes.
 
@@ -189,6 +189,9 @@ You can configure an exact delay in milliseconds or one of the precreated option
 * auto: 500 to 1750 ms
 * fast: 150 to 1000 ms
 * slow: 1500 to 3000 ms
+
+You can further customize the delays by giving an object specifying the lower and upper bounds.
+The full behavior of the feature is described in [unit tests](./test/unit/response-delay.spec.js)
 
 Thanks again to [Miloš Mošovský](https://github.com/MilosMosovsky) for this feature.
 
