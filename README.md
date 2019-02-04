@@ -521,6 +521,7 @@ Run a specific suite or test: add suffix describe or it block with `.only`.
 
 ## Release History
 
+* 1.0.21 Merged PR's: Add support for custom ranges for delays #79 ([udebella](https://github.com/udebella))
 * 1.0.20 Merged PR's: updated the proxy error handling to be more defensive #78 ([camacho](https://github.com/camacho))
 * 1.0.19 Merged PR's: remove json specific error message (messing with websocket proxying) #77 ([camacho](https://github.com/camacho))
 * 1.0.18 Merged PR's: add test:watch and clean up body parsing and restreaming #75 ([camacho](https://github.com/camacho), [kpruden](https://github.com/kpruden))
